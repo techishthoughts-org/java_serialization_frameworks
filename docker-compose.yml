@@ -187,6 +187,67 @@ services:
     networks:
       - serialization-network
 
+  # FST POC Service
+  fst-poc:
+    build:
+      context: ./fst-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+      - "8450:8450"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED -Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # FlatBuffers POC Service
+  flatbuffers-poc:
+    build:
+      context: ./flatbuffers-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8091:8091"
+      - "8451:8451"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8091/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # gRPC POC Service
+  grpc-poc:
+    build:
+      context: ./grpc-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8092:8092"
+      - "8452:8452"  # SSL port
+      - "9092:9092"  # gRPC port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8092/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
   # Supporting Services
 
   # Redis for Kryo caching demos

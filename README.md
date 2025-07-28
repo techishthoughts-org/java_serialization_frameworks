@@ -427,13 +427,13 @@ tail -f benchmark_run_clean.log
 
 ```bash
 # Build all Docker images
-for project in jackson-poc protobuf-poc avro-poc kryo-poc fory-poc msgpack-poc thrift-poc capnproto-poc hessian-poc; do
+for project in jackson-poc protobuf-poc avro-poc kryo-poc fory-poc msgpack-poc thrift-poc capnproto-poc hessian-poc fst-poc flatbuffers-poc grpc-poc; do
   cd $project
   mvn spring-boot:build-image
   cd ..
 done
 
-# Run with Docker Compose
+# Run with Docker Compose (all 12 frameworks)
 docker-compose up -d
 ```
 
@@ -580,10 +580,19 @@ volumes:
 #### **6. SSL Testing Commands**
 
 ```bash
-# Test HTTPS endpoints
-curl -k https://localhost:8441/actuator/health
-curl -k https://localhost:8442/actuator/health
-curl -k https://localhost:8443/actuator/health
+# Test HTTPS endpoints (all 12 frameworks)
+curl -k https://localhost:8441/actuator/health  # Jackson
+curl -k https://localhost:8442/actuator/health  # Protobuf
+curl -k https://localhost:8443/actuator/health  # Avro
+curl -k https://localhost:8444/actuator/health  # Kryo
+curl -k https://localhost:8445/actuator/health  # Fory
+curl -k https://localhost:8446/actuator/health  # MessagePack
+curl -k https://localhost:8447/actuator/health  # Cap'n Proto
+curl -k https://localhost:8448/actuator/health  # Thrift
+curl -k https://localhost:8449/actuator/health  # Hessian
+curl -k https://localhost:8450/actuator/health  # FST
+curl -k https://localhost:8451/actuator/health  # FlatBuffers
+curl -k https://localhost:8452/actuator/health  # gRPC
 
 # Test with certificate verification
 curl --cacert ssl-certificates/ca-certificate.pem \
@@ -817,6 +826,7 @@ This project uses specific JVM variables to ensure optimal performance and compa
 ```
 
 **Why These Are Critical:**
+
 - **FST Framework**: Uses reflection to access private fields in core Java classes
 - **Java 21 Impact**: Strong encapsulation prevents access by default
 - **Performance**: Direct field access is 10-100x faster than public APIs
@@ -831,6 +841,7 @@ This project uses specific JVM variables to ensure optimal performance and compa
 ```
 
 **Justification:**
+
 - **Large Payloads**: Supports 1MB+ object serialization
 - **Multiple Frameworks**: 12 frameworks running simultaneously
 - **Benchmark Stress**: High iteration counts and intensive testing
@@ -846,6 +857,7 @@ This project uses specific JVM variables to ensure optimal performance and compa
 ```
 
 **Benefits:**
+
 - **Predictable Pauses**: Maximum 200ms GC pauses
 - **Better Throughput**: 20-30% improvement for memory-intensive operations
 - **String Optimization**: Reduces memory usage by 10-20%
@@ -853,6 +865,7 @@ This project uses specific JVM variables to ensure optimal performance and compa
 ### **Complete JVM Configuration Examples**
 
 #### **Development Environment**
+
 ```bash
 export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
                    --add-opens java.base/java.util=ALL-UNNAMED \
@@ -861,6 +874,7 @@ export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
 ```
 
 #### **Production Environment**
+
 ```bash
 export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
                   --add-opens java.base/java.util=ALL-UNNAMED \
@@ -874,6 +888,7 @@ export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
 ```
 
 #### **Benchmark Environment**
+
 ```bash
 export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
                    --add-opens java.base/java.util=ALL-UNNAMED \
@@ -890,6 +905,7 @@ export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
 ### **Performance Impact Analysis**
 
 #### **FST Framework Performance**
+
 | Configuration | Success Rate | Avg Response Time | Memory Usage |
 |---------------|-------------|------------------|--------------|
 | **With JVM Variables** | 100% | 5956.6ms | 2.1GB |
@@ -897,6 +913,7 @@ export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
 | **Partial Variables** | 25% | 12000ms | 1.8GB |
 
 #### **Memory Performance Comparison**
+
 | Heap Size | GC Pauses | Throughput | Stability |
 |-----------|-----------|------------|-----------|
 | **2GB** | 150ms | 85% | Good |
@@ -906,12 +923,14 @@ export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
 ### **Security Considerations**
 
 #### **Module System Security**
+
 - **Risk**: Opening modules reduces encapsulation
 - **Mitigation**: Only opens to unnamed modules (our application)
 - **Benefit**: Enables high-performance serialization
 - **Trade-off**: Performance vs. security (acceptable for this use case)
 
 #### **Memory Security**
+
 - **Risk**: Large heap increases attack surface
 - **Mitigation**: Proper input validation and sanitization
 - **Benefit**: Supports large payload testing
@@ -922,22 +941,28 @@ export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
 #### **Common JVM Errors**
 
 **1. InaccessibleObjectException**
+
 ```bash
 java.lang.reflect.InaccessibleObjectException:
 Unable to make field private final byte[] java.lang.String.value accessible
 ```
+
 **Solution**: Add `--add-opens java.base/java.lang=ALL-UNNAMED`
 
 **2. OutOfMemoryError**
+
 ```bash
 java.lang.OutOfMemoryError: Java heap space
 ```
+
 **Solution**: Increase heap size with `-Xmx4g` or higher
 
 **3. GC Pause Issues**
+
 ```bash
 # Long garbage collection pauses
 ```
+
 **Solution**: Use G1GC with `-XX:+UseG1GC -XX:MaxGCPauseMillis=200`
 
 #### **JVM Variable Validation**

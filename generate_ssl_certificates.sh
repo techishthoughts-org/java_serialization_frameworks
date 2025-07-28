@@ -35,8 +35,8 @@ echo "🔐 Generating SSL certificates for all frameworks..."
 echo ""
 
 # Framework ports
-PORTS=(8081 8082 8083 8084 8085 8086 8087 8088 8089)
-FRAMEWORKS=("jackson" "protobuf" "avro" "kryo" "fory" "msgpack" "capnproto" "thrift" "hessian")
+PORTS=(8081 8082 8083 8084 8085 8086 8087 8088 8089 8090 8091 8092)
+FRAMEWORKS=("jackson" "protobuf" "avro" "kryo" "fory" "msgpack" "capnproto" "thrift" "hessian" "fst" "flatbuffers" "grpc")
 
 # Generate certificates for each framework
 for i in "${!PORTS[@]}"; do
