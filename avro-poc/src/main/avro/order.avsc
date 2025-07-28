@@ -1,0 +1,26 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "Order",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "orderNumber", "type": "string"},
+    {"name": "status", "type": {"type": "enum", "name": "OrderStatus", "symbols": ["PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED", "RETURNED"]}},
+    {"name": "items", "type": {"type": "array", "items": "OrderItem"}},
+    {"name": "totalAmount", "type": "string"},
+    {"name": "subtotal", "type": "string"},
+    {"name": "taxAmount", "type": "string"},
+    {"name": "shippingAmount", "type": "string"},
+    {"name": "discountAmount", "type": "string"},
+    {"name": "currency", "type": "string"},
+    {"name": "shippingAddress", "type": ["null", "Address"], "default": null},
+    {"name": "billingAddress", "type": ["null", "Address"], "default": null},
+    {"name": "payment", "type": ["null", "Payment"], "default": null},
+    {"name": "tracking", "type": {"type": "array", "items": "TrackingEvent"}},
+    {"name": "orderDate", "type": ["null", "long"], "default": null},
+    {"name": "shippedDate", "type": ["null", "long"], "default": null},
+    {"name": "deliveredDate", "type": ["null", "long"], "default": null},
+    {"name": "notes", "type": ["null", "string"], "default": null},
+    {"name": "customFields", "type": {"type": "map", "values": "string"}}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "SocialConnection",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "platform", "type": {"type": "enum", "name": "SocialPlatform", "symbols": ["FACEBOOK", "TWITTER", "INSTAGRAM", "LINKEDIN", "GITHUB", "YOUTUBE", "TIKTOK", "DISCORD"]}},
+    {"name": "username", "type": "string"},
+    {"name": "profileUrl", "type": "string"},
+    {"name": "isVerified", "type": "boolean"},
+    {"name": "followerCount", "type": "long"},
+    {"name": "connectedAt", "type": ["null", "long"], "default": null},
+    {"name": "lastSyncAt", "type": ["null", "long"], "default": null},
+    {"name": "additionalData", "type": {"type": "map", "values": "string"}}
+  ]
+}

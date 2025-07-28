@@ -1,0 +1,213 @@
+{
+  "timestamp": "2025-07-24T18:17:12.484175",
+  "frameworks": {
+    "jackson": {
+      "name": "Jackson JSON",
+      "description": "JSON, CBOR, MessagePack, Smile",
+      "port": 8081,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "formats": {
+              "messagePack": {
+                "size": 165053,
+                "serializationTime": 1.156042
+              },
+              "json": {
+                "size": 165053,
+                "serializationTime": 49.760667
+              },
+              "cbor": {
+                "size": 165053,
+                "serializationTime": 1.758083
+              }
+            },
+            "userCount": 10,
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "userCount": 10,
+            "compression": {
+              "gzip": {
+                "compressionRatio": 0.2113793372039377,
+                "compressedSize": 35279,
+                "compressionTime": 3.736792,
+                "originalSize": 166899
+              },
+              "zstandard": {
+                "compressionRatio": 0.21468073505533286,
+                "compressedSize": 35830,
+                "compressionTime": 195.805917,
+                "originalSize": 166899
+              }
+            },
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "performance": {
+              "avgDeserializationTime": 60,
+              "avgCompressionTime": 40,
+              "totalIterations": 1,
+              "avgSerializationTime": 13
+            },
+            "payloadSize": "medium",
+            "userCount": 100,
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "kryo": {
+      "name": "Kryo",
+      "description": "Binary serialization",
+      "port": 8084,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "formats": {
+              "kryo_optimized": {
+                "size": 68735,
+                "serializationTime": 3.051709
+              },
+              "kryo_standard": {
+                "size": 44942,
+                "serializationTime": 10.043875
+              }
+            },
+            "userCount": 10,
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "userCount": 10,
+            "compression": {
+              "kryo": {
+                "compressionRatio": 1.0,
+                "compressedSize": 45526,
+                "compressionTime": 0.0,
+                "originalSize": 45526
+              }
+            },
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "performance": {
+              "avgDeserializationTime": 12.249125,
+              "avgCompressionTime": 0.0,
+              "totalIterations": 1,
+              "serializedDataSize": 46595,
+              "avgSerializationTime": 3.849084
+            },
+            "payloadSize": "SMALL",
+            "userCount": 10,
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "protobuf": {
+      "name": "Protocol Buffers",
+      "description": "Google Protocol Buffers",
+      "port": 8082,
+      "endpoints": {
+        "Serialization": {
+          "success": false,
+          "data": null
+        },
+        "Compression": {
+          "success": false,
+          "data": null
+        },
+        "Performance": {
+          "success": false,
+          "data": null
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 0,
+        "success_rate": 0.0
+      }
+    },
+    "avro": {
+      "name": "Apache Avro",
+      "description": "Schema-based serialization",
+      "port": 8083,
+      "endpoints": {
+        "Serialization": {
+          "success": false,
+          "data": null
+        },
+        "Compression": {
+          "success": false,
+          "data": null
+        },
+        "Performance": {
+          "success": false,
+          "data": null
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 0,
+        "success_rate": 0.0
+      }
+    },
+    "fory": {
+      "name": "Apache Fury",
+      "description": "High-performance serialization",
+      "port": 8085,
+      "endpoints": {
+        "Serialization": {
+          "success": false,
+          "data": null
+        },
+        "Compression": {
+          "success": false,
+          "data": null
+        },
+        "Performance": {
+          "success": false,
+          "data": null
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 0,
+        "success_rate": 0.0
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 15,
+    "successful_tests": 6,
+    "success_rate": 40.0
+  }
+}

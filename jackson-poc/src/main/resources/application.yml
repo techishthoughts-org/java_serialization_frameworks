@@ -1,0 +1,48 @@
+server:
+  port: 8081
+  http2:
+    enabled: true
+  http3:
+    enabled: true
+    port: 8441
+  ssl:
+    enabled: false
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+      - application/cbor
+      - application/msgpack
+      - application/smile
+    min-response-size: 1024
+    http2:
+      enabled: true
+    http3:
+      enabled: true
+
+spring:
+  application:
+    name: jackson-poc
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.techishthoughts.jackson: DEBUG
+    org.springframework.web: INFO
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

@@ -1,0 +1,16 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "OrderItem",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "productId", "type": "long"},
+    {"name": "productName", "type": "string"},
+    {"name": "productSku", "type": "string"},
+    {"name": "quantity", "type": "int"},
+    {"name": "unitPrice", "type": "string"},
+    {"name": "totalPrice", "type": "string"},
+    {"name": "discount", "type": "string"},
+    {"name": "attributes", "type": {"type": "map", "values": "string"}}
+  ]
+}

@@ -1,0 +1,230 @@
+syntax = "proto3";
+
+package com.example.protobuf.model;
+
+option java_multiple_files = true;
+option java_package = "com.example.protobuf.model";
+option java_outer_classname = "UserProto";
+
+import "google/protobuf/timestamp.proto";
+
+// Main User message
+message User {
+  int64 id = 1;
+  string username = 2;
+  string email = 3;
+  string first_name = 4;
+  string last_name = 5;
+  UserProfile profile = 6;
+  repeated Address addresses = 7;
+  repeated Order orders = 8;
+  map<string, string> preferences = 9;
+  map<string, string> metadata = 10;
+  repeated string tags = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp last_login_at = 13;
+  bool is_active = 14;
+  double loyalty_points = 15;
+  repeated SocialConnection social_connections = 16;
+}
+
+// User Profile
+message UserProfile {
+  string bio = 1;
+  string avatar = 2;
+  google.protobuf.Timestamp date_of_birth = 3;
+  string gender = 4;
+  string phone_number = 5;
+  string nationality = 6;
+  string occupation = 7;
+  string company = 8;
+  repeated string interests = 9;
+  repeated Skill skills = 10;
+  repeated Education education = 11;
+  repeated Language languages = 12;
+}
+
+// Address
+message Address {
+  int64 id = 1;
+  AddressType type = 2;
+  string street1 = 3;
+  string street2 = 4;
+  string city = 5;
+  string state = 6;
+  string postal_code = 7;
+  string country = 8;
+  double latitude = 9;
+  double longitude = 10;
+  bool is_default = 11;
+
+  enum AddressType {
+    HOME = 0;
+    WORK = 1;
+    BILLING = 2;
+    SHIPPING = 3;
+    OTHER = 4;
+  }
+}
+
+// Order
+message Order {
+  int64 id = 1;
+  string order_number = 2;
+  OrderStatus status = 3;
+  repeated OrderItem items = 4;
+  string total_amount = 5;  // Using string for BigDecimal precision
+  string subtotal = 6;
+  string tax_amount = 7;
+  string shipping_amount = 8;
+  string discount_amount = 9;
+  string currency = 10;
+  Address shipping_address = 11;
+  Address billing_address = 12;
+  Payment payment = 13;
+  repeated TrackingEvent tracking = 14;
+  google.protobuf.Timestamp order_date = 15;
+  google.protobuf.Timestamp shipped_date = 16;
+  google.protobuf.Timestamp delivered_date = 17;
+  string notes = 18;
+  map<string, string> custom_fields = 19;
+
+  enum OrderStatus {
+    PENDING = 0;
+    CONFIRMED = 1;
+    PROCESSING = 2;
+    SHIPPED = 3;
+    DELIVERED = 4;
+    CANCELLED = 5;
+    RETURNED = 6;
+  }
+}
+
+// Order Item
+message OrderItem {
+  int64 id = 1;
+  int64 product_id = 2;
+  string product_name = 3;
+  string product_sku = 4;
+  int32 quantity = 5;
+  string unit_price = 6;  // Using string for BigDecimal precision
+  string total_price = 7;
+  string discount = 8;
+  map<string, string> attributes = 9;
+}
+
+// Payment
+message Payment {
+  int64 id = 1;
+  PaymentMethod method = 2;
+  PaymentStatus status = 3;
+  string amount = 4;  // Using string for BigDecimal precision
+  string currency = 5;
+  string transaction_id = 6;
+  string card_last_four = 7;
+  string card_brand = 8;
+  google.protobuf.Timestamp processed_at = 9;
+  string gateway_response = 10;
+
+  enum PaymentMethod {
+    CREDIT_CARD = 0;
+    DEBIT_CARD = 1;
+    PAYPAL = 2;
+    BANK_TRANSFER = 3;
+    CRYPTOCURRENCY = 4;
+    CASH_ON_DELIVERY = 5;
+  }
+
+  enum PaymentStatus {
+    PENDING = 0;
+    AUTHORIZED = 1;
+    CAPTURED = 2;
+    DECLINED = 3;
+    REFUNDED = 4;
+    CANCELLED = 5;
+  }
+}
+
+// Tracking Event
+message TrackingEvent {
+  int64 id = 1;
+  string status = 2;
+  string description = 3;
+  string location = 4;
+  google.protobuf.Timestamp timestamp = 5;
+  string carrier = 6;
+  string tracking_number = 7;
+}
+
+// Social Connection
+message SocialConnection {
+  int64 id = 1;
+  SocialPlatform platform = 2;
+  string username = 3;
+  string profile_url = 4;
+  bool is_verified = 5;
+  int64 follower_count = 6;
+  google.protobuf.Timestamp connected_at = 7;
+  google.protobuf.Timestamp last_sync_at = 8;
+  map<string, string> additional_data = 9;
+
+  enum SocialPlatform {
+    FACEBOOK = 0;
+    TWITTER = 1;
+    INSTAGRAM = 2;
+    LINKEDIN = 3;
+    GITHUB = 4;
+    YOUTUBE = 5;
+    TIKTOK = 6;
+    DISCORD = 7;
+  }
+}
+
+// Skill
+message Skill {
+  int64 id = 1;
+  string name = 2;
+  SkillLevel level = 3;
+  int32 years_of_experience = 4;
+  string certifications = 5;
+
+  enum SkillLevel {
+    BEGINNER = 0;
+    INTERMEDIATE = 1;
+    ADVANCED = 2;
+    EXPERT = 3;
+  }
+}
+
+// Education
+message Education {
+  int64 id = 1;
+  string institution = 2;
+  string degree = 3;
+  string field_of_study = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  double gpa = 7;
+  string honors = 8;
+}
+
+// Language
+message Language {
+  int64 id = 1;
+  string name = 2;
+  string code = 3;
+  LanguageProficiency proficiency = 4;
+  bool is_native = 5;
+
+  enum LanguageProficiency {
+    BASIC = 0;
+    CONVERSATIONAL = 1;
+    FLUENT = 2;
+    NATIVE = 3;
+  }
+}
+
+// List wrapper for collections
+message UserList {
+  repeated User users = 1;
+}

@@ -1,0 +1,17 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "Payment",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "method", "type": {"type": "enum", "name": "PaymentMethod", "symbols": ["CREDIT_CARD", "DEBIT_CARD", "PAYPAL", "BANK_TRANSFER", "CRYPTOCURRENCY", "CASH_ON_DELIVERY"]}},
+    {"name": "status", "type": {"type": "enum", "name": "PaymentStatus", "symbols": ["PENDING", "AUTHORIZED", "CAPTURED", "DECLINED", "REFUNDED", "CANCELLED"]}},
+    {"name": "amount", "type": "string"},
+    {"name": "currency", "type": "string"},
+    {"name": "transactionId", "type": "string"},
+    {"name": "cardLastFour", "type": "string"},
+    {"name": "cardBrand", "type": "string"},
+    {"name": "processedAt", "type": ["null", "long"], "default": null},
+    {"name": "gatewayResponse", "type": "string"}
+  ]
+}

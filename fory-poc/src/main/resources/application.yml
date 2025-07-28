@@ -1,0 +1,38 @@
+server:
+  port: 8085
+  http2:
+    enabled: true
+  http3:
+    enabled: true
+    port: 8445
+  ssl:
+    enabled: false
+  compression:
+    enabled: true
+    mime-types:
+      - application/octet-stream
+    min-response-size: 1024
+    http2:
+      enabled: true
+    http3:
+      enabled: true
+
+spring:
+  application:
+    name: fory-poc
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.example.fory: DEBUG
+    org.apache.fory: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

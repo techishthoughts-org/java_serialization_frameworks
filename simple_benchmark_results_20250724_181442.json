@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-07-24T18:14:42.414018",
+  "jackson": {
+    "Serialization": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "formats": {
+          "messagePack": {
+            "size": 162704,
+            "serializationTime": 0.657292
+          },
+          "json": {
+            "size": 162704,
+            "serializationTime": 2.131708
+          },
+          "cbor": {
+            "size": 162704,
+            "serializationTime": 0.7
+          }
+        },
+        "userCount": 10,
+        "iterations": 1
+      }
+    },
+    "Compression": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "userCount": 10,
+        "compression": {
+          "gzip": {
+            "compressionRatio": 0.21227756586261756,
+            "compressedSize": 34559,
+            "compressionTime": 2.398125,
+            "originalSize": 162801
+          },
+          "zstandard": {
+            "compressionRatio": 0.21537951241085743,
+            "compressedSize": 35064,
+            "compressionTime": 0.493333,
+            "originalSize": 162801
+          }
+        },
+        "iterations": 1
+      }
+    },
+    "Performance": {
+      "success": true,
+      "data": {
+        "performance": {
+          "avgDeserializationTime": 22,
+          "avgCompressionTime": 39,
+          "totalIterations": 1,
+          "avgSerializationTime": 12
+        },
+        "payloadSize": "medium",
+        "userCount": 100,
+        "iterations": 1
+      }
+    }
+  },
+  "kryo": {
+    "Serialization": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "formats": {
+          "kryo_optimized": {
+            "size": 69329,
+            "serializationTime": 4.045375
+          },
+          "kryo_standard": {
+            "size": 45990,
+            "serializationTime": 6.708
+          }
+        },
+        "userCount": 10,
+        "iterations": 1
+      }
+    },
+    "Compression": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "userCount": 10,
+        "compression": {
+          "kryo": {
+            "compressionRatio": 1.0,
+            "compressedSize": 45407,
+            "compressionTime": 0.0,
+            "originalSize": 45407
+          }
+        },
+        "iterations": 1
+      }
+    },
+    "Performance": {
+      "success": true,
+      "data": {
+        "performance": {
+          "error": "Deserialization failed - no users deserialized"
+        },
+        "payloadSize": "SMALL",
+        "userCount": 10,
+        "iterations": 1
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 6,
+    "successful_tests": 6,
+    "success_rate": 100.0
+  }
+}

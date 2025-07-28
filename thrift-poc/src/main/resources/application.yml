@@ -1,0 +1,29 @@
+server:
+  port: 8087
+  http2:
+    enabled: false
+  http3:
+    enabled: false
+  ssl:
+    enabled: false
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: thrift-poc
+
+  # Health check configuration
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info
+    endpoint:
+      health:
+        show-details: always
+
+logging:
+  level:
+    org.techishthoughts.thrift: DEBUG
+    org.springframework.web: DEBUG

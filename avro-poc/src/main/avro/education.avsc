@@ -1,0 +1,15 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "Education",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "institution", "type": "string"},
+    {"name": "degree", "type": "string"},
+    {"name": "fieldOfStudy", "type": "string"},
+    {"name": "startDate", "type": ["null", "long"], "default": null},
+    {"name": "endDate", "type": ["null", "long"], "default": null},
+    {"name": "gpa", "type": "double"},
+    {"name": "honors", "type": ["null", "string"], "default": null}
+  ]
+}

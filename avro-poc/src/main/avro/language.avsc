@@ -1,0 +1,12 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "Language",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "name", "type": "string"},
+    {"name": "code", "type": "string"},
+    {"name": "proficiency", "type": {"type": "enum", "name": "LanguageProficiency", "symbols": ["BASIC", "CONVERSATIONAL", "FLUENT", "NATIVE"]}},
+    {"name": "isNative", "type": "boolean"}
+  ]
+}

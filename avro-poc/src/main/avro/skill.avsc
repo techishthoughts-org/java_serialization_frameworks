@@ -1,0 +1,12 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "Skill",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "name", "type": "string"},
+    {"name": "level", "type": {"type": "enum", "name": "SkillLevel", "symbols": ["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]}},
+    {"name": "yearsOfExperience", "type": "int"},
+    {"name": "certifications", "type": ["null", "string"], "default": null}
+  ]
+}

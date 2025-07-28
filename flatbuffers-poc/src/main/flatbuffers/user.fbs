@@ -1,0 +1,177 @@
+// FlatBuffers schema for User model
+// Generated for Tech.ish Thoughts Java Serialization Benchmark
+
+namespace org.techishthoughts.flatbuffers;
+
+enum AddressType : byte {
+  HOME = 0,
+  WORK = 1,
+  BILLING = 2,
+  SHIPPING = 3
+}
+
+enum LanguageProficiency : byte {
+  BEGINNER = 0,
+  INTERMEDIATE = 1,
+  ADVANCED = 2,
+  NATIVE = 3
+}
+
+enum OrderStatus : byte {
+  PENDING = 0,
+  CONFIRMED = 1,
+  SHIPPED = 2,
+  DELIVERED = 3,
+  CANCELLED = 4
+}
+
+enum PaymentMethod : byte {
+  CREDIT_CARD = 0,
+  DEBIT_CARD = 1,
+  PAYPAL = 2,
+  BANK_TRANSFER = 3,
+  CRYPTO = 4
+}
+
+enum PaymentStatus : byte {
+  PENDING = 0,
+  PROCESSING = 1,
+  COMPLETED = 2,
+  FAILED = 3,
+  REFUNDED = 4
+}
+
+enum SocialPlatform : byte {
+  FACEBOOK = 0,
+  TWITTER = 1,
+  LINKEDIN = 2,
+  INSTAGRAM = 3,
+  GITHUB = 4
+}
+
+enum SkillLevel : byte {
+  NOVICE = 0,
+  BEGINNER = 1,
+  INTERMEDIATE = 2,
+  ADVANCED = 3,
+  EXPERT = 4
+}
+
+table Address {
+  id:long;
+  street:string;
+  city:string;
+  state:string;
+  zipCode:string;
+  country:string;
+  addressType:AddressType;
+  isPrimary:bool;
+}
+
+table Education {
+  id:long;
+  institution:string;
+  degree:string;
+  fieldOfStudy:string;
+  startDate:string;
+  endDate:string;
+  gpa:float;
+  description:string;
+}
+
+table Language {
+  id:long;
+  name:string;
+  proficiency:LanguageProficiency;
+  isNative:bool;
+}
+
+table Skill {
+  id:long;
+  name:string;
+  level:SkillLevel;
+  yearsOfExperience:int;
+  description:string;
+}
+
+table TrackingEvent {
+  id:long;
+  eventType:string;
+  timestamp:string;
+  location:string;
+  description:string;
+  status:string;
+}
+
+table OrderItem {
+  id:long;
+  productId:long;
+  productName:string;
+  quantity:int;
+  unitPrice:double;
+  totalPrice:double;
+  trackingEvents:[TrackingEvent];
+}
+
+table Payment {
+  id:long;
+  amount:double;
+  currency:string;
+  method:PaymentMethod;
+  status:PaymentStatus;
+  transactionId:string;
+  timestamp:string;
+}
+
+table SocialConnection {
+  id:long;
+  platform:SocialPlatform;
+  username:string;
+  profileUrl:string;
+  followersCount:int;
+  isVerified:bool;
+  connectedAt:string;
+}
+
+table Order {
+  id:long;
+  orderNumber:string;
+  orderDate:string;
+  status:OrderStatus;
+  totalAmount:double;
+  currency:string;
+  items:[OrderItem];
+  payment:Payment;
+  shippingAddress:Address;
+  billingAddress:Address;
+}
+
+table UserProfile {
+  id:long;
+  bio:string;
+  avatarUrl:string;
+  website:string;
+  dateOfBirth:string;
+  gender:string;
+  interests:[string];
+  skills:[Skill];
+  education:[Education];
+  languages:[Language];
+  socialConnections:[SocialConnection];
+}
+
+table User {
+  id:long;
+  username:string;
+  email:string;
+  firstName:string;
+  lastName:string;
+  isActive:bool;
+  createdAt:string;
+  lastLoginAt:string;
+  addresses:[Address];
+  profile:UserProfile;
+  orders:[Order];
+}
+
+root_type User;

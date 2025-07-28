@@ -1,0 +1,19 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "UserProfile",
+  "fields": [
+    {"name": "bio", "type": "string"},
+    {"name": "avatar", "type": "string"},
+    {"name": "dateOfBirth", "type": ["null", "long"], "default": null},
+    {"name": "gender", "type": "string"},
+    {"name": "phoneNumber", "type": "string"},
+    {"name": "nationality", "type": "string"},
+    {"name": "occupation", "type": "string"},
+    {"name": "company", "type": "string"},
+    {"name": "interests", "type": {"type": "array", "items": "string"}},
+    {"name": "skills", "type": {"type": "array", "items": "Skill"}},
+    {"name": "education", "type": {"type": "array", "items": "Education"}},
+    {"name": "languages", "type": {"type": "array", "items": "Language"}}
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "timestamp": "2025-07-24T18:50:39.159133",
+  "jackson": {
+    "Serialization": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "formats": {
+          "messagePack": {
+            "size": 167983,
+            "serializationTime": 1.40025
+          },
+          "json": {
+            "size": 167983,
+            "serializationTime": 43.288292
+          },
+          "cbor": {
+            "size": 167983,
+            "serializationTime": 2.292042
+          }
+        },
+        "userCount": 10,
+        "iterations": 1
+      }
+    },
+    "Compression": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "userCount": 10,
+        "compression": {
+          "gzip": {
+            "compressionRatio": 0.2101970264413743,
+            "compressedSize": 33563,
+            "compressionTime": 3.795125,
+            "originalSize": 159674
+          },
+          "zstandard": {
+            "compressionRatio": 0.2143429738091361,
+            "compressedSize": 34225,
+            "compressionTime": 191.57425,
+            "originalSize": 159674
+          }
+        },
+        "iterations": 1
+      }
+    },
+    "Performance": {
+      "success": true,
+      "data": {
+        "performance": {
+          "avgDeserializationTime": 85,
+          "avgCompressionTime": 41,
+          "totalIterations": 1,
+          "avgSerializationTime": 13
+        },
+        "payloadSize": "medium",
+        "userCount": 100,
+        "iterations": 1
+      }
+    }
+  },
+  "kryo": {
+    "Serialization": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "formats": {
+          "kryo_optimized": {
+            "size": 67373,
+            "serializationTime": 3.147625
+          },
+          "kryo_standard": {
+            "size": 44281,
+            "serializationTime": 11.82725
+          }
+        },
+        "userCount": 10,
+        "iterations": 1
+      }
+    },
+    "Compression": {
+      "success": true,
+      "data": {
+        "complexity": "SMALL",
+        "userCount": 10,
+        "compression": {
+          "kryo": {
+            "compressionRatio": 1.0,
+            "compressedSize": 44393,
+            "compressionTime": 0.0,
+            "originalSize": 44393
+          }
+        },
+        "iterations": 1
+      }
+    },
+    "Performance": {
+      "success": true,
+      "data": {
+        "performance": {
+          "avgDeserializationTime": 13.904,
+          "avgCompressionTime": 0.0,
+          "totalIterations": 1,
+          "serializedDataSize": 45662,
+          "avgSerializationTime": 7.245167
+        },
+        "payloadSize": "SMALL",
+        "userCount": 10,
+        "iterations": 1
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 6,
+    "successful_tests": 6,
+    "success_rate": 100.0
+  }
+}

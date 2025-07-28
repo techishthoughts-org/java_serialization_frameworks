@@ -1,0 +1,237 @@
+{
+  "timestamp": "2025-07-24T18:28:26.651195",
+  "frameworks": {
+    "jackson": {
+      "name": "Jackson JSON",
+      "description": "JSON, CBOR, MessagePack, Smile",
+      "port": 8081,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "formats": {
+              "messagePack": {
+                "size": 172467,
+                "serializationTime": 1.429041
+              },
+              "json": {
+                "size": 172467,
+                "serializationTime": 49.940833
+              },
+              "cbor": {
+                "size": 172467,
+                "serializationTime": 2.552375
+              }
+            },
+            "userCount": 10,
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "userCount": 10,
+            "compression": {
+              "gzip": {
+                "compressionRatio": 0.21115471320030058,
+                "compressedSize": 35406,
+                "compressionTime": 3.660292,
+                "originalSize": 167678
+              },
+              "zstandard": {
+                "compressionRatio": 0.21393981321342095,
+                "compressedSize": 35873,
+                "compressionTime": 301.795291,
+                "originalSize": 167678
+              }
+            },
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "performance": {
+              "avgDeserializationTime": 75,
+              "avgCompressionTime": 39,
+              "totalIterations": 1,
+              "avgSerializationTime": 14
+            },
+            "payloadSize": "medium",
+            "userCount": 100,
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "kryo": {
+      "name": "Kryo",
+      "description": "Binary serialization",
+      "port": 8084,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "formats": {
+              "kryo_optimized": {
+                "size": 69852,
+                "serializationTime": 3.4835
+              },
+              "kryo_standard": {
+                "size": 46064,
+                "serializationTime": 11.766958
+              }
+            },
+            "userCount": 10,
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "userCount": 10,
+            "compression": {
+              "kryo": {
+                "compressionRatio": 1.0,
+                "compressedSize": 49451,
+                "compressionTime": 0.0,
+                "originalSize": 49451
+              }
+            },
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "performance": {
+              "avgDeserializationTime": 14.114084,
+              "avgCompressionTime": 0.0,
+              "totalIterations": 1,
+              "serializedDataSize": 48024,
+              "avgSerializationTime": 4.19275
+            },
+            "payloadSize": "SMALL",
+            "userCount": 10,
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "protobuf": {
+      "name": "Protocol Buffers",
+      "description": "Google Protocol Buffers (Hybrid)",
+      "port": 8082,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "error": "Failed to serialize users",
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "error": "Failed to serialize users",
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "payloadSize": "SMALL",
+            "error": "Failed to serialize users",
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "avro": {
+      "name": "Apache Avro",
+      "description": "Schema-based serialization",
+      "port": 8083,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "timestamp": "2025-07-24T17:28:27.803+00:00",
+            "status": 404,
+            "error": "Not Found",
+            "path": "/api/avro/benchmark/serialization"
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "timestamp": "2025-07-24T17:28:27.851+00:00",
+            "status": 404,
+            "error": "Not Found",
+            "path": "/api/avro/benchmark/compression"
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "timestamp": "2025-07-24T17:28:27.875+00:00",
+            "status": 404,
+            "error": "Not Found",
+            "path": "/api/avro/benchmark/performance"
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "fury": {
+      "name": "Apache Fury",
+      "description": "High-performance serialization",
+      "port": 8085,
+      "endpoints": {
+        "Benchmark": {
+          "success": true,
+          "data": {
+            "timestamp": "2025-07-24T17:28:27.945+00:00",
+            "status": 404,
+            "error": "Not Found",
+            "path": "/api/fory/benchmark"
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 1,
+        "successful_tests": 1,
+        "success_rate": 100.0
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 13,
+    "successful_tests": 13,
+    "success_rate": 100.0
+  }
+}

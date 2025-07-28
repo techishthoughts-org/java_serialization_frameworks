@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-07-24T18:11:27.948347",
+  "frameworks": {
+    "jackson": {
+      "description": "Jackson JSON with multiple formats",
+      "endpoints": {
+        "serialization": {
+          "success": false,
+          "error": "Request failed"
+        },
+        "compression": {
+          "success": false,
+          "error": "Request failed"
+        },
+        "performance": {
+          "success": false,
+          "error": "Request failed"
+        }
+      }
+    },
+    "kryo": {
+      "description": "Kryo binary serialization",
+      "endpoints": {
+        "serialization": {
+          "success": false,
+          "error": "Request failed"
+        },
+        "compression": {
+          "success": false,
+          "error": "Request failed"
+        },
+        "performance": {
+          "success": false,
+          "error": "Request failed"
+        }
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 6,
+    "successful_tests": 0,
+    "success_rate": 0.0,
+    "frameworks_tested": 2
+  }
+}

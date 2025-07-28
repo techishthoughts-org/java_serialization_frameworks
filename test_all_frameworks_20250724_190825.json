@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-07-24T19:08:25.696215",
+  "frameworks": {
+    "Jackson JSON": {
+      "port": 8081,
+      "status": "UP",
+      "success": true
+    },
+    "Protocol Buffers": {
+      "port": 8082,
+      "status": "UP",
+      "success": true
+    },
+    "Apache Avro": {
+      "port": 8083,
+      "status": "UP",
+      "success": true
+    },
+    "Kryo": {
+      "port": 8084,
+      "status": "UP",
+      "success": true
+    },
+    "Apache Fury": {
+      "port": 8085,
+      "status": "UP",
+      "success": true
+    },
+    "MessagePack": {
+      "port": 8086,
+      "status": "UP",
+      "success": true
+    },
+    "Apache Thrift": {
+      "port": 8087,
+      "status": "DOWN",
+      "success": false
+    },
+    "Cap'n Proto": {
+      "port": 8088,
+      "status": "UP",
+      "success": true
+    },
+    "Hessian": {
+      "port": 8089,
+      "status": "UP",
+      "success": true
+    },
+    "FST": {
+      "port": 8090,
+      "status": "DOWN",
+      "success": false
+    },
+    "FlatBuffers": {
+      "port": 8091,
+      "status": "UP",
+      "success": true
+    },
+    "gRPC": {
+      "port": 8092,
+      "status": "DOWN",
+      "success": false
+    }
+  },
+  "summary": {}
+}

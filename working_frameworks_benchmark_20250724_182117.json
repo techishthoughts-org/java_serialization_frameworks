@@ -1,0 +1,158 @@
+{
+  "timestamp": "2025-07-24T18:21:16.723764",
+  "frameworks": {
+    "jackson": {
+      "name": "Jackson JSON",
+      "description": "JSON, CBOR, MessagePack, Smile",
+      "port": 8081,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "formats": {
+              "messagePack": {
+                "size": 159393,
+                "serializationTime": 0.841833
+              },
+              "json": {
+                "size": 159393,
+                "serializationTime": 1.082834
+              },
+              "cbor": {
+                "size": 159393,
+                "serializationTime": 0.666208
+              }
+            },
+            "userCount": 10,
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "userCount": 10,
+            "compression": {
+              "gzip": {
+                "compressionRatio": 0.21296301431399844,
+                "compressedSize": 38400,
+                "compressionTime": 3.150625,
+                "originalSize": 180313
+              },
+              "zstandard": {
+                "compressionRatio": 0.21689506580224388,
+                "compressedSize": 39109,
+                "compressionTime": 0.75925,
+                "originalSize": 180313
+              }
+            },
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "performance": {
+              "avgDeserializationTime": 24,
+              "avgCompressionTime": 39,
+              "totalIterations": 1,
+              "avgSerializationTime": 12
+            },
+            "payloadSize": "medium",
+            "userCount": 100,
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "kryo": {
+      "name": "Kryo",
+      "description": "Binary serialization",
+      "port": 8084,
+      "endpoints": {
+        "Serialization": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "formats": {
+              "kryo_optimized": {
+                "size": 73528,
+                "serializationTime": 2.518458
+              },
+              "kryo_standard": {
+                "size": 48501,
+                "serializationTime": 7.288958
+              }
+            },
+            "userCount": 10,
+            "iterations": 1
+          }
+        },
+        "Compression": {
+          "success": true,
+          "data": {
+            "complexity": "SMALL",
+            "userCount": 10,
+            "compression": {
+              "kryo": {
+                "compressionRatio": 1.0,
+                "compressedSize": 45756,
+                "compressionTime": 0.0,
+                "originalSize": 45756
+              }
+            },
+            "iterations": 1
+          }
+        },
+        "Performance": {
+          "success": true,
+          "data": {
+            "performance": {
+              "error": "Deserialization failed - no users deserialized"
+            },
+            "payloadSize": "SMALL",
+            "userCount": 10,
+            "iterations": 1
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 3,
+        "successful_tests": 3,
+        "success_rate": 100.0
+      }
+    },
+    "fury": {
+      "name": "Apache Fury",
+      "description": "High-performance serialization",
+      "port": 8085,
+      "endpoints": {
+        "Benchmark": {
+          "success": true,
+          "data": {
+            "timestamp": "2025-07-24T17:21:17.032+00:00",
+            "status": 404,
+            "error": "Not Found",
+            "path": "/api/fory/benchmark"
+          }
+        }
+      },
+      "summary": {
+        "total_tests": 1,
+        "successful_tests": 1,
+        "success_rate": 100.0
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 7,
+    "successful_tests": 7,
+    "success_rate": 100.0
+  }
+}

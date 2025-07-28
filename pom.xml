@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.techishthoughts</groupId>
+    <artifactId>compression-java-strategy</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>Java Serialization and Compression Strategy Benchmark</name>
+    <description>Comprehensive benchmark suite for evaluating Java serialization frameworks and compression algorithms with security best practices</description>
+    <url>https://github.com/techishthoughts-org/compression-java-strategy</url>
+
+    <organization>
+        <name>Tech.ish Thoughts</name>
+        <url>https://www.techishthoughts.com/</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Tech.ish Thoughts Team</name>
+            <organization>Tech.ish Thoughts</organization>
+            <url>https://github.com/techishthoughts-org</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/techishthoughts-org/compression-java-strategy.git</connection>
+        <developerConnection>scm:git:ssh://github.com:techishthoughts-org/compression-java-strategy.git</developerConnection>
+        <url>https://github.com/techishthoughts-org/compression-java-strategy</url>
+    </scm>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>3.2.0</spring.boot.version>
+        <jackson.version>2.16.0</jackson.version>
+        <protobuf.version>4.29.3</protobuf.version>
+        <avro.version>1.11.3</avro.version>
+        <thrift.version>0.19.0</thrift.version>
+        <kryo.version>5.3.0</kryo.version>
+        <fury.version>0.10.3</fury.version>
+        <jmh.version>1.37</jmh.version>
+        <confluent.version>7.4.0</confluent.version>
+
+        <!-- 2025 New Framework Versions -->
+        <flatbuffers.version>25.2.10</flatbuffers.version>
+        <capnproto.version>0.1.0</capnproto.version>
+        <msgpack.version>0.9.8</msgpack.version>
+        <bson.version>4.11.1</bson.version>
+        <fst.version>2.57</fst.version>
+        <hessian.version>4.0.66</hessian.version>
+        <grpc.version>1.60.0</grpc.version>
+        <lz4.version>1.8.0</lz4.version>
+        <snappy.version>1.1.10.5</snappy.version>
+        <lzma.version>1.9</lzma.version>
+        <bzip2.version>1.0.1</bzip2.version>
+        <arrow.version>14.0.2</arrow.version>
+        <parquet.version>1.13.1</parquet.version>
+        <iceberg.version>1.4.2</iceberg.version>
+        <delta.version>3.0.0</delta.version>
+
+        <!-- HTTP/3 Support -->
+        <http3.version>0.0.1.Final</http3.version>
+        <quic.version>0.0.1.Final</quic.version>
+    </properties>
+
+    <modules>
+        <module>common-payload</module>
+        <module>jackson-poc</module>
+        <module>kryo-poc</module>
+        <module>avro-poc</module>
+        <module>protobuf-poc</module>
+        <module>msgpack-poc</module>
+        <module>hessian-poc</module>
+        <module>thrift-poc</module>
+        <module>fst-poc</module>
+        <module>grpc-poc</module>
+        <module>capnproto-poc</module>
+        <module>flatbuffers-poc</module>
+        <module>fory-poc</module>
+        <module>compression-benchmark</module>
+        <module>jmh-benchmark</module>
+
+        <!-- 2025 Modern Serialization Frameworks -->
+        <module>chronicle-wire-poc</module>
+        <module>messagepack-enhanced-poc</module>
+        <module>fst-enhanced-poc</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>confluent</id>
+            <name>Confluent Repository</name>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- JMH for benchmarking -->
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
+
+            <!-- Serialization frameworks -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.thrift</groupId>
+                <artifactId>libthrift</artifactId>
+                <version>${thrift.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.fury</groupId>
+                <artifactId>fury-core</artifactId>
+                <version>${fury.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.fury</groupId>
+                <artifactId>fury-native</artifactId>
+                <version>${fury.version}</version>
+            </dependency>
+            <!-- Kryo serializers - optional dependency, not available in Maven Central -->
+            <!-- <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo-serializers</artifactId>
+                <version>0.45</version>
+            </dependency> -->
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-avro-serializer</artifactId>
+                <version>${confluent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-client</artifactId>
+                <version>${confluent.version}</version>
+            </dependency>
+
+            <!-- Compression libraries -->
+            <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>1.5.5-6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.brotli</groupId>
+                <artifactId>dec</artifactId>
+                <version>0.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aayushatharva.brotli4j</groupId>
+                <artifactId>brotli4j</artifactId>
+                <version>1.12.0</version>
+            </dependency>
+
+            <!-- Binary formats -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- HTTP/3 Support -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http3</artifactId>
+                <version>${http3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-quic</artifactId>
+                <version>${quic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler</artifactId>
+                <version>4.1.100.Final</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.msgpack</groupId>
+                <artifactId>jackson-dataformat-msgpack</artifactId>
+                <version>0.9.5</version>
+            </dependency>
+
+            <!-- 2025 Modern Binary Formats -->
+            <dependency>
+                <groupId>com.google.flatbuffers</groupId>
+                <artifactId>flatbuffers-java</artifactId>
+                <version>${flatbuffers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.capnproto</groupId>
+                <artifactId>runtime</artifactId>
+                <version>${capnproto.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.msgpack</groupId>
+                <artifactId>msgpack-core</artifactId>
+                <version>${msgpack.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>bson</artifactId>
+                <version>${bson.version}</version>
+            </dependency>
+
+            <!-- Database-Optimized -->
+            <dependency>
+                <groupId>de.ruedigermoeller</groupId>
+                <artifactId>fst</artifactId>
+                <version>${fst.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
+            </dependency>
+
+            <!-- Cloud-Native & Microservices -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+
+            <!-- Modern Compression Algorithms -->
+            <dependency>
+                <groupId>org.lz4</groupId>
+                <artifactId>lz4-java</artifactId>
+                <version>${lz4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.tukaani</groupId>
+                <artifactId>xz</artifactId>
+                <version>${lzma.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.24.0</version>
+            </dependency>
+
+            <!-- Emerging 2025 Technologies -->
+            <dependency>
+                <groupId>org.apache.arrow</groupId>
+                <artifactId>arrow-memory-core</artifactId>
+                <version>${arrow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.arrow</groupId>
+                <artifactId>arrow-vector</artifactId>
+                <version>${arrow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-common</artifactId>
+                <version>${parquet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-encoding</artifactId>
+                <version>${parquet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.iceberg</groupId>
+                <artifactId>iceberg-core</artifactId>
+                <version>${iceberg.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.delta</groupId>
+                <artifactId>delta-core_2.12</artifactId>
+                <version>${delta.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <source>21</source>
+                        <target>21</target>
+                        <compilerArgs>
+                            <arg>--enable-preview</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

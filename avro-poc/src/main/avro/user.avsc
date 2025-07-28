@@ -1,0 +1,23 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "User",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "username", "type": "string"},
+    {"name": "email", "type": "string"},
+    {"name": "firstName", "type": "string"},
+    {"name": "lastName", "type": "string"},
+    {"name": "profile", "type": ["null", "UserProfile"], "default": null},
+    {"name": "addresses", "type": {"type": "array", "items": "Address"}},
+    {"name": "orders", "type": {"type": "array", "items": "Order"}},
+    {"name": "preferences", "type": {"type": "map", "values": "string"}},
+    {"name": "metadata", "type": {"type": "map", "values": "string"}},
+    {"name": "tags", "type": {"type": "array", "items": "string"}},
+    {"name": "createdAt", "type": ["null", "long"], "default": null},
+    {"name": "lastLoginAt", "type": ["null", "long"], "default": null},
+    {"name": "isActive", "type": "boolean"},
+    {"name": "loyaltyPoints", "type": "double"},
+    {"name": "socialConnections", "type": {"type": "array", "items": "SocialConnection"}}
+  ]
+}

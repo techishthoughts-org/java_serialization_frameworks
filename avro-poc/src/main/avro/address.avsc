@@ -1,0 +1,18 @@
+{
+  "namespace": "com.example.avro.model",
+  "type": "record",
+  "name": "Address",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "type", "type": {"type": "enum", "name": "AddressType", "symbols": ["HOME", "WORK", "BILLING", "SHIPPING", "OTHER"]}},
+    {"name": "street1", "type": "string"},
+    {"name": "street2", "type": ["null", "string"], "default": null},
+    {"name": "city", "type": "string"},
+    {"name": "state", "type": "string"},
+    {"name": "postalCode", "type": "string"},
+    {"name": "country", "type": "string"},
+    {"name": "latitude", "type": "double"},
+    {"name": "longitude", "type": "double"},
+    {"name": "isDefault", "type": "boolean"}
+  ]
+}

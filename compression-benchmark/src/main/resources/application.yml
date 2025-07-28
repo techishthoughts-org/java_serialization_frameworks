@@ -1,0 +1,49 @@
+server:
+  port: 8086
+  http2:
+    enabled: true
+  http3:
+    enabled: true
+    port: 8446
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${KEYSTORE_PASSWORD:changeit}
+    key-store-type: PKCS12
+    protocols: TLSv1.3
+    ciphers:
+      - TLS_AES_256_GCM_SHA384
+      - TLS_CHACHA20_POLY1305_SHA256
+    alpn:
+      enabled: true
+      protocols: h3, h2, http/1.1
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+      - application/octet-stream
+    min-response-size: 1024
+    http2:
+      enabled: true
+    http3:
+      enabled: true
+
+spring:
+  application:
+    name: compression-benchmark
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.example.compression: DEBUG
+    org.apache.commons.compress: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

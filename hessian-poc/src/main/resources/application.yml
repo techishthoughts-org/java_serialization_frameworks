@@ -1,0 +1,39 @@
+server:
+  port: 8089
+  http2:
+    enabled: false
+  http3:
+    enabled: false
+  ssl:
+    enabled: false
+  compression:
+    enabled: true
+    mime-types:
+      - application/octet-stream
+      - application/json
+    min-response-size: 1024
+    http2:
+      enabled: true
+    http3:
+      enabled: true
+
+spring:
+  application:
+    name: hessian-poc
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.techishthoughts.hessian: DEBUG
+    org.springframework.web: INFO
+    com.caucho.hessian: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
