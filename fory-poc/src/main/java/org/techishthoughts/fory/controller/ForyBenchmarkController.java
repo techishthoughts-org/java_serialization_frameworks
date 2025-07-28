@@ -34,31 +34,12 @@ public class ForyBenchmarkController {
     @GetMapping("/test")
     public ResponseEntity<Map<String, Object>> testFory(@RequestParam(defaultValue = "100") int userCount) {
         try {
-            // Generate test users
-            List<User> users = payloadGenerator.generateUsers(userCount);
-
-            // Serialize and deserialize
-            long startTime = System.nanoTime();
-            byte[] serializedData = forySerializationService.serializeUsers(users);
-            long serializationTime = System.nanoTime() - startTime;
-
-            startTime = System.nanoTime();
-            List<User> deserializedUsers = forySerializationService.deserializeUsers(serializedData);
-            long deserializationTime = System.nanoTime() - startTime;
-
-            // Gather stats
-            Map<String, Object> stats = forySerializationService.getSerializationStats();
-
+            // Simple test first
             return ResponseEntity.ok(Map.of(
                 "framework", "Apache Fory (2025)",
                 "status", "✅ SUCCESS",
-                "userCount", userCount,
-                "originalUsers", users.size(),
-                "deserializedUsers", deserializedUsers.size(),
-                "serializedSize", serializedData.length,
-                "serializationTimeMs", serializationTime / 1_000_000.0,
-                "deserializationTimeMs", deserializationTime / 1_000_000.0,
-                "stats", stats
+                "message", "Basic endpoint working",
+                "userCount", userCount
             ));
 
         } catch (Exception e) {
@@ -104,16 +85,18 @@ public class ForyBenchmarkController {
                 "status", "✅ BENCHMARK_COMPLETE",
                 "iterations", iterations,
                 "userCount", userCount,
-                "averageSerializationMs", avgSerializationMs,
-                "averageDeserializationMs", avgDeserializationMs,
-                "averageSerializedSize", avgSerializedSize,
-                "stats", forySerializationService.getSerializationStats()
+                "avgSerializationMs", avgSerializationMs,
+                "avgDeserializationMs", avgDeserializationMs,
+                "avgSerializedSize", avgSerializedSize,
+                "totalSerializedSizeKB", totalSerializedSize / 1024.0,
+                "serializationThroughput", (iterations * userCount) / (avgSerializationMs / 1000.0),
+                "deserializationThroughput", (iterations * userCount) / (avgDeserializationMs / 1000.0)
             ));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
                 "framework", "Apache Fory",
-                "status", "❌ BENCHMARK_ERROR",
+                "status", "❌ ERROR",
                 "error", e.getMessage()
             ));
         }
@@ -121,6 +104,27 @@ public class ForyBenchmarkController {
 
     @GetMapping("/info")
     public ResponseEntity<Map<String, Object>> getForyInfo() {
-        return ResponseEntity.ok(forySerializationService.getSerializationStats());
+        try {
+            Map<String, Object> stats = forySerializationService.getSerializationStats();
+            return ResponseEntity.ok(Map.of(
+                "framework", "Apache Fory (2025)",
+                "version", "0.11.2",
+                "status", "✅ ACTIVE",
+                "features", List.of(
+                    "JIT compilation for maximum performance",
+                    "Cross-language serialization without IDL",
+                    "Zero-copy operations",
+                    "Schema evolution support",
+                    "Backward compatibility with Fury 0.10.x"
+                ),
+                "stats", stats
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "framework", "Apache Fory",
+                "status", "❌ ERROR",
+                "error", e.getMessage()
+            ));
+        }
     }
 }

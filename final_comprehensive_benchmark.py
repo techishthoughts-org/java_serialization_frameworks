@@ -44,9 +44,8 @@ FRAMEWORKS = {
         'port': 8084,
         'name': 'Kryo',
         'endpoints': {
-            'serialization': '/api/kryo/benchmark/serialization',
-            'compression': '/api/kryo/benchmark/compression',
-            'performance': '/api/kryo/benchmark/performance'
+            'test': '/api/kryo/test-kryo-debug',
+            'benchmark': '/api/kryo/benchmark'
         }
     },
     'fory': {
@@ -180,9 +179,15 @@ class ComprehensiveBenchmark:
                 'iterations': scenario['iterations']
             }
             method = 'POST'
-        else:  # test or benchmark endpoints
-            payload = {'test': 'data'}
-            method = 'POST' if endpoint_name == 'benchmark' else 'GET'
+        elif endpoint_name == 'benchmark':
+            payload = {
+                'iterations': scenario['iterations'],
+                'userCount': scenario.get('userCount', 100)
+            }
+            method = 'POST'
+        else:  # test endpoints
+            payload = None
+            method = 'GET'
 
         try:
             start_time = time.time()
