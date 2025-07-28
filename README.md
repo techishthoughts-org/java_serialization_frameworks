@@ -32,6 +32,7 @@ This project provides a comprehensive evaluation platform for Java serialization
 - 📱 **RESTful APIs** - Standardized endpoints for all frameworks
 - 🏗️ **Microservices Architecture** - Independent, scalable services
 - 🐳 **Docker Ready** - Containerized deployment support
+- 🧹 **Optimized Structure** - Clean, streamlined project with only essential frameworks
 
 ## 🛠️ Supported Frameworks
 
@@ -81,7 +82,17 @@ pip install requests matplotlib seaborn pandas numpy
 ./run_complete_benchmark.sh
 ```
 
-### 4. Generate Plots
+### 4. Monitor Progress
+
+```bash
+# Monitor benchmark progress
+tail -f benchmark_run_clean.log
+
+# Check current status
+ps aux | grep run_complete_benchmark
+```
+
+### 5. Generate Plots
 
 ```bash
 # Generate visualizations from results
@@ -120,27 +131,40 @@ python generate_benchmark_plots.py
 
 ```
 java_serialization_frameworks/
-├── README.md                                    # This file
-├── pom.xml                                     # Root Maven configuration
-├── common-payload/                             # Shared data models
-├── jackson-poc/                                # Jackson JSON (8081)
-├── protobuf-poc/                              # Protocol Buffers (8082)
-├── avro-poc/                                  # Apache Avro (8083)
-├── kryo-poc/                                  # Kryo (8084)
-├── fory-poc/                                  # Apache Fory (8085)
-├── msgpack-poc/                               # MessagePack (8086)
-├── thrift-poc/                                # Apache Thrift (8087)
-├── capnproto-poc/                             # Cap'n Proto (8088)
-├── hessian-poc/                               # Hessian (8089)
-├── fst-poc/                                   # FST (8090)
-├── flatbuffers-poc/                           # FlatBuffers (8091)
-├── grpc-poc/                                  # gRPC (8092)
-├── start_all_frameworks_comprehensive.py      # Framework launcher
-├── final_comprehensive_benchmark.py           # Benchmark suite
-├── generate_benchmark_plots.py                # Plot generator
-├── run_complete_benchmark.sh                  # Complete automation
-└── requirements.txt                           # Python dependencies
+├── 📖 README.md                                    # Complete documentation
+├── 🔧 pom.xml                                     # Root Maven configuration (cleaned)
+├── 📦 common-payload/                             # Shared data models & generators
+├── 🚀 jackson-poc/                                # Jackson JSON (8081)
+├── ⚡ protobuf-poc/                               # Protocol Buffers (8082)
+├── 📊 avro-poc/                                   # Apache Avro (8083)
+├── 🚀 kryo-poc/                                   # Kryo (8084)
+├── ⚡ fory-poc/                                    # Apache Fory (8085)
+├── 📦 msgpack-poc/                                # MessagePack (8086)
+├── 🔗 thrift-poc/                                 # Apache Thrift (8087)
+├── ⚡ capnproto-poc/                              # Cap'n Proto (8088)
+├── 🔧 hessian-poc/                                # Hessian (8089)
+├── 🚀 fst-poc/                                    # FST (8090)
+├── ⚡ flatbuffers-poc/                            # FlatBuffers (8091)
+├── 🔗 grpc-poc/                                   # gRPC (8092)
+├── 🚀 start_all_frameworks_comprehensive.py      # Framework launcher
+├── 📊 final_comprehensive_benchmark.py           # Benchmark suite
+├── 📈 generate_benchmark_plots.py                # Plot generator
+├── 🎯 run_complete_benchmark.sh                  # One-command automation
+├── 📦 requirements.txt                           # Python dependencies
+├── 📊 final_comprehensive_benchmark_*.json      # Benchmark results
+├── 🖼️ *.png                                      # Generated plots
+└── 📝 benchmark_run_clean.log                   # Current benchmark log
 ```
+
+### 🧹 Clean Architecture
+
+This project has been **streamlined** to include only the **essential 12 frameworks**:
+
+- ✅ **12 Active Frameworks** - All production-ready
+- ✅ **1 Shared Dependency** - common-payload for shared models
+- ✅ **Clean Maven Structure** - No unused modules
+- ✅ **Optimized Build** - Faster compilation and deployment
+- ✅ **Background Benchmark** - Automated testing suite
 
 ## 📊 Benchmarking
 
@@ -366,6 +390,13 @@ curl http://localhost:8081/actuator/health
 
 ## 🛠️ Management Commands
 
+### 🚀 Quick Start (Recommended)
+
+```bash
+# One command does everything!
+./run_complete_benchmark.sh
+```
+
 ### Start Individual Frameworks
 
 ```bash
@@ -377,6 +408,16 @@ mvn spring-boot:run -pl jackson-poc -Dspring-boot.run.arguments=--server.port=81
 
 # Start with profile
 mvn spring-boot:run -pl jackson-poc -Dspring-boot.run.arguments=--spring.profiles.active=prod
+```
+
+### 🎯 Start All Frameworks
+
+```bash
+# Start all 12 frameworks simultaneously
+python start_all_frameworks_comprehensive.py
+
+# Monitor framework status
+tail -f benchmark_run_clean.log
 ```
 
 ### Docker Deployment
@@ -423,7 +464,7 @@ For FST framework on Java 21, add JVM arguments:
 
 ```bash
 export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED"
-mvn spring-boot:run -pl fst-enhanced-poc
+mvn spring-boot:run -pl fst-poc
 ```
 
 #### Memory Issues
@@ -609,6 +650,15 @@ We welcome contributions! Please see our contributing guidelines:
 4. Update documentation
 5. Add Docker configuration
 
+### 🧹 Project Cleanup
+
+This project has been **optimized** by removing unused modules:
+
+- ❌ **Removed**: benchmark-comparison, chronicle-wire-poc, compression-benchmark
+- ❌ **Removed**: fst-enhanced-poc, jmh-benchmark, messagepack-enhanced-poc
+- ✅ **Kept**: 12 essential frameworks + common-payload
+- ✅ **Result**: Faster builds, cleaner structure, easier maintenance
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -630,4 +680,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ for the Java community**
 
-*Last updated: July 2025*
+*Last updated: July 2025 - Project cleaned and optimized*
