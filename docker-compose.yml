@@ -87,25 +87,7 @@ services:
     networks:
       - serialization-network
 
-  # Apache Fory POC Service
-  fory-poc:
-    build:
-      context: ./fory-poc
-      dockerfile: Dockerfile
-    ports:
-      - "8085:8085"
-      - "8445:8445"  # SSL port
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - serialization-network
+
 
   # MessagePack POC Service
   msgpack-poc:
@@ -167,25 +149,7 @@ services:
     networks:
       - serialization-network
 
-  # Hessian POC Service
-  hessian-poc:
-    build:
-      context: ./hessian-poc
-      dockerfile: Dockerfile
-    ports:
-      - "8089:8089"
-      - "8449:8449"  # SSL port
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - serialization-network
+
 
   # FST POC Service
   fst-poc:

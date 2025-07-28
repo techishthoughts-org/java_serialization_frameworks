@@ -48,14 +48,7 @@ FRAMEWORKS = {
             'benchmark': '/api/kryo/benchmark'
         }
     },
-    'fory': {
-        'port': 8085,
-        'name': 'Apache Fory (Fixed)',
-        'endpoints': {
-            'test': '/api/fory/test',
-            'benchmark': '/api/fory/benchmark'
-        }
-    },
+
     'msgpack': {
         'port': 8086,
         'name': 'MessagePack',
@@ -83,14 +76,7 @@ FRAMEWORKS = {
             'performance': '/api/capnproto/benchmark/performance'
         }
     },
-    'hessian': {
-        'port': 8089,
-        'name': 'Hessian (Fixed)',
-        'endpoints': {
-            'test': '/api/hessian/test',
-            'benchmark': '/api/hessian/benchmark'
-        }
-    },
+
     'fst': {
         'port': 8090,
         'name': 'FST (Fast Serialization)',

@@ -427,13 +427,13 @@ tail -f benchmark_run_clean.log
 
 ```bash
 # Build all Docker images
-for project in jackson-poc protobuf-poc avro-poc kryo-poc fory-poc msgpack-poc thrift-poc capnproto-poc hessian-poc fst-poc flatbuffers-poc grpc-poc; do
+for project in jackson-poc protobuf-poc avro-poc kryo-poc msgpack-poc thrift-poc capnproto-poc fst-poc flatbuffers-poc grpc-poc; do
   cd $project
   mvn spring-boot:build-image
   cd ..
 done
 
-# Run with Docker Compose (all 12 frameworks)
+# Run with Docker Compose (all 10 frameworks)
 docker-compose up -d
 ```
 
@@ -580,16 +580,14 @@ volumes:
 #### **6. SSL Testing Commands**
 
 ```bash
-# Test HTTPS endpoints (all 12 frameworks)
+# Test HTTPS endpoints (all 10 frameworks)
 curl -k https://localhost:8441/actuator/health  # Jackson
 curl -k https://localhost:8442/actuator/health  # Protobuf
 curl -k https://localhost:8443/actuator/health  # Avro
 curl -k https://localhost:8444/actuator/health  # Kryo
-curl -k https://localhost:8445/actuator/health  # Fory
 curl -k https://localhost:8446/actuator/health  # MessagePack
 curl -k https://localhost:8447/actuator/health  # Cap'n Proto
 curl -k https://localhost:8448/actuator/health  # Thrift
-curl -k https://localhost:8449/actuator/health  # Hessian
 curl -k https://localhost:8450/actuator/health  # FST
 curl -k https://localhost:8451/actuator/health  # FlatBuffers
 curl -k https://localhost:8452/actuator/health  # gRPC

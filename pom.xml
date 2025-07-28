@@ -75,13 +75,11 @@
         <module>avro-poc</module>
         <module>protobuf-poc</module>
         <module>msgpack-poc</module>
-        <module>hessian-poc</module>
         <module>thrift-poc</module>
         <module>fst-poc</module>
         <module>grpc-poc</module>
         <module>capnproto-poc</module>
         <module>flatbuffers-poc</module>
-        <module>fory-poc</module>
     </modules>
 
     <repositories>
