@@ -238,31 +238,31 @@ curl http://localhost:8081/actuator/health
 
 ### 🏆 Performance Rankings
 
-![Performance Rankings](benchmark_plots_20250728_094939/performance_ranking.png)
+![Performance Rankings](performance_ranking.png)
 
 *Framework performance ranking by response time with success rate indicators*
 
 ### 📈 Success Rate Comparison
 
-![Success Rate Comparison](benchmark_plots_20250728_094939/success_rate_comparison.png)
+![Success Rate Comparison](success_rate_comparison.png)
 
 *Side-by-side comparison of success rates and response times*
 
 ### 📋 Scenario Analysis
 
-![Scenario Analysis](benchmark_plots_20250728_094939/scenario_analysis.png)
+![Scenario Analysis](scenario_analysis.png)
 
 *Performance analysis across different payload sizes*
 
 ### 🎯 Comprehensive Summary
 
-![Comprehensive Summary](benchmark_plots_20250728_094939/comprehensive_summary.png)
+![Comprehensive Summary](comprehensive_summary.png)
 
 *Bubble chart showing performance vs success rate with test volume*
 
 ### 🔥 Performance Heatmap
 
-![Performance Heatmap](benchmark_plots_20250728_094939/performance_heatmap.png)
+![Performance Heatmap](performance_heatmap.png)
 
 *Heatmap showing success rates across frameworks and scenarios*
 

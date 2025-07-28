@@ -36,3 +36,14 @@ Thumbs.db
 # Benchmark results
 final_comprehensive_benchmark_*.json
 benchmark_plots_*/
+
+# Old benchmark files
+*.log
+all_frameworks_benchmark_*.json
+comprehensive_benchmark_results_*.json
+comprehensive_frameworks_test_*.json
+simple_benchmark_results_*.json
+test_all_frameworks_*.json
+updated_simple_benchmark_*.json
+working_frameworks_benchmark_*.json
+production_validation_*.json
