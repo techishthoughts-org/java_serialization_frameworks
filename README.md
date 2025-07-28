@@ -45,11 +45,9 @@ This project provides a comprehensive evaluation platform for Java serialization
 | **Protocol Buffers** | 8082 | ✅ Production | Cross-language, gRPC | Very High |
 | **Apache Avro** | 8083 | ✅ Production | Schema Evolution, Kafka | High |
 | **Kryo** | 8084 | ✅ Production | Java-only, High Performance | Very High |
-
 | **MessagePack** | 8086 | ✅ Production | Compact Binary Format | High |
 | **Apache Thrift** | 8087 | ✅ Production | Cross-language RPC | High |
 | **Cap'n Proto** | 8088 | ✅ Production | Zero-copy, High Performance | Very High |
-
 | **FST** | 8090 | ✅ Production | Java Fast Serialization | Very High |
 | **FlatBuffers** | 8091 | ✅ Production | Game Development, IoT | Ultra High |
 | **gRPC** | 8092 | ✅ Production | Microservices, HTTP/2 | Very High |
