@@ -9,13 +9,12 @@ services:
     ports:
       - "8081:8081"
       - "8441:8441"  # SSL port
-      - "9441:9441"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8441/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -30,14 +29,13 @@ services:
     ports:
       - "8082:8082"
       - "8442:8442"  # SSL port
-      - "9442:9442"  # HTTP/3 port
       - "9090:9090"  # gRPC port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
       - JVM_OPTS=-Xmx2g -Xms1g
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8442/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -52,23 +50,20 @@ services:
     ports:
       - "8083:8083"
       - "8443:8443"  # SSL port
-      - "9443:9443"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     depends_on:
       - kafka
       - schema-registry
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8443/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
       - serialization-network
-
-
 
   # Kryo POC Service
   kryo-poc:
@@ -78,15 +73,14 @@ services:
     ports:
       - "8084:8084"
       - "8444:8444"  # SSL port
-      - "9444:9444"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     depends_on:
       - redis
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8444/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -101,13 +95,32 @@ services:
     ports:
       - "8085:8085"
       - "8445:8445"  # SSL port
-      - "9445:9445"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8445/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # MessagePack POC Service
+  msgpack-poc:
+    build:
+      context: ./msgpack-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+      - "8446:8446"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -122,13 +135,12 @@ services:
     ports:
       - "8087:8087"
       - "8447:8447"  # SSL port
-      - "9447:9447"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8447/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8087/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -143,13 +155,12 @@ services:
     ports:
       - "8088:8088"
       - "8448:8448"  # SSL port
-      - "9448:9448"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8448/actuator/health", "--insecure"]
+      test: ["CMD", "curl", "-f", "http://localhost:8088/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -164,71 +175,12 @@ services:
     ports:
       - "8089:8089"
       - "8449:8449"  # SSL port
-      - "9449:9449"  # HTTP/3 port
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8449/actuator/health", "--insecure"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - serialization-network
-
-  # Compression Benchmark Service
-  compression-benchmark:
-    build:
-      context: ./compression-benchmark
-      dockerfile: Dockerfile
-    ports:
-      - "8086:8086"
-      - "8446:8446"  # SSL port
-      - "9446:9446"  # HTTP/3 port
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - KEYSTORE_PASSWORD=changeit
-      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
-    healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:8446/actuator/health", "--insecure"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - serialization-network
-
-  # Benchmark Comparison Service
-  benchmark-comparison:
-    build:
-      context: ./benchmark-comparison
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"  # Main benchmark dashboard
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - JVM_OPTS=-Xmx6g -Xms3g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
-      - JACKSON_SERVICE_URL=http://jackson-poc:8081
-      - PROTOBUF_SERVICE_URL=http://protobuf-poc:8082
-      - AVRO_SERVICE_URL=http://avro-poc:8083
-      - KRYO_SERVICE_URL=http://kryo-poc:8084
-      - FORY_SERVICE_URL=http://fory-poc:8085
-      - CAPNPROTO_SERVICE_URL=http://capnproto-poc:8087
-      - THRIFT_SERVICE_URL=http://thrift-poc:8088
-      - HESSIAN_SERVICE_URL=http://hessian-poc:8089
-      - COMPRESSION_SERVICE_URL=http://compression-benchmark:8086
-    depends_on:
-      - jackson-poc
-      - protobuf-poc
-      - avro-poc
-      - kryo-poc
-      - fory-poc
-      - capnproto-poc
-      - thrift-poc
-      - hessian-poc
-      - compression-benchmark
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3

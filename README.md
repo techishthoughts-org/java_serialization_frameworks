@@ -17,6 +17,8 @@ A comprehensive benchmarking suite for evaluating 12 modern Java serialization f
 - [Results](#results)
 - [Framework Details](#framework-details)
 - [JVM Configuration & Optimization](#jvm-configuration--optimization)
+- [Docker Deployment](#docker-deployment)
+- [SSL Certificate Generation](#ssl-certificate-generation)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
@@ -425,7 +427,7 @@ tail -f benchmark_run_clean.log
 
 ```bash
 # Build all Docker images
-for project in jackson-poc protobuf-poc avro-poc kryo-poc fory-poc msgpack-poc thrift-poc capnproto-poc hessian-poc fst-poc flatbuffers-poc grpc-poc; do
+for project in jackson-poc protobuf-poc avro-poc kryo-poc fory-poc msgpack-poc thrift-poc capnproto-poc hessian-poc; do
   cd $project
   mvn spring-boot:build-image
   cd ..
@@ -433,6 +435,178 @@ done
 
 # Run with Docker Compose
 docker-compose up -d
+```
+
+### 🔐 SSL Certificate Generation
+
+This project supports SSL/TLS encryption for secure communication. Here's how to generate and configure SSL certificates:
+
+#### **1. Generate Self-Signed Certificate (Development)**
+
+```bash
+# Create certificates directory
+mkdir -p ssl-certificates
+cd ssl-certificates
+
+# Generate self-signed certificate for development
+keytool -genkeypair \
+  -alias serialization-benchmark \
+  -keyalg RSA \
+  -keysize 2048 \
+  -validity 365 \
+  -keystore keystore.p12 \
+  -storetype PKCS12 \
+  -storepass changeit \
+  -keypass changeit \
+  -dname "CN=localhost, OU=Development, O=TechishThoughts, L=City, ST=State, C=US"
+
+# Generate certificate for each framework
+for port in 8081 8082 8083 8084 8085 8086 8087 8088 8089; do
+  keytool -genkeypair \
+    -alias framework-${port} \
+    -keyalg RSA \
+    -keysize 2048 \
+    -validity 365 \
+    -keystore keystore-${port}.p12 \
+    -storetype PKCS12 \
+    -storepass changeit \
+    -keypass changeit \
+    -dname "CN=localhost, OU=Development, O=TechishThoughts, L=City, ST=State, C=US"
+done
+
+cd ..
+```
+
+#### **2. Generate Certificate Authority (Production)**
+
+```bash
+# Create CA directory
+mkdir -p ca-certificates
+cd ca-certificates
+
+# Generate CA private key
+openssl genrsa -out ca-private-key.pem 4096
+
+# Generate CA certificate
+openssl req -new -x509 -days 365 -key ca-private-key.pem \
+  -out ca-certificate.pem \
+  -subj "/C=US/ST=State/L=City/O=TechishThoughts/OU=IT/CN=Serialization-CA"
+
+# Generate server private key
+openssl genrsa -out server-private-key.pem 2048
+
+# Generate server certificate signing request
+openssl req -new -key server-private-key.pem \
+  -out server-certificate.csr \
+  -subj "/C=US/ST=State/L=City/O=TechishThoughts/OU=IT/CN=serialization-benchmark.local"
+
+# Sign server certificate with CA
+openssl x509 -req -days 365 -in server-certificate.csr \
+  -CA ca-certificate.pem -CAkey ca-private-key.pem \
+  -CAcreateserial -out server-certificate.pem
+
+# Convert to PKCS12 format for Java
+openssl pkcs12 -export \
+  -in server-certificate.pem \
+  -inkey server-private-key.pem \
+  -out keystore.p12 \
+  -name serialization-benchmark \
+  -passout pass:changeit
+
+cd ..
+```
+
+#### **3. Configure SSL in Application**
+
+Add SSL configuration to `application.yml`:
+
+```yaml
+server:
+  port: 8081
+  ssl:
+    enabled: true
+    key-store: classpath:ssl-certificates/keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: serialization-benchmark
+
+spring:
+  application:
+    name: jackson-poc
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+```
+
+#### **4. SSL Certificate Management**
+
+```bash
+# List certificates in keystore
+keytool -list -keystore ssl-certificates/keystore.p12 -storepass changeit
+
+# Export certificate
+keytool -export -alias serialization-benchmark \
+  -keystore ssl-certificates/keystore.p12 \
+  -storepass changeit \
+  -file ssl-certificates/certificate.crt
+
+# Import certificate to truststore
+keytool -import -alias serialization-benchmark \
+  -file ssl-certificates/certificate.crt \
+  -keystore ssl-certificates/truststore.p12 \
+  -storepass changeit -noprompt
+
+# Verify certificate
+openssl x509 -in ssl-certificates/certificate.crt -text -noout
+```
+
+#### **5. Docker SSL Configuration**
+
+```bash
+# Copy certificates to Docker containers
+docker cp ssl-certificates/keystore.p12 jackson-poc:/app/ssl-certificates/
+
+# Or mount certificates in docker-compose.yml
+volumes:
+  - ./ssl-certificates:/app/ssl-certificates:ro
+```
+
+#### **6. SSL Testing Commands**
+
+```bash
+# Test HTTPS endpoints
+curl -k https://localhost:8441/actuator/health
+curl -k https://localhost:8442/actuator/health
+curl -k https://localhost:8443/actuator/health
+
+# Test with certificate verification
+curl --cacert ssl-certificates/ca-certificate.pem \
+  https://localhost:8441/actuator/health
+
+# Test SSL connection
+openssl s_client -connect localhost:8441 -servername localhost
+```
+
+#### **7. SSL Security Best Practices**
+
+```bash
+# Generate strong password for production
+openssl rand -base64 32 > ssl-certificates/keystore-password.txt
+
+# Set proper permissions
+chmod 600 ssl-certificates/keystore-password.txt
+chmod 600 ssl-certificates/*.pem
+chmod 600 ssl-certificates/*.p12
+
+# Regular certificate renewal
+# Add to crontab for automatic renewal
+0 0 1 * * /path/to/renew-certificates.sh
 ```
 
 ### Health Monitoring
