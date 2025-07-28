@@ -1209,15 +1209,6 @@ We welcome contributions! Please see our contributing guidelines:
 4. Update documentation
 5. Add Docker configuration
 
-### 🧹 Project Cleanup
-
-This project has been **optimized** by removing unused modules:
-
-- ❌ **Removed**: benchmark-comparison, chronicle-wire-poc, compression-benchmark
-- ❌ **Removed**: fst-enhanced-poc, jmh-benchmark, messagepack-enhanced-poc
-- ✅ **Kept**: 12 essential frameworks + common-payload
-- ✅ **Result**: Faster builds, cleaner structure, easier maintenance
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
