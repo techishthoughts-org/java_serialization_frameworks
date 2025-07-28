@@ -82,13 +82,6 @@
         <module>capnproto-poc</module>
         <module>flatbuffers-poc</module>
         <module>fory-poc</module>
-        <module>compression-benchmark</module>
-        <module>jmh-benchmark</module>
-
-        <!-- 2025 Modern Serialization Frameworks -->
-        <module>chronicle-wire-poc</module>
-        <module>messagepack-enhanced-poc</module>
-        <module>fst-enhanced-poc</module>
     </modules>
 
     <repositories>
