@@ -1,0 +1,36 @@
+server:
+  port: 8093
+  ssl:
+    enabled: false
+
+spring:
+  application:
+    name: cbor-serialization-poc
+  profiles:
+    active: default
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.techishthoughts.cbor: DEBUG
+    org.springframework.web: INFO
+    org.springframework.boot: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# CBOR Framework Configuration
+cbor:
+  framework:
+    name: "CBOR (Concise Binary Object Representation)"
+    version: "1.0.0"
+    description: "IETF standard binary format for IoT and constrained environments"
+    port: 8093
+    ssl-port: 8453

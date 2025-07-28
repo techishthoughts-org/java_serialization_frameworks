@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Comprehensive Framework Launcher (2025)
-Starts all 12 serialization frameworks simultaneously for benchmarking
+Starts all 17 serialization frameworks simultaneously for benchmarking
 """
 
 import os
@@ -12,7 +12,7 @@ import time
 
 import requests
 
-# All 12 frameworks with their details
+# All 15 frameworks with their details
 FRAMEWORKS = {
     'jackson': {
         'port': 8081,
@@ -38,12 +38,7 @@ FRAMEWORKS = {
         'module': 'kryo-poc',
         'health_endpoint': '/actuator/health'
     },
-    'fory': {
-        'port': 8085,
-        'name': 'Apache Fory (Fixed)',
-        'module': 'fory-poc',
-        'health_endpoint': '/actuator/health'
-    },
+
     'msgpack': {
         'port': 8086,
         'name': 'MessagePack',
@@ -62,12 +57,7 @@ FRAMEWORKS = {
         'module': 'capnproto-poc',
         'health_endpoint': '/actuator/health'
     },
-    'hessian': {
-        'port': 8089,
-        'name': 'Hessian (Fixed)',
-        'module': 'hessian-poc',
-        'health_endpoint': '/actuator/health'
-    },
+
     'fst': {
         'port': 8090,
         'name': 'FST (Fast Serialization)',
@@ -84,6 +74,36 @@ FRAMEWORKS = {
         'port': 8092,
         'name': 'gRPC',
         'module': 'grpc-poc',
+        'health_endpoint': '/actuator/health'
+    },
+    'cbor': {
+        'port': 8093,
+        'name': 'CBOR',
+        'module': 'cbor-poc',
+        'health_endpoint': '/actuator/health'
+    },
+    'bson': {
+        'port': 8094,
+        'name': 'BSON',
+        'module': 'bson-poc',
+        'health_endpoint': '/actuator/health'
+    },
+    'arrow': {
+        'port': 8095,
+        'name': 'Apache Arrow',
+        'module': 'arrow-poc',
+        'health_endpoint': '/actuator/health'
+    },
+    'sbe': {
+        'port': 8096,
+        'name': 'SBE',
+        'module': 'sbe-poc',
+        'health_endpoint': '/actuator/health'
+    },
+    'parquet': {
+        'port': 8097,
+        'name': 'Apache Parquet',
+        'module': 'parquet-poc',
         'health_endpoint': '/actuator/health'
     }
 }

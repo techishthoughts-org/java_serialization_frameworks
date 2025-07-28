@@ -1,0 +1,36 @@
+server:
+  port: 8096
+  ssl:
+    enabled: false
+
+spring:
+  application:
+    name: sbe-serialization-poc
+  profiles:
+    active: default
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.techishthoughts.sbe: DEBUG
+    org.springframework.web: INFO
+    org.springframework.boot: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# SBE Framework Configuration
+sbe:
+  framework:
+    name: "SBE (Simple Binary Encoding)"
+    version: "1.0.0"
+    description: "Ultra-low latency binary format for financial trading"
+    port: 8096
+    ssl-port: 8456

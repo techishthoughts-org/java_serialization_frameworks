@@ -212,6 +212,106 @@ services:
     networks:
       - serialization-network
 
+  # CBOR POC Service
+  cbor-poc:
+    build:
+      context: ./cbor-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8093:8093"
+      - "8453:8453"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8093/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # BSON POC Service
+  bson-poc:
+    build:
+      context: ./bson-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8094:8094"
+      - "8454:8454"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8094/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # Apache Arrow POC Service
+  arrow-poc:
+    build:
+      context: ./arrow-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8095:8095"
+      - "8455:8455"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8095/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # SBE POC Service
+  sbe-poc:
+    build:
+      context: ./sbe-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8096:8096"
+      - "8456:8456"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=100
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8096/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
+  # Apache Parquet POC Service
+  parquet-poc:
+    build:
+      context: ./parquet-poc
+      dockerfile: Dockerfile
+    ports:
+      - "8097:8097"
+      - "8457:8457"  # SSL port
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYSTORE_PASSWORD=changeit
+      - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8097/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - serialization-network
+
   # Supporting Services
 
   # Redis for Kryo caching demos

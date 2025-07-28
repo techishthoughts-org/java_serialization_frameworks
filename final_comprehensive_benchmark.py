@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Final Comprehensive Serialization Framework Benchmark (2025)
-Tests all 12 frameworks across multiple scenarios with detailed reporting
+Tests all 15 frameworks across multiple scenarios with detailed reporting
 """
 
 import json
@@ -11,7 +11,7 @@ from datetime import datetime
 
 import requests
 
-# All 12 frameworks with their complete endpoint mapping
+# All 15 frameworks with their complete endpoint mapping
 FRAMEWORKS = {
     'jackson': {
         'port': 8081,
@@ -48,7 +48,6 @@ FRAMEWORKS = {
             'benchmark': '/api/kryo/benchmark'
         }
     },
-
     'msgpack': {
         'port': 8086,
         'name': 'MessagePack',
@@ -76,7 +75,6 @@ FRAMEWORKS = {
             'performance': '/api/capnproto/benchmark/performance'
         }
     },
-
     'fst': {
         'port': 8090,
         'name': 'FST (Fast Serialization)',

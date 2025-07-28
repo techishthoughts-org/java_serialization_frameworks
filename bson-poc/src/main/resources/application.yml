@@ -1,0 +1,36 @@
+server:
+  port: 8094
+  ssl:
+    enabled: false
+
+spring:
+  application:
+    name: bson-serialization-poc
+  profiles:
+    active: default
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.techishthoughts.bson: DEBUG
+    org.springframework.web: INFO
+    org.springframework.boot: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# BSON Framework Configuration
+bson:
+  framework:
+    name: "BSON (Binary JSON)"
+    version: "1.0.0"
+    description: "MongoDB's binary format for document databases"
+    port: 8094
+    ssl-port: 8454

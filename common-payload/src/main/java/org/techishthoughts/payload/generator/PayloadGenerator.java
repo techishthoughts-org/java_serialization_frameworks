@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
 import org.techishthoughts.payload.model.Address;
 import org.techishthoughts.payload.model.Address.AddressType;
 import org.techishthoughts.payload.model.Education;
@@ -35,6 +36,7 @@ import org.techishthoughts.payload.model.UserProfile;
  * Generates large, complex payload data for stress-testing serialization frameworks.
  * Creates realistic user data with deep object graphs and collections.
  */
+@Component
 public class PayloadGenerator {
 
     private static final String[] FIRST_NAMES = {

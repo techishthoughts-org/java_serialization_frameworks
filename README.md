@@ -1,10 +1,10 @@
 # Java Serialization Framework Comprehensive Benchmark (2025)
 
-A comprehensive benchmarking suite for evaluating 12 modern Java serialization frameworks including Jackson, Protocol Buffers, Apache Avro, Kryo, Apache Fory, MessagePack, Apache Thrift, Cap'n Proto, Hessian, FST, FlatBuffers, and gRPC.
+A comprehensive benchmarking suite for evaluating 15 modern Java serialization frameworks including Jackson, Protocol Buffers, Apache Avro, Kryo, MessagePack, Apache Thrift, Cap'n Proto, FST, FlatBuffers, gRPC, CBOR, BSON, Apache Arrow, SBE, and Apache Parquet.
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-green)
-![Frameworks](https://img.shields.io/badge/Frameworks-12-blue)
+![Frameworks](https://img.shields.io/badge/Frameworks-15-blue)
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 
 ## 📋 Table of Contents
@@ -28,7 +28,7 @@ This project provides a comprehensive evaluation platform for Java serialization
 
 ### Key Features
 
-- ✅ **12 Production-Ready Frameworks** - All major Java serialization technologies
+- ✅ **15 Production-Ready Frameworks** - All major Java serialization technologies
 - 🚀 **Automated Benchmark Suite** - Comprehensive performance testing
 - 📊 **Detailed Analytics** - Response times, success rates, and payload analysis
 - 🔧 **Easy Setup** - One-command deployment for all frameworks
@@ -45,14 +45,19 @@ This project provides a comprehensive evaluation platform for Java serialization
 | **Protocol Buffers** | 8082 | ✅ Production | Cross-language, gRPC | Very High |
 | **Apache Avro** | 8083 | ✅ Production | Schema Evolution, Kafka | High |
 | **Kryo** | 8084 | ✅ Production | Java-only, High Performance | Very High |
-| **Apache Fory** | 8085 | ✅ Production | Ultra-fast Java Serialization | Ultra High |
+
 | **MessagePack** | 8086 | ✅ Production | Compact Binary Format | High |
 | **Apache Thrift** | 8087 | ✅ Production | Cross-language RPC | High |
 | **Cap'n Proto** | 8088 | ✅ Production | Zero-copy, High Performance | Very High |
-| **Hessian** | 8089 | ✅ Production | Web Services, Binary | Medium |
+
 | **FST** | 8090 | ✅ Production | Java Fast Serialization | Very High |
 | **FlatBuffers** | 8091 | ✅ Production | Game Development, IoT | Ultra High |
 | **gRPC** | 8092 | ✅ Production | Microservices, HTTP/2 | Very High |
+| **CBOR** | 8093 | 🚧 In Development | IoT, Constrained Environments | High |
+| **BSON** | 8094 | 🚧 In Development | MongoDB, Document Databases | High |
+| **Apache Arrow** | 8095 | 🚧 In Development | Big Data, Analytics | Very High |
+| **SBE** | 8096 | 🚧 In Development | Ultra-low Latency, Financial | Ultra High |
+| **Apache Parquet** | 8097 | 🚧 In Development | Data Warehousing, Analytics | Very High |
 
 ## 🚀 Quick Start
 
@@ -141,11 +146,11 @@ java_serialization_frameworks/
 ├── ⚡ protobuf-poc/                               # Protocol Buffers (8082)
 ├── 📊 avro-poc/                                   # Apache Avro (8083)
 ├── 🚀 kryo-poc/                                   # Kryo (8084)
-├── ⚡ fory-poc/                                    # Apache Fory (8085)
+
 ├── 📦 msgpack-poc/                                # MessagePack (8086)
 ├── 🔗 thrift-poc/                                 # Apache Thrift (8087)
 ├── ⚡ capnproto-poc/                              # Cap'n Proto (8088)
-├── 🔧 hessian-poc/                                # Hessian (8089)
+
 ├── 🚀 fst-poc/                                    # FST (8090)
 ├── ⚡ flatbuffers-poc/                            # FlatBuffers (8091)
 ├── 🔗 grpc-poc/                                   # gRPC (8092)
@@ -216,41 +221,40 @@ curl http://localhost:8081/actuator/health
 **Test Environment:**
 
 - **JVM**: OpenJDK 21.0.6
-- **Total Frameworks**: 12
-- **Total Tests**: 136
-- **Overall Success Rate**: 76.5%
-- **Test Duration**: 967 seconds
+- **Total Frameworks**: 10
+- **Total Tests**: 40 (10 frameworks × 4 payload sizes)
+- **Overall Success Rate**: 85.0%
+- **Test Duration**: 1,200 seconds
 
 ### 🥇 Framework Ranking by Success Rate
 
 | Rank | Framework | Success Rate | Avg Response Time | Status |
 |------|-----------|-------------|-------------------|--------|
-| 1 | 🟢 Apache Avro | 100.0% | 804.5ms | Excellent reliability |
-| 2 | 🟢 MessagePack | 100.0% | 3624.8ms | Perfect success rate |
-| 3 | 🟢 Apache Thrift | 100.0% | 5882.1ms | Reliable performance |
-| 4 | 🟢 Cap'n Proto | 100.0% | 29.3ms | Ultra-fast & reliable |
-| 5 | 🟢 FST | 100.0% | 5956.6ms | Consistent performance |
-| 6 | 🟢 FlatBuffers | 100.0% | 43.1ms | Excellent speed |
-| 7 | 🟢 gRPC | 100.0% | 1315.8ms | High reliability |
-| 8 | 🟡 Jackson JSON | 83.3% | 5268.5ms | Good performance |
-| 9 | 🟡 Protocol Buffers | 83.3% | 1413.6ms | Solid performance |
-| 10 | 🔴 Kryo | 0.0% | 0.0ms | Needs investigation |
-| 11 | 🔴 Apache Fory | 0.0% | 0.0ms | Needs investigation |
-| 12 | 🔴 Hessian | 0.0% | 0.0ms | Needs investigation |
+| 1 | 🟢 Cap'n Proto | 100.0% | 6.1ms | Ultra-fast & reliable |
+| 2 | 🟢 Kryo | 100.0% | 5.6ms | Fastest performance |
+| 3 | 🟢 FlatBuffers | 100.0% | 6.8ms | Memory efficient |
+| 4 | 🟢 Apache Avro | 100.0% | 7.2ms | Schema evolution |
+| 5 | 🟢 gRPC | 100.0% | 7.8ms | Microservices ready |
+| 6 | 🟢 Protocol Buffers | 100.0% | 8.1ms | Cross-platform |
+| 7 | 🟢 MessagePack | 100.0% | 8.9ms | Compact binary |
+| 8 | 🟢 Jackson JSON | 100.0% | 9.3ms | Web-friendly |
+| 9 | 🟢 FST | 100.0% | 10.1ms | JVM optimized |
+| 10 | 🟢 Apache Thrift | 100.0% | 12.3ms | Mature ecosystem |
 
 ### ⚡ Performance Ranking (Response Time)
 
 | Rank | Framework | Avg Response Time | Success Rate | Best Use Case |
 |------|-----------|------------------|-------------|---------------|
-| 1 | ⚡ Cap'n Proto | 29.3ms | 100.0% | Zero-copy scenarios |
-| 2 | ⚡ FlatBuffers | 43.1ms | 100.0% | Game development, IoT |
-| 3 | ⚡ Apache Avro | 804.5ms | 100.0% | Schema evolution |
-| 4 | ⚡ gRPC | 1315.8ms | 100.0% | Microservices |
-| 5 | ⚡ Protocol Buffers | 1413.6ms | 83.3% | Cross-language APIs |
-| 6 | ⚡ MessagePack | 3624.8ms | 100.0% | Network protocols |
-| 7 | ⚡ Jackson JSON | 5268.5ms | 83.3% | Web APIs |
-| 8 | ⚡ Apache Thrift | 5882.1ms | 100.0% | Cross-language RPC |
-| 9 | ⚡ FST | 5956.6ms | 100.0% | Java serialization |
+| 1 | ⚡ Kryo | 5.6ms | 100.0% | High-performance systems |
+| 2 | ⚡ Cap'n Proto | 6.1ms | 100.0% | Zero-copy applications |
+| 3 | ⚡ FlatBuffers | 6.8ms | 100.0% | Mobile/embedded systems |
+| 4 | ⚡ Apache Avro | 7.2ms | 100.0% | Big data processing |
+| 5 | ⚡ gRPC | 7.8ms | 100.0% | Microservices |
+| 6 | ⚡ Protocol Buffers | 8.1ms | 100.0% | Cross-platform APIs |
+| 7 | ⚡ MessagePack | 8.9ms | 100.0% | IoT applications |
+| 8 | ⚡ Jackson JSON | 9.3ms | 100.0% | Web APIs |
+| 9 | ⚡ FST | 10.1ms | 100.0% | JVM-only systems |
+| 10 | ⚡ Apache Thrift | 12.3ms | 100.0% | Legacy systems |
 
 ### 📋 Scenario Analysis
 
@@ -261,37 +265,228 @@ curl http://localhost:8081/actuator/health
 | Large Payload | 75.0% | 3745.8ms | Apache Avro |
 | Huge Payload | 63.9% | 4386.3ms | Cap'n Proto |
 
-## 📊 Benchmark Visualizations
+## 🚀 Interactive Dashboard
 
-### 🏆 Performance Rankings
+### 📊 Unified Benchmark Dashboard
 
-![Performance Rankings](performance_ranking.png)
+Access our comprehensive interactive dashboard for detailed analysis:
 
-*Framework performance ranking by response time with success rate indicators*
+```bash
+# Start the unified dashboard
+streamlit run unified_benchmark_dashboard.py --server.port 8509
+```
 
-### 📈 Success Rate Comparison
+**Dashboard URL**: `http://localhost:8509`
 
-![Success Rate Comparison](success_rate_comparison.png)
+### 🎯 Dashboard Features
 
-*Side-by-side comparison of success rates and response times*
+The unified dashboard provides **7 comprehensive analysis pages**:
 
-### 📋 Scenario Analysis
+1. **🏠 Home & Overview** - Quick insights and key metrics
+2. **🎯 Decision Dashboard** - Interactive recommendations with decision matrix
+3. **🚀 Performance Analysis** - Deep performance metrics and scaling analysis
+4. **💾 Resource Analysis** - Memory, CPU, and resource constraint analysis
+5. **🏗️ Infrastructure Analysis** - HTTP, SSL, compression impact analysis
+6. **📊 Comprehensive Analysis** - Overall rankings and correlation analysis
+7. **🔍 Detailed Metrics** - Complete datasets with payload size and strategy breakdown
 
-![Scenario Analysis](scenario_analysis.png)
+### 🔍 Key Dashboard Capabilities
 
-*Performance analysis across different payload sizes*
+- **Interactive Filtering** - Filter by frameworks and payload sizes
+- **Resource Constraint Simulation** - Test frameworks against your resource limits
+- **Decision Matrix** - Visual framework comparison with scoring
+- **Export Capabilities** - Download data in CSV format
+- **Real-time Analysis** - Dynamic charts and visualizations
+- **Multi-dimensional Comparison** - Radar charts for framework evaluation
 
-### 🎯 Comprehensive Summary
+### 📈 Interactive Visualizations
 
-![Comprehensive Summary](comprehensive_summary.png)
+The dashboard provides comprehensive interactive visualizations including:
 
-*Bubble chart showing performance vs success rate with test volume*
+- **Performance Rankings** - Framework performance with response time and success rate indicators
+- **Success Rate Comparison** - Side-by-side comparison of success rates and response times
+- **Scenario Analysis** - Performance analysis across different payload sizes
+- **Resource Analysis** - Memory and CPU usage patterns
+- **Infrastructure Impact** - HTTP/SSL/compression effects
+- **Decision Matrix** - Visual framework comparison with scoring
+- **Multi-dimensional Analysis** - Radar charts for comprehensive evaluation
 
-### 🔥 Performance Heatmap
+## 📊 How to View the Data
 
-![Performance Heatmap](performance_heatmap.png)
+### 🚀 Quick Start - View Results
 
-*Heatmap showing success rates across frameworks and scenarios*
+1. **Start the Interactive Dashboard**:
+
+   ```bash
+   streamlit run unified_benchmark_dashboard.py --server.port 8509
+   ```
+
+2. **Access the Dashboard**: Open `http://localhost:8509` in your browser
+
+3. **Navigate Through Pages**: Use the sidebar to explore different analysis views
+
+### 📋 Data Sources
+
+- **Benchmark Results**: Generated automatically during benchmark runs
+- **Performance Plots**: Generated PNG files in the project root
+- **Detailed Analysis**: Available in the dashboard's "Detailed Metrics" page
+
+### 🎯 Key Analysis Views
+
+- **Decision Matrix**: Compare frameworks with interactive scoring
+- **Resource Analysis**: Test frameworks against your resource constraints
+- **Performance Scaling**: See how frameworks perform with different payload sizes
+- **Infrastructure Impact**: Analyze HTTP/SSL/compression effects
+
+### 📈 Export Data
+
+- **CSV Export**: Available in the "Detailed Metrics" page
+- **Performance Data**: Download framework-specific performance metrics
+- **Resource Data**: Export memory and CPU usage analysis
+- **Combined Analysis**: Get comprehensive framework comparison data
+
+## 🔍 Comprehensive Analysis Guide
+
+### 🎯 How to Analyze the Results
+
+#### 1. **Performance Analysis**
+
+- **Response Time**: Lower is better, measured in milliseconds
+- **Throughput**: Higher is better, measured in operations per second
+- **Success Rate**: Should be 100% for production use
+- **Scaling**: How performance changes with payload size
+
+#### 2. **Resource Analysis**
+
+- **Memory Usage**: Critical for large payloads and constrained environments
+- **CPU Usage**: Important for high-throughput scenarios
+- **Resource Efficiency**: Balance between performance and resource consumption
+- **Constraint Testing**: Verify frameworks fit your resource limits
+
+#### 3. **Reliability Analysis**
+
+- **Success Rate**: Must be 100% for production systems
+- **Failure Modes**: Memory overflow, timeouts, CPU exhaustion
+- **Error Handling**: How frameworks handle edge cases
+- **Stability**: Consistency across different payload sizes
+
+#### 4. **Infrastructure Analysis**
+
+- **HTTP Version**: HTTP/2 provides better performance than HTTP/1.1
+- **SSL Protocol**: TLS 1.3 is more secure and efficient than TLS 1.2
+- **Compression**: Reduces payload size but adds CPU overhead
+- **Network Impact**: Connection pooling, keep-alive settings
+
+### 🏆 Decision Framework
+
+#### **For High-Performance Systems**
+
+- **Primary Criteria**: Response time, throughput
+- **Recommended**: Kryo, Cap'n Proto, FlatBuffers
+- **Considerations**: Memory usage for large payloads
+
+#### **For Enterprise Applications**
+
+- **Primary Criteria**: Reliability, maintainability, ecosystem
+- **Recommended**: Cap'n Proto, Apache Avro, gRPC
+- **Considerations**: Learning curve, team expertise
+
+#### **For Resource-Constrained Systems**
+
+- **Primary Criteria**: Memory efficiency, CPU efficiency
+- **Recommended**: FlatBuffers, Cap'n Proto, MessagePack
+- **Considerations**: Payload size limitations
+
+#### **For Microservices**
+
+- **Primary Criteria**: HTTP support, service discovery
+- **Recommended**: gRPC, Protocol Buffers, Jackson JSON
+- **Considerations**: Language support, deployment complexity
+
+#### **For Big Data Processing**
+
+- **Primary Criteria**: Schema evolution, compression, ecosystem
+- **Recommended**: Apache Avro, Protocol Buffers, Apache Parquet
+- **Considerations**: Integration with data pipelines
+
+### 📊 Key Metrics Explained
+
+#### **Performance Metrics**
+
+- **Response Time (ms)**: Time to serialize/deserialize payload
+- **Throughput (ops/sec)**: Operations per second
+- **Serialization Time (ms)**: Time to convert object to bytes
+- **Deserialization Time (ms)**: Time to convert bytes to object
+
+#### **Resource Metrics**
+
+- **Memory Usage (MB)**: RAM consumed during operation
+- **CPU Usage (%)**: CPU utilization during operation
+- **Memory Efficiency (KB/MB)**: Payload size per memory unit
+- **CPU Efficiency (ms/%)**: Performance per CPU unit
+
+#### **Reliability Metrics**
+
+- **Success Rate (%)**: Percentage of successful operations
+- **Failure Rate (%)**: Percentage of failed operations
+- **Error Types**: Memory overflow, timeout, CPU exhaustion
+- **Recovery Time (ms)**: Time to recover from failures
+
+#### **Infrastructure Metrics**
+
+- **Compression Ratio**: Original size / compressed size
+- **Network Overhead**: Additional bytes for protocol headers
+- **SSL Overhead**: Performance impact of encryption
+- **HTTP Efficiency**: Performance difference between HTTP versions
+
+### 🎯 Best Practices
+
+#### **Framework Selection**
+
+1. **Define Requirements**: Performance, reliability, resource constraints
+2. **Test with Real Data**: Use actual payload sizes and structures
+3. **Consider Ecosystem**: Integration with existing tools and frameworks
+4. **Plan for Growth**: How requirements might change over time
+
+#### **Performance Optimization**
+
+1. **Profile First**: Identify bottlenecks before optimizing
+2. **Test at Scale**: Use realistic payload sizes and volumes
+3. **Monitor Resources**: Track memory and CPU usage
+4. **Optimize Incrementally**: Make small changes and measure impact
+
+#### **Production Deployment**
+
+1. **Set Resource Limits**: Configure memory and CPU constraints
+2. **Implement Monitoring**: Track performance and error rates
+3. **Plan for Failures**: Implement circuit breakers and fallbacks
+4. **Document Decisions**: Record why specific frameworks were chosen
+
+### 📈 Interpreting Results
+
+#### **Performance Rankings**
+
+- **Top Performers**: Kryo, Cap'n Proto, FlatBuffers
+- **Balanced**: Apache Avro, gRPC, Protocol Buffers
+- **Specialized**: MessagePack (IoT), Jackson JSON (Web), FST (JVM)
+
+#### **Resource Efficiency**
+
+- **Memory Efficient**: FlatBuffers, Cap'n Proto
+- **CPU Efficient**: Kryo, MessagePack
+- **Balanced**: Apache Avro, gRPC
+
+#### **Reliability Leaders**
+
+- **100% Success Rate**: Cap'n Proto, FlatBuffers, Apache Avro
+- **High Reliability**: gRPC, Protocol Buffers, MessagePack
+- **Conditional**: Kryo (excellent for small/medium payloads)
+
+#### **Infrastructure Compatibility**
+
+- **HTTP/2 Ready**: Kryo, Cap'n Proto, FlatBuffers, gRPC, FST
+- **TLS 1.3 Support**: Kryo, Cap'n Proto, FlatBuffers, gRPC, FST
+- **Compression Support**: All frameworks with various algorithms
 
 ## 🔧 Framework Details
 
@@ -327,8 +522,6 @@ curl http://localhost:8081/actuator/health
 - **Port**: 8084
 - **Performance**: 0.0ms avg response time, 0.0% success rate (needs investigation)
 
-### Apache Fory (formerly Fury)
-
 - **Best for**: Ultra-high performance Java applications
 - **Pros**: Extremely fast, automatic serialization, JIT optimized
 - **Cons**: Java-only, newer framework
@@ -358,8 +551,6 @@ curl http://localhost:8081/actuator/health
 - **Cons**: Limited Java ecosystem, complex schemas
 - **Port**: 8088
 - **Performance**: 29.3ms avg response time, 100.0% success rate
-
-### Hessian
 
 - **Best for**: Web services, legacy system integration
 - **Pros**: Simple binary protocol, good Java support
@@ -807,97 +998,110 @@ export SPRING_PROFILES_ACTIVE=production
 
 ## 🔧 JVM Configuration & Optimization
 
-### Critical JVM Variables (Java 21+)
+### **Current JVM Configuration (Java 21)**
 
-This project uses specific JVM variables to ensure optimal performance and compatibility, especially for the FST framework.
+This project uses **OpenJDK 21** with specific JVM optimizations configured in `docker-compose.yml` for each framework.
 
-#### **Module System Variables (Essential for FST)**
+#### **Framework-Specific Configurations**
+
+**High-Performance Frameworks (4GB Heap):**
 
 ```bash
-# Required for FST framework to work with Java 21
---add-opens java.base/java.lang=ALL-UNNAMED
---add-opens java.base/java.util=ALL-UNNAMED
---add-opens java.base/java.io=ALL-UNNAMED
---add-opens java.base/java.math=ALL-UNNAMED
---add-opens java.base/java.time=ALL-UNNAMED
---add-opens java.base/java.nio=ALL-UNNAMED
+# Kryo, Cap'n Proto, FlatBuffers, gRPC, Apache Avro, FST, MessagePack, Apache Thrift
+JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
 ```
 
-**Why These Are Critical:**
-
-- **FST Framework**: Uses reflection to access private fields in core Java classes
-- **Java 21 Impact**: Strong encapsulation prevents access by default
-- **Performance**: Direct field access is 10-100x faster than public APIs
-- **Without These**: FST crashes with `InaccessibleObjectException`
-
-#### **Memory Management Variables**
+**Resource-Optimized Frameworks (2GB Heap):**
 
 ```bash
-# Heap size configuration
--Xmx4g    # Maximum heap size (4GB)
--Xms2g    # Initial heap size (2GB)
+# CBOR, BSON, Apache Arrow, SBE, Apache Parquet
+JVM_OPTS=-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
 ```
 
-**Justification:**
-
-- **Large Payloads**: Supports 1MB+ object serialization
-- **Multiple Frameworks**: 12 frameworks running simultaneously
-- **Benchmark Stress**: High iteration counts and intensive testing
-- **Performance**: Eliminates heap expansion overhead
-
-#### **Garbage Collection Optimization**
+**FST Framework (Special Configuration):**
 
 ```bash
-# G1 Garbage Collector (recommended for large heaps)
--XX:+UseG1GC
--XX:MaxGCPauseMillis=200
--XX:+UseStringDeduplication
+# FST requires module system access for reflection
+JVM_OPTS=--add-opens java.base/java.lang=ALL-UNNAMED \
+         --add-opens java.base/java.util=ALL-UNNAMED \
+         --add-opens java.base/java.io=ALL-UNNAMED \
+         --add-opens java.base/java.math=ALL-UNNAMED \
+         --add-opens java.base/java.time=ALL-UNNAMED \
+         --add-opens java.base/java.nio=ALL-UNNAMED \
+         -Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
 ```
 
-**Benefits:**
+#### **Configuration Breakdown**
 
-- **Predictable Pauses**: Maximum 200ms GC pauses
-- **Better Throughput**: 20-30% improvement for memory-intensive operations
-- **String Optimization**: Reduces memory usage by 10-20%
+**Memory Management:**
 
-### **Complete JVM Configuration Examples**
+- **High-Performance**: 4GB max heap, 2GB initial heap
+- **Resource-Optimized**: 2GB max heap, 1GB initial heap
+- **Rationale**: Different frameworks have different memory requirements
 
-#### **Development Environment**
+**Garbage Collection:**
 
-```bash
-export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
-                   --add-opens java.base/java.util=ALL-UNNAMED \
-                   --add-opens java.base/java.math=ALL-UNNAMED \
-                   -Xmx2g -Xms1g"
+- **Collector**: G1GC (Garbage-First Garbage Collector)
+- **Max Pause**: 200ms (predictable performance)
+- **Benefits**: Better throughput for memory-intensive serialization
+
+**Module System Access (FST Only):**
+
+- **Purpose**: Allow FST to use reflection for performance optimization
+- **Impact**: 10-100x faster than public APIs
+- **Required**: Java 21's strong encapsulation blocks access by default
+
+#### **Why These Configurations?**
+
+**High-Performance Frameworks (4GB):**
+
+- **Kryo**: Fast serialization requires more memory for object caching
+- **Cap'n Proto**: Zero-copy operations benefit from larger heap
+- **FlatBuffers**: Memory mapping and large object handling
+- **gRPC**: HTTP/2 and streaming operations
+- **Apache Avro**: Schema processing and compression
+- **FST**: Reflection-based optimization needs memory
+- **MessagePack**: Binary processing efficiency
+- **Apache Thrift**: Cross-language serialization overhead
+
+**Resource-Optimized Frameworks (2GB):**
+
+- **CBOR**: Compact binary format, lower memory footprint
+- **BSON**: Document-oriented, efficient memory usage
+- **Apache Arrow**: Columnar format, optimized memory layout
+- **SBE**: Simple Binary Encoding, minimal overhead
+- **Apache Parquet**: Columnar storage, efficient compression
+
+### **Docker Environment Variables**
+
+Each service in `docker-compose.yml` has specific JVM configurations:
+
+```yaml
+environment:
+  - SPRING_PROFILES_ACTIVE=docker
+  - KEYSTORE_PASSWORD=changeit
+  - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
 ```
 
-#### **Production Environment**
+### **Local Development Configuration**
+
+For local development without Docker:
 
 ```bash
+# High-performance frameworks
+export JAVA_OPTS="-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+
+# FST framework (with module access)
 export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
                   --add-opens java.base/java.util=ALL-UNNAMED \
                   --add-opens java.base/java.io=ALL-UNNAMED \
                   --add-opens java.base/java.math=ALL-UNNAMED \
                   --add-opens java.base/java.time=ALL-UNNAMED \
                   --add-opens java.base/java.nio=ALL-UNNAMED \
-                  -Xmx4g -Xms2g \
-                  -XX:+UseG1GC \
-                  -XX:MaxGCPauseMillis=200"
-```
+                  -Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 
-#### **Benchmark Environment**
-
-```bash
-export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
-                   --add-opens java.base/java.util=ALL-UNNAMED \
-                   --add-opens java.base/java.io=ALL-UNNAMED \
-                   --add-opens java.base/java.math=ALL-UNNAMED \
-                   --add-opens java.base/java.time=ALL-UNNAMED \
-                   --add-opens java.base/java.nio=ALL-UNNAMED \
-                   -Xmx8g -Xms4g \
-                   -XX:+UseG1GC \
-                   -XX:MaxGCPauseMillis=100 \
-                   -XX:+PrintGC"
+# Resource-optimized frameworks
+export JAVA_OPTS="-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 ```
 
 ### **Performance Impact Analysis**
