@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.techishthoughts</groupId>
-        <artifactId>compression-java-strategy</artifactId>
+        <artifactId>java-serialization-frameworks</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -43,6 +43,12 @@
             <groupId>org.objenesis</groupId>
             <artifactId>objenesis</artifactId>
             <version>3.3</version>
+        </dependency>
+
+        <!-- Compression libraries -->
+        <dependency>
+            <groupId>org.lz4</groupId>
+            <artifactId>lz4-java</artifactId>
         </dependency>
 
         <!-- JMH for benchmarking -->

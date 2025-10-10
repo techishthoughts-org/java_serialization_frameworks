@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.techishthoughts</groupId>
-    <artifactId>compression-java-strategy</artifactId>
+    <artifactId>java-serialization-frameworks</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>Java Serialization and Compression Strategy Benchmark</name>
-    <description>Comprehensive benchmark suite for evaluating Java serialization frameworks and compression algorithms with security best practices</description>
-    <url>https://github.com/techishthoughts-org/compression-java-strategy</url>
+    <name>Java Serialization Frameworks Benchmark</name>
+    <description>Comprehensive benchmark suite for evaluating Java serialization frameworks with security best practices</description>
+    <url>https://github.com/techishthoughts-org/java_serialization_frameworks</url>
 
     <organization>
         <name>Tech.ish Thoughts</name>
@@ -27,9 +27,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/techishthoughts-org/compression-java-strategy.git</connection>
-        <developerConnection>scm:git:ssh://github.com:techishthoughts-org/compression-java-strategy.git</developerConnection>
-        <url>https://github.com/techishthoughts-org/compression-java-strategy</url>
+        <connection>scm:git:git://github.com/techishthoughts-org/java_serialization_frameworks.git</connection>
+        <developerConnection>scm:git:ssh://github.com:techishthoughts-org/java_serialization_frameworks.git</developerConnection>
+        <url>https://github.com/techishthoughts-org/java_serialization_frameworks</url>
     </scm>
 
     <properties>
@@ -71,15 +71,20 @@
     <modules>
         <module>common-payload</module>
         <module>jackson-poc</module>
-        <module>kryo-poc</module>
-        <module>avro-poc</module>
         <module>protobuf-poc</module>
+        <module>avro-poc</module>
+        <module>kryo-poc</module>
         <module>msgpack-poc</module>
         <module>thrift-poc</module>
-        <module>fst-poc</module>
-        <module>grpc-poc</module>
         <module>capnproto-poc</module>
+        <module>fst-poc</module>
         <module>flatbuffers-poc</module>
+        <module>grpc-poc</module>
+        <module>cbor-poc</module>
+        <module>bson-poc</module>
+        <module>arrow-poc</module>
+        <module>parquet-poc</module>
+        <module>benchmark-jmh</module>
     </modules>
 
     <repositories>
@@ -338,9 +343,7 @@
                     <configuration>
                         <source>21</source>
                         <target>21</target>
-                        <compilerArgs>
-                            <arg>--enable-preview</arg>
-                        </compilerArgs>
+                        <release>21</release>
                     </configuration>
                 </plugin>
             </plugins>

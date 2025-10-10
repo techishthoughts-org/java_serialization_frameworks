@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.techishthoughts</groupId>
-        <artifactId>compression-java-strategy</artifactId>
+        <artifactId>java-serialization-frameworks</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -76,6 +76,30 @@
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
+        </dependency>
+
+        <!-- Resource monitoring dependencies -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-jmx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.management</groupId>
+            <artifactId>jconsole</artifactId>
+            <version>21.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

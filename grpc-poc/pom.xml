@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.techishthoughts</groupId>
-        <artifactId>compression-java-strategy</artifactId>
+        <artifactId>java-serialization-frameworks</artifactId>
         <version>1.0.0</version>
     </parent>
 
