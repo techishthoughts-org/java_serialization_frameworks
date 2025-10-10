@@ -208,7 +208,7 @@ public class StatisticalSignificanceDetector {
         double b = 0.5;
 
         // Beta function approximation for t-distribution
-        double betaApprox = Math.pow(1 + x / degreesOfFreedom, -(degreesOffreedom + 1) / 2.0);
+        double betaApprox = Math.pow(1 + x / degreesOfFreedom, -(degreesOfFreedom + 1) / 2.0);
 
         // Two-tailed p-value
         double pValue = 2 * (1 - betaApprox);

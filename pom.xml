@@ -83,6 +83,7 @@
         <module>cbor-poc</module>
         <module>bson-poc</module>
         <module>arrow-poc</module>
+        <module>sbe-poc</module>
         <module>parquet-poc</module>
         <module>benchmark-jmh</module>
     </modules>

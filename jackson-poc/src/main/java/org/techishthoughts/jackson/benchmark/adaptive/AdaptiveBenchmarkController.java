@@ -503,7 +503,7 @@ public class AdaptiveBenchmarkController {
         stats.put("p99", calculatePercentile(sortedValues, 0.99));
 
         // Add robust statistics
-        Map<String, Double> robustStats = outlierAnalysis.getMetrics().entrySet().stream()
+        Map<String, Double> robustStats = outlierAnalysis.getStatistics().entrySet().stream()
                 .filter(entry -> entry.getValue() instanceof Double)
                 .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), (Double) entry.getValue()), HashMap::putAll);
         stats.putAll(robustStats);
