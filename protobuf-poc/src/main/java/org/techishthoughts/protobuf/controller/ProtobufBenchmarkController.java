@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.techishthoughts.payload.generator.HugePayloadGenerator;
 import org.techishthoughts.payload.model.User;
+import org.techishthoughts.payload.service.result.CompressionResult;
 import org.techishthoughts.protobuf.service.ProtobufSerializationService;
 
 /**
@@ -280,7 +281,8 @@ public class ProtobufBenchmarkController {
         for (int i = 0; i < iterations; i++) {
             long startTime = System.nanoTime();
             try {
-                gzipCompressed = protobufService.compressWithGzip(serializedData);
+                var compressionResult = protobufService.compressWithGzip(serializedData);
+                gzipCompressed = compressionResult.getCompressedData();
             } catch (Exception e) {
                 System.err.println("GZIP compression failed: " + e.getMessage());
                 continue;
@@ -305,7 +307,8 @@ public class ProtobufBenchmarkController {
         for (int i = 0; i < iterations; i++) {
             long startTime = System.nanoTime();
             try {
-                zstdCompressed = protobufService.compressWithZstd(serializedData);
+                var compressionResult = protobufService.compressWithZstd(serializedData);
+                zstdCompressed = compressionResult.getCompressedData();
             } catch (Exception e) {
                 System.err.println("Zstandard compression failed: " + e.getMessage());
                 continue;

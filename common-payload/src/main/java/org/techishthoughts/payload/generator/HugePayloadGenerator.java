@@ -33,7 +33,10 @@ import org.techishthoughts.payload.model.UserProfile;
 /**
  * Generates massive payload data for extreme stress-testing of serialization frameworks.
  * Supports configurable complexity levels and dataset sizes.
+ *
+ * @deprecated Use UnifiedPayloadGenerator instead for better performance and consistency.
  */
+@Deprecated
 public class HugePayloadGenerator {
 
     // Complexity levels for different testing scenarios
@@ -142,7 +145,9 @@ public class HugePayloadGenerator {
      * Generate a massive dataset based on complexity level
      * @param level Complexity level for the dataset
      * @return Generated user list
+     * @deprecated Use UnifiedPayloadGenerator.generateDataset(level) instead
      */
+    @Deprecated
     public static List<User> generateHugeDataset(ComplexityLevel level) {
         System.out.println("🚀 Generating HUGE dataset with complexity level: " + level.name());
         System.out.println("📊 Configuration:");
