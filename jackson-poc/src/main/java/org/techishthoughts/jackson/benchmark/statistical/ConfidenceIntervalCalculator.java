@@ -202,7 +202,7 @@ public class ConfidenceIntervalCalculator {
     /**
      * Determines if the confidence interval width meets the desired precision criteria.
      */
-    public boolean meetsPreci sionCriteria(ConfidenceInterval interval, double maxRelativeWidth) {
+    public boolean meetsPrecisionCriteria(ConfidenceInterval interval, double maxRelativeWidth) {
         return interval.getRelativeWidth() <= maxRelativeWidth;
     }
 
