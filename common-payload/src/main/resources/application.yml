@@ -1,0 +1,33 @@
+# Common Payload Configuration
+benchmark:
+  payload-generation:
+    default-user-count: 1000
+    max-addresses-per-user: 5
+    max-orders-per-user: 10
+    max-skills-per-user: 15
+    max-languages-per-user: 5
+    max-social-connections-per-user: 5
+    max-order-items-per-order: 5
+    max-tracking-events-per-order: 8
+
+  performance:
+    default-iterations: 100
+    max-iterations: 1000
+    timeout-ms: 60000
+    max-payload-size-mb: 100
+    enable-warmup: true
+    warmup-iterations: 10
+
+  limits:
+    max-users: 50000
+    progress-report-interval: 1000
+    memory-threshold-percent: 80.0
+    enable-memory-monitoring: true
+    enable-gc-logging: false
+
+logging:
+  level:
+    org.techishthoughts: INFO
+    org.techishthoughts.payload.generator: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
