@@ -1,22 +1,29 @@
 package org.techishthoughts.protobuf.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.techishthoughts.payload.generator.UnifiedPayloadGenerator;
 import org.techishthoughts.payload.model.User;
+import org.techishthoughts.payload.service.AbstractSerializationService;
+import org.techishthoughts.payload.service.SerializationException;
+import org.techishthoughts.payload.service.result.CompressionResult;
+import org.techishthoughts.payload.service.result.SerializationResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-// Zstd compression not available in this module
-
 /**
- * Simplified Protocol Buffers Serialization Service
+ * Protocol Buffers Serialization Service implementing the common SerializationService interface.
  *
  * 2025 SOLUTION: This service provides a working protobuf implementation for testing
  * by using a hybrid approach that combines JSON serialization with protobuf schema validation.
@@ -28,66 +35,162 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * 4. Provide a path to full protobuf implementation
  */
 @Service
-public class ProtobufSerializationService {
+public class ProtobufSerializationService extends AbstractSerializationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProtobufSerializationService.class);
+    private static final String FRAMEWORK_NAME = "Protocol Buffers";
 
     private final ObjectMapper objectMapper;
 
-    public ProtobufSerializationService() {
+    public ProtobufSerializationService(UnifiedPayloadGenerator payloadGenerator) {
+        super(payloadGenerator);
         this.objectMapper = new ObjectMapper();
         // Register JavaTimeModule to handle Java 8 date/time types
         this.objectMapper.registerModule(new JavaTimeModule());
+
+        logger.info("Initialized Protocol Buffers serialization service with JSON hybrid approach");
+    }
+
+    @Override
+    public String getFrameworkName() {
+        return FRAMEWORK_NAME;
+    }
+
+    @Override
+    public SerializationResult serialize(List<User> users) throws SerializationException {
+        try {
+            logger.debug("Serializing {} users using protobuf-compatible approach", users.size());
+
+            long startTime = System.nanoTime();
+            // Use JSON serialization with protobuf-style optimization
+            byte[] data = objectMapper.writeValueAsBytes(users);
+            long serializationTime = System.nanoTime() - startTime;
+
+            logger.debug("Successfully serialized {} users to {} bytes in {:.2f} ms",
+                    users.size(), data.length, serializationTime / 1_000_000.0);
+
+            return SerializationResult.builder(FRAMEWORK_NAME)
+                    .format("Protobuf-Compatible JSON")
+                    .data(data)
+                    .serializationTime(serializationTime)
+                    .inputObjectCount(users.size())
+                    .build();
+
+        } catch (Exception e) {
+            logger.error("Failed to serialize {} users", users.size(), e);
+            throw SerializationException.serialization(FRAMEWORK_NAME, "Protobuf serialization failed", e);
+        }
+    }
+
+    @Override
+    public List<User> deserialize(byte[] data) throws SerializationException {
+        try {
+            logger.debug("Deserializing {} bytes using protobuf-compatible approach", data.length);
+
+            long startTime = System.nanoTime();
+            CollectionType listType = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, User.class);
+            List<User> users = objectMapper.readValue(data, listType);
+            long deserializationTime = System.nanoTime() - startTime;
+
+            logger.debug("Successfully deserialized {} users from {} bytes in {:.2f} ms",
+                    users.size(), data.length, deserializationTime / 1_000_000.0);
+
+            return users;
+        } catch (Exception e) {
+            logger.error("Failed to deserialize {} bytes", data.length, e);
+            throw SerializationException.deserialization(FRAMEWORK_NAME, "Protobuf deserialization failed", e);
+        }
+    }
+
+    @Override
+    public CompressionResult compress(byte[] data) throws SerializationException {
+        // Use GZIP as the default compression for Protocol Buffers
+        return compressWithGzip(data);
+    }
+
+    @Override
+    public byte[] decompress(byte[] compressedData) throws SerializationException {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
+            GZIPInputStream gzipIn = new GZIPInputStream(bais);
+            byte[] decompressed = gzipIn.readAllBytes();
+            gzipIn.close();
+            return decompressed;
+        } catch (IOException e) {
+            throw SerializationException.decompression(FRAMEWORK_NAME, "GZIP decompression failed", compressedData.length, e);
+        }
+    }
+
+    @Override
+    protected PerformanceTier getExpectedPerformanceTier() {
+        return PerformanceTier.ULTRA_HIGH;
+    }
+
+    @Override
+    protected MemoryFootprint getMemoryFootprint() {
+        return MemoryFootprint.LOW;
+    }
+
+    @Override
+    public List<String> getSupportedCompressionAlgorithms() {
+        return Arrays.asList("GZIP");
+    }
+
+    @Override
+    public boolean supportsSchemaEvolution() {
+        return true;
+    }
+
+    @Override
+    public String getTypicalUseCase() {
+        return "High-performance microservices, gRPC, cross-language systems";
     }
 
     /**
-     * Serialize users using a protobuf-compatible approach
-     * For testing purposes, this uses JSON with protobuf-style optimization
+     * Legacy method for backwards compatibility
+     * @deprecated Use serialize() method instead
      */
+    @Deprecated
     public byte[] serializeUsers(List<User> users) {
-        long startTime = System.nanoTime();
-
         try {
-            // Use JSON serialization with protobuf-style optimization
-            byte[] serialized = objectMapper.writeValueAsBytes(users);
-
-            long serializationTime = System.nanoTime() - startTime;
-            System.out.println("Protobuf-style serialization took: " + (serializationTime / 1_000_000.0) + " ms");
-
-            return serialized;
-        } catch (Exception e) {
+            SerializationResult result = serialize(users);
+            return result.getData();
+        } catch (SerializationException e) {
             throw new RuntimeException("Failed to serialize users", e);
         }
     }
 
     /**
-     * Deserialize users using a protobuf-compatible approach
+     * Legacy method for backwards compatibility
+     * @deprecated Use deserialize() method instead
      */
+    @Deprecated
     public List<User> deserializeUsers(byte[] data) {
-        long startTime = System.nanoTime();
-
         try {
-            CollectionType listType = objectMapper.getTypeFactory()
-                .constructCollectionType(List.class, User.class);
-            List<User> users = objectMapper.readValue(data, listType);
-
-            long deserializationTime = System.nanoTime() - startTime;
-            System.out.println("Protobuf-style deserialization took: " + (deserializationTime / 1_000_000.0) + " ms");
-
-            return users;
-        } catch (Exception e) {
+            return deserialize(data);
+        } catch (SerializationException e) {
             throw new RuntimeException("Failed to deserialize users", e);
         }
     }
 
     /**
-     * Get serialization statistics
+     * Test method to validate the service works correctly
      */
-    public Map<String, Object> getSerializationStats() {
-        return Map.of(
+    public boolean testSerialization(List<User> users) {
+        return testRoundtrip(users);
+    }
+
+    /**
+     * Get serialization statistics for backwards compatibility
+     */
+    public java.util.Map<String, Object> getSerializationStats() {
+        return java.util.Map.of(
             "framework", "Protocol Buffers (JSON Hybrid)",
             "status", "enabled",
             "approach", "JSON with protobuf optimization",
             "version", "4.29.3",
-            "features", List.of(
+            "features", java.util.List.of(
                 "Schema validation ready",
                 "Performance optimized",
                 "Testing compatible",
@@ -96,29 +199,40 @@ public class ProtobufSerializationService {
         );
     }
 
-    /**
-     * Test method to validate the service works correctly
-     */
-    public boolean testSerialization(List<User> users) {
-        try {
-            byte[] serialized = serializeUsers(users);
-            List<User> deserialized = deserializeUsers(serialized);
-
-            // Basic validation
-            return users.size() == deserialized.size() &&
-                   users.size() > 0;
-        } catch (Exception e) {
-            System.err.println("Protobuf serialization test failed: " + e.getMessage());
-            return false;
-        }
-    }
-
     // ===== COMPRESSION METHODS =====
 
     /**
      * Compress data using GZIP
      */
-    public byte[] compressWithGzip(byte[] data) throws IOException {
+    public CompressionResult compressWithGzip(byte[] data) throws SerializationException {
+        try {
+            long startTime = System.nanoTime();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (GZIPOutputStream gzipOut = new GZIPOutputStream(baos)) {
+                gzipOut.write(data);
+            }
+
+            byte[] compressed = baos.toByteArray();
+            long compressionTime = System.nanoTime() - startTime;
+
+            return CompressionResult.builder("GZIP")
+                    .compressedData(compressed)
+                    .compressionTime(compressionTime)
+                    .originalSize(data.length)
+                    .build();
+
+        } catch (IOException e) {
+            throw SerializationException.compression(FRAMEWORK_NAME, "GZIP compression failed", data.length, e);
+        }
+    }
+
+    /**
+     * Legacy GZIP compression method for backwards compatibility
+     * @deprecated Use compressWithGzip() that returns CompressionResult instead
+     */
+    @Deprecated
+    public byte[] compressGzipLegacy(byte[] data) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (GZIPOutputStream gzipOut = new GZIPOutputStream(baos)) {
             gzipOut.write(data);
@@ -130,9 +244,15 @@ public class ProtobufSerializationService {
      * Compress data using Zstandard
      * Note: Zstd compression not available in this module, returns original data
      */
-    public byte[] compressWithZstd(byte[] data) {
+    public CompressionResult compressWithZstd(byte[] data) {
         // Zstd compression not available in this module
-        System.out.println("Warning: Zstd compression not available in Protobuf module");
-        return data;
+        logger.warn("Warning: Zstd compression not available in Protobuf module, returning uncompressed data");
+
+        return CompressionResult.builder("Zstandard (Unavailable)")
+                .compressedData(data)
+                .compressionTime(0)
+                .originalSize(data.length)
+                .error("Zstd compression not available in this module")
+                .build();
     }
 }
