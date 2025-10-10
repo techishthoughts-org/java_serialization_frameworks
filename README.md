@@ -37,6 +37,29 @@ This project provides a comprehensive evaluation platform for Java serialization
 - 🐳 **Docker Ready** - Containerized deployment support
 - 🧹 **Optimized Structure** - Clean, streamlined project with only essential frameworks
 
+### V2 API Migration Status
+
+**V2 Unified Benchmark API** - New standardized benchmark architecture (In Progress)
+
+| Status | Frameworks | Features |
+|--------|-----------|----------|
+| ✅ **Complete (33%)** | Jackson, Protobuf, Kryo, Avro, MessagePack (5/15) | Unified `/v2/benchmark` endpoint, BenchmarkConfig, enhanced results |
+| 🔨 **In Progress** | Thrift, Cap'n Proto, FST, FlatBuffers, gRPC (5/15) | Service layer migration needed |
+| 📋 **Planned** | CBOR, BSON, Arrow, SBE, Parquet (5/15) | Complete implementation required |
+
+**V2 API Benefits:**
+- Single unified endpoint (`/api/{framework}/v2/benchmark`) vs multiple V1 endpoints
+- Structured configuration with `BenchmarkConfig` (warmup, compression, roundtrip, memory monitoring)
+- Enhanced `BenchmarkResult` with comprehensive metrics
+- Memory monitoring integration
+- Compression analysis
+- Backward compatibility with V1 endpoints maintained
+
+**Documentation:**
+- See `MIGRATION_STATUS_REPORT.md` for detailed migration roadmap
+- See `V2_BENCHMARK_UPDATE_SUMMARY.md` for V2 feature documentation
+- See `GIT_COMMIT_STRATEGY.md` for implementation strategy
+
 ## 🛠️ Supported Frameworks
 
 | Framework | Port | Status | Use Case | Performance Tier |
