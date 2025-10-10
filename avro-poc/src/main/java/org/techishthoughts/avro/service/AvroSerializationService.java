@@ -3,8 +3,14 @@ package org.techishthoughts.avro.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;
@@ -16,19 +22,33 @@ import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.techishthoughts.avro.service.AvroSerializationService.SchemaEvolutionResult;
-import org.techishthoughts.avro.service.AvroSerializationService.SerializationResult;
+import org.techishthoughts.payload.generator.UnifiedPayloadGenerator;
 import org.techishthoughts.payload.model.User;
+import org.techishthoughts.payload.service.AbstractSerializationService;
+import org.techishthoughts.payload.service.SerializationException;
+import org.techishthoughts.payload.service.result.CompressionResult;
+import org.techishthoughts.payload.service.result.SerializationResult;
 
+/**
+ * Apache Avro serialization service implementing the common SerializationService interface.
+ * Provides binary serialization with schema evolution support and multiple compression options.
+ */
 @Service
-public class AvroSerializationService {
+public class AvroSerializationService extends AbstractSerializationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AvroSerializationService.class);
+    private static final String FRAMEWORK_NAME = "Apache Avro";
 
     private final Schema userSchema;
     private final DatumWriter<GenericRecord> userWriter;
     private final DatumReader<GenericRecord> userReader;
 
-    public AvroSerializationService() {
+    public AvroSerializationService(UnifiedPayloadGenerator payloadGenerator) {
+        super(payloadGenerator);
         // Create a simple schema for User with basic fields
         String schemaJson = "{\n" +
             "  \"type\": \"record\",\n" +
@@ -47,11 +67,105 @@ public class AvroSerializationService {
         this.userSchema = new Schema.Parser().parse(schemaJson);
         this.userWriter = new GenericDatumWriter<>(userSchema);
         this.userReader = new GenericDatumReader<>(userSchema);
+
+        logger.info("Initialized Avro serialization service with user schema");
     }
 
-    public SerializationResult serializeUsers(List<User> users) throws IOException {
-        long startTime = System.nanoTime();
+    @Override
+    public String getFrameworkName() {
+        return FRAMEWORK_NAME;
+    }
 
+    @Override
+    protected PerformanceTier getExpectedPerformanceTier() {
+        return PerformanceTier.HIGH;
+    }
+
+    @Override
+    protected MemoryFootprint getMemoryFootprint() {
+        return MemoryFootprint.MEDIUM;
+    }
+
+    @Override
+    public List<String> getSupportedCompressionAlgorithms() {
+        return Arrays.asList("Snappy", "Deflate", "GZIP");
+    }
+
+    @Override
+    public boolean supportsSchemaEvolution() {
+        return true;
+    }
+
+    @Override
+    public String getTypicalUseCase() {
+        return "Schema evolution, data pipelines, Apache Kafka integration";
+    }
+
+    @Override
+    public SerializationResult serialize(List<User> users) throws SerializationException {
+        try {
+            logger.debug("Serializing {} users to Avro binary format", users.size());
+
+            long startTime = System.nanoTime();
+            byte[] data = serializeToAvro(users);
+            long serializationTime = System.nanoTime() - startTime;
+
+            logger.debug("Successfully serialized {} users to {} bytes in {:.2f} ms",
+                    users.size(), data.length, serializationTime / 1_000_000.0);
+
+            return SerializationResult.builder(FRAMEWORK_NAME)
+                    .format("Avro Binary")
+                    .data(data)
+                    .serializationTime(serializationTime)
+                    .inputObjectCount(users.size())
+                    .build();
+
+        } catch (Exception e) {
+            logger.error("Failed to serialize {} users", users.size(), e);
+            throw SerializationException.serialization(FRAMEWORK_NAME, "Avro serialization failed", e);
+        }
+    }
+
+    @Override
+    public List<User> deserialize(byte[] data) throws SerializationException {
+        try {
+            logger.debug("Deserializing {} bytes from Avro binary format", data.length);
+
+            long startTime = System.nanoTime();
+            List<User> users = deserializeFromAvro(data);
+            long deserializationTime = System.nanoTime() - startTime;
+
+            logger.debug("Successfully deserialized {} users from {} bytes in {:.2f} ms",
+                    users.size(), data.length, deserializationTime / 1_000_000.0);
+
+            return users;
+
+        } catch (Exception e) {
+            logger.error("Failed to deserialize {} bytes", data.length, e);
+            throw SerializationException.deserialization(FRAMEWORK_NAME, "Avro deserialization failed", e);
+        }
+    }
+
+    @Override
+    public CompressionResult compress(byte[] data) throws SerializationException {
+        // Use GZIP as the default compression for Avro (Snappy requires additional library)
+        return compressWithGzip(data);
+    }
+
+    @Override
+    public byte[] decompress(byte[] compressedData) throws SerializationException {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
+            GZIPInputStream gzipIn = new GZIPInputStream(bais);
+            byte[] decompressed = gzipIn.readAllBytes();
+            gzipIn.close();
+            return decompressed;
+        } catch (IOException e) {
+            throw SerializationException.decompression(FRAMEWORK_NAME, "GZIP decompression failed", compressedData.length, e);
+        }
+    }
+
+    private byte[] serializeToAvro(List<User> users) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(baos, null);
 
@@ -70,15 +184,10 @@ public class AvroSerializationService {
         }
 
         encoder.flush();
-        byte[] data = baos.toByteArray();
-        long serializationTime = System.nanoTime() - startTime;
-
-        return new SerializationResult("Avro", data, serializationTime, data.length);
+        return baos.toByteArray();
     }
 
-    public List<User> deserializeUsers(byte[] data) throws IOException {
-        long startTime = System.nanoTime();
-
+    private List<User> deserializeFromAvro(byte[] data) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
         BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(bais, null);
 
@@ -100,14 +209,100 @@ public class AvroSerializationService {
                 break;
             }
         }
-
-        long deserializationTime = System.nanoTime() - startTime;
-        System.out.println("Avro deserialization took: " + (deserializationTime / 1_000_000.0) + " ms");
-
         return users;
     }
 
-    public SerializationResult serializeUsersWithSchemaEvolution(List<User> users, Schema writerSchema) throws IOException {
+    // Additional compression methods
+    public CompressionResult compressWithGzip(byte[] data) throws SerializationException {
+        try {
+            long startTime = System.nanoTime();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (GZIPOutputStream gzipOut = new GZIPOutputStream(baos)) {
+                gzipOut.write(data);
+            }
+
+            byte[] compressed = baos.toByteArray();
+            long compressionTime = System.nanoTime() - startTime;
+
+            return CompressionResult.builder("GZIP")
+                    .compressedData(compressed)
+                    .compressionTime(compressionTime)
+                    .originalSize(data.length)
+                    .build();
+
+        } catch (IOException e) {
+            throw SerializationException.compression(FRAMEWORK_NAME, "GZIP compression failed", data.length, e);
+        }
+    }
+
+    public CompressionResult compressWithDeflate(byte[] data) throws SerializationException {
+        try {
+            long startTime = System.nanoTime();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (DeflaterOutputStream deflateOut = new DeflaterOutputStream(baos)) {
+                deflateOut.write(data);
+            }
+
+            byte[] compressed = baos.toByteArray();
+            long compressionTime = System.nanoTime() - startTime;
+
+            return CompressionResult.builder("Deflate")
+                    .compressedData(compressed)
+                    .compressionTime(compressionTime)
+                    .originalSize(data.length)
+                    .build();
+
+        } catch (IOException e) {
+            throw SerializationException.compression(FRAMEWORK_NAME, "Deflate compression failed", data.length, e);
+        }
+    }
+
+    public CompressionResult compressWithSnappy(byte[] data) throws SerializationException {
+        try {
+            // Try to use Snappy if available
+            Class<?> snappyClass = Class.forName("org.xerial.snappy.Snappy");
+
+            long startTime = System.nanoTime();
+            byte[] compressed = (byte[]) snappyClass.getMethod("compress", byte[].class).invoke(null, data);
+            long compressionTime = System.nanoTime() - startTime;
+
+            return CompressionResult.builder("Snappy")
+                    .compressedData(compressed)
+                    .compressionTime(compressionTime)
+                    .originalSize(data.length)
+                    .build();
+
+        } catch (ClassNotFoundException e) {
+            logger.warn("Snappy compression not available, falling back to GZIP");
+            return compressWithGzip(data);
+        } catch (Exception e) {
+            throw SerializationException.compression(FRAMEWORK_NAME, "Snappy compression failed", data.length, e);
+        }
+    }
+
+    // Legacy methods for backward compatibility - now delegates to new interface methods
+    public LegacySerializationResult serializeUsers(List<User> users) throws IOException {
+        try {
+            SerializationResult result = serialize(users);
+            // Convert to legacy format for compatibility
+            return new LegacySerializationResult("Avro", result.getData(), result.getSerializationTimeNs(), result.getSizeBytes());
+        } catch (SerializationException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    public List<User> deserializeUsers(byte[] data) throws IOException {
+        try {
+            return deserialize(data);
+        } catch (SerializationException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    // Schema Evolution Methods - Enhanced versions
+    public LegacySerializationResult serializeUsersWithSchemaEvolution(List<User> users, Schema writerSchema) throws IOException {
         long startTime = System.nanoTime();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -133,7 +328,7 @@ public class AvroSerializationService {
         byte[] data = baos.toByteArray();
         long serializationTime = System.nanoTime() - startTime;
 
-        return new SerializationResult("Avro (Schema Evolution)", data, serializationTime, data.length);
+        return new LegacySerializationResult("Avro (Schema Evolution)", data, serializationTime, data.length);
     }
 
     public List<User> deserializeUsersWithSchemaEvolution(byte[] data, Schema readerSchema) throws IOException {
@@ -164,20 +359,20 @@ public class AvroSerializationService {
         }
 
         long deserializationTime = System.nanoTime() - startTime;
-        System.out.println("Avro schema evolution deserialization took: " + (deserializationTime / 1_000_000.0) + " ms");
+        logger.debug("Avro schema evolution deserialization took: {:.2f} ms", deserializationTime / 1_000_000.0);
 
         return users;
     }
 
     public SchemaEvolutionResult testSchemaEvolution(List<User> users) throws IOException {
         // Serialize with original schema
-        SerializationResult originalResult = serializeUsers(users);
+        LegacySerializationResult originalResult = serializeUsers(users);
 
         // Create an evolved schema (add a new field)
         Schema evolvedSchema = createEvolvedSchema();
 
         // Serialize with evolved schema
-        SerializationResult evolvedResult = serializeUsersWithSchemaEvolution(users, evolvedSchema);
+        LegacySerializationResult evolvedResult = serializeUsersWithSchemaEvolution(users, evolvedSchema);
 
         // Try to deserialize with original schema (backward compatibility)
         List<User> deserializedUsers = deserializeUsersWithSchemaEvolution(evolvedResult.getData(), userSchema);
@@ -221,13 +416,14 @@ public class AvroSerializationService {
         }
     }
 
-    public static class SerializationResult {
+    // Legacy result class for backward compatibility
+    public static class LegacySerializationResult {
         private final String format;
         private final byte[] data;
         private final long serializationTimeNs;
         private final int sizeBytes;
 
-        public SerializationResult(String format, byte[] data, long serializationTimeNs, int sizeBytes) {
+        public LegacySerializationResult(String format, byte[] data, long serializationTimeNs, int sizeBytes) {
             this.format = format;
             this.data = data;
             this.serializationTimeNs = serializationTimeNs;
@@ -244,13 +440,13 @@ public class AvroSerializationService {
     }
 
     public static class SchemaEvolutionResult {
-        private final SerializationResult originalResult;
+        private final LegacySerializationResult originalResult;
         private final int deserializedCount;
         private final boolean evolutionSuccess;
         private final String originalSchema;
         private final String evolvedSchema;
 
-        public SchemaEvolutionResult(SerializationResult originalResult, int deserializedCount,
+        public SchemaEvolutionResult(LegacySerializationResult originalResult, int deserializedCount,
                                    boolean evolutionSuccess, String originalSchema, String evolvedSchema) {
             this.originalResult = originalResult;
             this.deserializedCount = deserializedCount;
@@ -259,7 +455,7 @@ public class AvroSerializationService {
             this.evolvedSchema = evolvedSchema;
         }
 
-        public SerializationResult getOriginalResult() { return originalResult; }
+        public LegacySerializationResult getOriginalResult() { return originalResult; }
         public int getDeserializedCount() { return deserializedCount; }
         public boolean isEvolutionSuccess() { return evolutionSuccess; }
         public String getOriginalSchema() { return originalSchema; }

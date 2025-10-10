@@ -37,7 +37,7 @@ public class AvroBenchmarkController {
             List<User> users = PayloadGenerator.generateMassiveDataset(userCount);
 
             // Run serialization benchmark
-            AvroSerializationService.SerializationResult serializationResult =
+            AvroSerializationService.LegacySerializationResult serializationResult =
                 serializationService.serializeUsers(users);
 
             // Run deserialization benchmark
@@ -95,7 +95,7 @@ public class AvroBenchmarkController {
         Map<String, Object> results = new HashMap<>();
 
         try {
-            AvroSerializationService.SerializationResult serializationResult =
+            AvroSerializationService.LegacySerializationResult serializationResult =
                 serializationService.serializeUsers(users);
 
             List<User> deserializedUsers = serializationService.deserializeUsers(serializationResult.getData());
@@ -262,7 +262,7 @@ public class AvroBenchmarkController {
             System.out.println("  Avro serialization iteration " + (i + 1) + "/" + iterations);
             long startTime = System.nanoTime();
             try {
-                AvroSerializationService.SerializationResult result = serializationService.serializeUsers(users);
+                AvroSerializationService.LegacySerializationResult result = serializationService.serializeUsers(users);
                 serializedData = result.getData();
             } catch (IOException e) {
                 System.err.println("Avro serialization failed: " + e.getMessage());
@@ -284,7 +284,7 @@ public class AvroBenchmarkController {
         Map<String, Object> results = new HashMap<>();
 
         // Serialize first
-        AvroSerializationService.SerializationResult serializationResult;
+        AvroSerializationService.LegacySerializationResult serializationResult;
         byte[] serializedData;
         try {
             serializationResult = serializationService.serializeUsers(users);
@@ -315,7 +315,7 @@ public class AvroBenchmarkController {
         for (int i = 0; i < iterations; i++) {
             long startTime = System.nanoTime();
             try {
-                AvroSerializationService.SerializationResult result = serializationService.serializeUsers(users);
+                AvroSerializationService.LegacySerializationResult result = serializationService.serializeUsers(users);
                 serializedData = result.getData();
             } catch (IOException e) {
                 System.err.println("Avro serialization failed: " + e.getMessage());
@@ -348,7 +348,7 @@ public class AvroBenchmarkController {
         return results;
     }
 
-    private Map<String, Object> createSerializationResult(AvroSerializationService.SerializationResult result) {
+    private Map<String, Object> createSerializationResult(AvroSerializationService.LegacySerializationResult result) {
         return Map.of(
             "format", result.getFormat(),
             "timeMs", result.getSerializationTimeMs(),

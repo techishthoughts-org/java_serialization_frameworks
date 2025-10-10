@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.techishthoughts.msgpack.service.MessagePackSerializationService;
 import org.techishthoughts.payload.generator.PayloadGenerator;
 import org.techishthoughts.payload.model.User;
+import org.techishthoughts.payload.service.result.SerializationResult;
+import org.techishthoughts.payload.service.result.CompressionResult;
 
 @RestController
 @RequestMapping("/api/msgpack")
@@ -35,20 +37,19 @@ public class MessagePackBenchmarkController {
             List<User> users = PayloadGenerator.generateUsers(userCount);
 
             // Run serialization benchmark
-            long startTime = System.nanoTime();
-            byte[] serialized = serializationService.serializeList(users);
-            long serializationTime = System.nanoTime() - startTime;
+            SerializationResult serializationResult = serializationService.serialize(users);
+            long serializationTime = serializationResult.getSerializationTimeNs();
 
             // Run deserialization benchmark
-            startTime = System.nanoTime();
-            List<User> deserialized = serializationService.deserializeList(serialized);
+            long startTime = System.nanoTime();
+            List<User> deserialized = serializationService.deserialize(serializationResult.getData());
             long deserializationTime = System.nanoTime() - startTime;
 
             // Compile results
             results.put("userCount", userCount);
             results.put("serializationTimeMs", serializationTime / 1_000_000.0);
             results.put("deserializationTimeMs", deserializationTime / 1_000_000.0);
-            results.put("totalSizeBytes", serialized.length);
+            results.put("totalSizeBytes", serializationResult.getData().length);
             results.put("success", true);
 
         } catch (Exception e) {
@@ -78,13 +79,12 @@ public class MessagePackBenchmarkController {
             long totalSize = 0;
 
             for (int i = 0; i < iterations; i++) {
-                long startTime = System.nanoTime();
-                byte[] serialized = serializationService.serializeList(users);
-                totalSerializationTime += (System.nanoTime() - startTime);
-                totalSize += serialized.length;
+                SerializationResult serializationResult = serializationService.serialize(users);
+                totalSerializationTime += serializationResult.getSerializationTimeNs();
+                totalSize += serializationResult.getData().length;
 
-                startTime = System.nanoTime();
-                List<User> deserialized = serializationService.deserializeList(serialized);
+                long startTime = System.nanoTime();
+                List<User> deserialized = serializationService.deserialize(serializationResult.getData());
                 totalDeserializationTime += (System.nanoTime() - startTime);
             }
 
@@ -119,14 +119,12 @@ public class MessagePackBenchmarkController {
             long totalCompressedSize = 0;
 
             for (int i = 0; i < iterations; i++) {
-                long startTime = System.nanoTime();
-                byte[] serialized = serializationService.serializeList(users);
-                totalSerializationTime += (System.nanoTime() - startTime);
+                SerializationResult serializationResult = serializationService.serialize(users);
+                totalSerializationTime += serializationResult.getSerializationTimeNs();
 
-                startTime = System.nanoTime();
-                byte[] compressed = serializationService.serializeListWithGzip(users);
-                totalCompressionTime += (System.nanoTime() - startTime);
-                totalCompressedSize += compressed.length;
+                CompressionResult compressionResult = serializationService.compressWithGzip(serializationResult.getData());
+                totalCompressionTime += compressionResult.getCompressionTimeNs();
+                totalCompressedSize += compressionResult.getCompressedData().length;
             }
 
             results.put("serializationTimeMs", totalSerializationTime / 1_000_000.0 / iterations);
@@ -160,11 +158,11 @@ public class MessagePackBenchmarkController {
 
             for (int i = 0; i < iterations; i++) {
                 long startTime = System.nanoTime();
-                byte[] serialized = serializationService.serializeList(users);
-                byte[] compressed = serializationService.serializeListWithGzip(users);
-                List<User> deserialized = serializationService.deserializeList(serialized);
+                SerializationResult serializationResult = serializationService.serialize(users);
+                CompressionResult compressionResult = serializationService.compressWithGzip(serializationResult.getData());
+                List<User> deserialized = serializationService.deserialize(serializationResult.getData());
                 totalTime += (System.nanoTime() - startTime);
-                totalSize += compressed.length;
+                totalSize += compressionResult.getCompressedData().length;
             }
 
             results.put("totalTimeMs", totalTime / 1_000_000.0 / iterations);

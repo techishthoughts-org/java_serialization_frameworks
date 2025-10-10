@@ -4,14 +4,24 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import net.jpountz.lz4.LZ4Compressor;
+import net.jpountz.lz4.LZ4Factory;
+import net.jpountz.lz4.LZ4FastDecompressor;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.techishthoughts.msgpack.service.MessagePackSerializationService.BigDecimalSerializer;
+import org.techishthoughts.payload.generator.UnifiedPayloadGenerator;
 import org.techishthoughts.payload.model.User;
+import org.techishthoughts.payload.service.AbstractSerializationService;
+import org.techishthoughts.payload.service.SerializationException;
+import org.techishthoughts.payload.service.result.CompressionResult;
+import org.techishthoughts.payload.service.result.SerializationResult;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -27,16 +37,28 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 /**
  * MessagePack Serialization Service
  *
- * 2025 UPDATE: MessagePack provides fast binary serialization with excellent
- * performance and cross-language compatibility. It's particularly effective
- * for mobile and IoT applications.
+ * MessagePack provides fast binary serialization with excellent performance and
+ * cross-language compatibility. It's particularly effective for mobile and IoT
+ * applications where bandwidth and processing power are limited.
  */
 @Service
-public class MessagePackSerializationService {
+public class MessagePackSerializationService extends AbstractSerializationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MessagePackSerializationService.class);
+    private static final String FRAMEWORK_NAME = "MessagePack";
 
     private final ObjectMapper messagePackMapper;
+    private final LZ4Compressor lz4Compressor;
+    private final LZ4FastDecompressor lz4Decompressor;
 
-    public MessagePackSerializationService() {
+    public MessagePackSerializationService(UnifiedPayloadGenerator payloadGenerator) {
+        super(payloadGenerator);
+
+        // Initialize LZ4 compression
+        LZ4Factory factory = LZ4Factory.fastestInstance();
+        this.lz4Compressor = factory.fastCompressor();
+        this.lz4Decompressor = factory.fastDecompressor();
+
         // Create custom module for BigDecimal handling
         SimpleModule bigDecimalModule = new SimpleModule();
         bigDecimalModule.addSerializer(BigDecimal.class, new BigDecimalSerializer());
@@ -46,6 +68,8 @@ public class MessagePackSerializationService {
             .registerModule(new JavaTimeModule())
             .registerModule(bigDecimalModule)
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        logger.info("Initialized MessagePack serialization service with LZ4 and GZIP compression");
     }
 
     /**
@@ -77,105 +101,180 @@ public class MessagePackSerializationService {
         }
     }
 
+    @Override
+    public String getFrameworkName() {
+        return FRAMEWORK_NAME;
+    }
+
+    @Override
+    public SerializationResult serialize(List<User> users) throws SerializationException {
+        try {
+            logger.debug("Serializing {} users to MessagePack format", users.size());
+
+            long startTime = System.nanoTime();
+            byte[] data = messagePackMapper.writeValueAsBytes(users);
+            long serializationTime = System.nanoTime() - startTime;
+
+            logger.debug("Successfully serialized {} users to {} bytes in {:.2f} ms",
+                    users.size(), data.length, serializationTime / 1_000_000.0);
+
+            return SerializationResult.builder(FRAMEWORK_NAME)
+                    .format("MessagePack Binary")
+                    .data(data)
+                    .serializationTime(serializationTime)
+                    .inputObjectCount(users.size())
+                    .build();
+
+        } catch (Exception e) {
+            logger.error("Failed to serialize {} users", users.size(), e);
+            throw SerializationException.serialization(FRAMEWORK_NAME, "MessagePack serialization failed", e);
+        }
+    }
+
+    @Override
+    public List<User> deserialize(byte[] data) throws SerializationException {
+        try {
+            logger.debug("Deserializing {} bytes from MessagePack format", data.length);
+
+            long startTime = System.nanoTime();
+            List<User> users = messagePackMapper.readValue(data,
+                    messagePackMapper.getTypeFactory().constructCollectionType(List.class, User.class));
+            long deserializationTime = System.nanoTime() - startTime;
+
+            logger.debug("Successfully deserialized {} users from {} bytes in {:.2f} ms",
+                    users.size(), data.length, deserializationTime / 1_000_000.0);
+
+            return users;
+
+        } catch (Exception e) {
+            logger.error("Failed to deserialize {} bytes", data.length, e);
+            throw SerializationException.deserialization(FRAMEWORK_NAME, "MessagePack deserialization failed", e);
+        }
+    }
+
+    @Override
+    public CompressionResult compress(byte[] data) throws SerializationException {
+        // Use GZIP as the default compression (matches decompress method)
+        return compressWithGzip(data);
+    }
+
+    @Override
+    public byte[] decompress(byte[] compressedData) throws SerializationException {
+        try {
+            // For simplicity, default to GZIP decompression
+            // In a real implementation, you'd store compression metadata
+            return decompressGzip(compressedData);
+        } catch (Exception e) {
+            throw SerializationException.decompression(FRAMEWORK_NAME, "Default decompression failed", compressedData.length, e);
+        }
+    }
+
+    @Override
+    protected PerformanceTier getExpectedPerformanceTier() {
+        return PerformanceTier.VERY_HIGH;
+    }
+
+    @Override
+    protected MemoryFootprint getMemoryFootprint() {
+        return MemoryFootprint.LOW;
+    }
+
+    @Override
+    public List<String> getSupportedCompressionAlgorithms() {
+        return Arrays.asList("LZ4", "GZIP");
+    }
+
+    @Override
+    public boolean supportsSchemaEvolution() {
+        return false; // MessagePack requires consistent schema
+    }
+
+    @Override
+    public String getTypicalUseCase() {
+        return "Cross-language serialization, network protocols, efficient data storage";
+    }
+
+    // Additional compression methods
+    public CompressionResult compressWithLZ4(byte[] data) throws SerializationException {
+        try {
+            long startTime = System.nanoTime();
+            int maxCompressedLength = lz4Compressor.maxCompressedLength(data.length);
+            byte[] compressed = new byte[maxCompressedLength];
+            int compressedLength = lz4Compressor.compress(data, 0, data.length, compressed, 0, maxCompressedLength);
+
+            // Trim the array to actual compressed size
+            byte[] result = new byte[compressedLength];
+            System.arraycopy(compressed, 0, result, 0, compressedLength);
+
+            long compressionTime = System.nanoTime() - startTime;
+
+            return CompressionResult.builder("LZ4")
+                    .compressedData(result)
+                    .compressionTime(compressionTime)
+                    .originalSize(data.length)
+                    .build();
+
+        } catch (Exception e) {
+            throw SerializationException.compression(FRAMEWORK_NAME, "LZ4 compression failed", data.length, e);
+        }
+    }
+
+    public CompressionResult compressWithGzip(byte[] data) throws SerializationException {
+        try {
+            long startTime = System.nanoTime();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (GZIPOutputStream gzipOut = new GZIPOutputStream(baos)) {
+                gzipOut.write(data);
+            }
+
+            byte[] compressed = baos.toByteArray();
+            long compressionTime = System.nanoTime() - startTime;
+
+            return CompressionResult.builder("GZIP")
+                    .compressedData(compressed)
+                    .compressionTime(compressionTime)
+                    .originalSize(data.length)
+                    .build();
+
+        } catch (IOException e) {
+            throw SerializationException.compression(FRAMEWORK_NAME, "GZIP compression failed", data.length, e);
+        }
+    }
+
+    public byte[] decompressGzip(byte[] compressedData) throws SerializationException {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
+            GZIPInputStream gzipIn = new GZIPInputStream(bais);
+            byte[] decompressed = gzipIn.readAllBytes();
+            gzipIn.close();
+            return decompressed;
+        } catch (IOException e) {
+            throw SerializationException.decompression(FRAMEWORK_NAME, "GZIP decompression failed", compressedData.length, e);
+        }
+    }
+
     /**
-     * Serialize user to MessagePack format
+     * Legacy methods for backward compatibility
      */
+    @Deprecated
     public byte[] serialize(User user) throws IOException {
         return messagePackMapper.writeValueAsBytes(user);
     }
 
-    /**
-     * Deserialize user from MessagePack format
-     */
-    public User deserialize(byte[] data) throws IOException {
+    @Deprecated
+    public User deserializeUser(byte[] data) throws IOException {
         return messagePackMapper.readValue(data, User.class);
     }
 
-    /**
-     * Serialize user list to MessagePack format
-     */
+    @Deprecated
     public byte[] serializeList(List<User> users) throws IOException {
         return messagePackMapper.writeValueAsBytes(users);
     }
 
-    /**
-     * Deserialize user list from MessagePack format
-     */
-    @SuppressWarnings("unchecked")
+    @Deprecated
     public List<User> deserializeList(byte[] data) throws IOException {
-        return messagePackMapper.readValue(data, List.class);
-    }
-
-    /**
-     * Serialize with GZIP compression
-     */
-    public byte[] serializeWithGzip(User user) throws IOException {
-        byte[] serialized = serialize(user);
-        return compressGzip(serialized);
-    }
-
-    /**
-     * Deserialize with GZIP decompression
-     */
-    public User deserializeWithGzip(byte[] compressedData) throws IOException {
-        byte[] decompressed = decompressGzip(compressedData);
-        return deserialize(decompressed);
-    }
-
-    /**
-     * Serialize list with GZIP compression
-     */
-    public byte[] serializeListWithGzip(List<User> users) throws IOException {
-        byte[] serialized = serializeList(users);
-        return compressGzip(serialized);
-    }
-
-    /**
-     * Deserialize list with GZIP decompression
-     */
-    public List<User> deserializeListWithGzip(byte[] compressedData) throws IOException {
-        byte[] decompressed = decompressGzip(compressedData);
-        return deserializeList(decompressed);
-    }
-
-    /**
-     * Compress data using GZIP
-     */
-    private byte[] compressGzip(byte[] data) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (GZIPOutputStream gzipOut = new GZIPOutputStream(baos)) {
-            gzipOut.write(data);
-        }
-        return baos.toByteArray();
-    }
-
-    /**
-     * Decompress data using GZIP
-     */
-    private byte[] decompressGzip(byte[] compressedData) throws IOException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (GZIPInputStream gzipIn = new GZIPInputStream(bais)) {
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = gzipIn.read(buffer)) > 0) {
-                baos.write(buffer, 0, len);
-            }
-        }
-        return baos.toByteArray();
-    }
-
-    /**
-     * Get serialization format info
-     */
-    public String getFormatInfo() {
-        return "MessagePack - Fast binary serialization format with excellent performance and cross-language compatibility";
-    }
-
-    /**
-     * Get compression info
-     */
-    public String getCompressionInfo() {
-        return "GZIP - Standard compression with good compression ratio and reasonable speed";
+        return messagePackMapper.readValue(data,
+                messagePackMapper.getTypeFactory().constructCollectionType(List.class, User.class));
     }
 }
