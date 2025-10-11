@@ -1,8 +1,10 @@
 package org.techishthoughts.flatbuffers.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.springframework.stereotype.Service;
@@ -82,18 +84,16 @@ public class FlatBuffersSerializationServiceV2 extends AbstractSerializationServ
             byte[] data = objectMapper.writeValueAsBytes(users);
             long durationNs = System.nanoTime() - startTime;
 
-            return SerializationResult.builder()
-                    .framework(getFrameworkName())
+            return SerializationResult.builder(getFrameworkName())
                     .data(data)
-                    .sizeBytes(data.length)
-                    .serializationTimeMs(durationNs / 1_000_000.0)
-                    .success(true)
+                    .format("JSON")
+                    .serializationTime(durationNs)
+                    .inputObjectCount(users.size())
                     .build();
 
         } catch (Exception e) {
-            throw new SerializationException(
+            throw SerializationException.serialization(
                     getFrameworkName(),
-                    "SERIALIZE",
                     "Failed to serialize users with FlatBuffers",
                     e
             );
@@ -107,9 +107,8 @@ public class FlatBuffersSerializationServiceV2 extends AbstractSerializationServ
                     .constructCollectionType(List.class, User.class);
             return objectMapper.readValue(data, listType);
         } catch (Exception e) {
-            throw new SerializationException(
+            throw SerializationException.deserialization(
                     getFrameworkName(),
-                    "DESERIALIZE",
                     "Failed to deserialize users with FlatBuffers",
                     e
             );
@@ -124,25 +123,35 @@ public class FlatBuffersSerializationServiceV2 extends AbstractSerializationServ
             byte[] compressed = compressWithGzip(data);
             long durationNs = System.nanoTime() - startTime;
 
-            double compressionRatio = data.length > 0
-                    ? (double) compressed.length / data.length
-                    : 0.0;
-
-            return CompressionResult.builder()
-                    .algorithm("GZIP")
+            return CompressionResult.builder("GZIP")
                     .compressedData(compressed)
-                    .originalSizeBytes(data.length)
-                    .compressedSizeBytes(compressed.length)
-                    .compressionTimeMs(durationNs / 1_000_000.0)
-                    .compressionRatio(compressionRatio)
-                    .success(true)
+                    .compressionTime(durationNs)
+                    .originalSize(data.length)
                     .build();
 
         } catch (Exception e) {
-            throw new SerializationException(
+            throw SerializationException.compression(
                     getFrameworkName(),
-                    "COMPRESS",
                     "Failed to compress data with GZIP",
+                    data.length,
+                    e
+            );
+        }
+    }
+
+    @Override
+    public byte[] decompress(byte[] compressedData) throws SerializationException {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
+            GZIPInputStream gzipIn = new GZIPInputStream(bais);
+            byte[] decompressed = gzipIn.readAllBytes();
+            gzipIn.close();
+            return decompressed;
+        } catch (IOException e) {
+            throw SerializationException.decompression(
+                    getFrameworkName(),
+                    "GZIP decompression failed",
+                    compressedData.length,
                     e
             );
         }
