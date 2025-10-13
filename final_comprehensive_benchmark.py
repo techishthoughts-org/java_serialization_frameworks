@@ -603,8 +603,14 @@ class ComprehensiveBenchmark:
 
         # Run benchmarks
         for framework_key, framework_info in available_frameworks.items():
-            self.results[framework_key] = self.run_framework_benchmark(
-                framework_key, framework_info)
+            try:
+                result = self.run_framework_benchmark(framework_key, framework_info)
+                if result and isinstance(result, dict) and 'summary' in result:
+                    self.results[framework_key] = result
+                else:
+                    print(f"⚠️  {framework_info['name']}: Invalid result, skipping")
+            except Exception as e:
+                print(f"❌ {framework_info['name']}: Error during benchmark - {str(e)[:100]}")
 
         return self.results
 
@@ -619,16 +625,16 @@ class ComprehensiveBenchmark:
 
         # Overall statistics
         total_frameworks = len(self.results)
-        total_tests = sum(r['summary']['total_tests']
+        total_tests = sum(r.get('summary', {}).get('total_tests', 0)
                          for r in self.results.values())
-        total_successful = sum(r['summary']['successful_tests']
+        total_successful = sum(r.get('summary', {}).get('successful_tests', 0)
                              for r in self.results.values())
 
         # Enhanced statistics with V2 information
-        v2_frameworks = sum(1 for r in self.results.values() if r['summary'].get('v2_available', False))
-        total_v2_tests = sum(sum(1 for s in r['scenarios'].values() if s.get('v2_unified_result'))
+        v2_frameworks = sum(1 for r in self.results.values() if r.get('summary', {}).get('v2_available', False))
+        total_v2_tests = sum(sum(1 for s in r.get('scenarios', {}).values() if s.get('v2_unified_result'))
                            for r in self.results.values())
-        successful_v2_tests = sum(sum(1 for s in r['scenarios'].values()
+        successful_v2_tests = sum(sum(1 for s in r.get('scenarios', {}).values()
                                     if s.get('v2_unified_result', {}).get('success', False))
                                 for r in self.results.values())
 
@@ -650,14 +656,14 @@ class ComprehensiveBenchmark:
 
         sorted_frameworks = sorted(
             self.results.items(),
-            key=lambda x: x[1]['summary']['overall_success_rate'],
+            key=lambda x: x[1].get('summary', {}).get('overall_success_rate', 0),
             reverse=True
         )
 
         for i, (framework_key, result) in enumerate(sorted_frameworks, 1):
-            success_rate = result['summary']['overall_success_rate']
-            avg_response = result['summary']['avg_response_time_ms']
-            has_v2 = result['summary'].get('v2_available', False)
+            success_rate = result.get('summary', {}).get('overall_success_rate', 0)
+            avg_response = result.get('summary', {}).get('avg_response_time_ms', 0)
+            has_v2 = result.get('summary', {}).get('v2_available', False)
             api_version = "V2" if has_v2 else "V1"
 
             status = ("🟢" if success_rate >= 80 else
@@ -674,18 +680,18 @@ class ComprehensiveBenchmark:
         # Filter only successful frameworks for performance ranking
         successful_frameworks = [
             (k, v) for k, v in self.results.items()
-            if v['summary']['successful_tests'] > 0
+            if v.get('summary', {}).get('successful_tests', 0) > 0
         ]
 
         sorted_by_performance = sorted(
             successful_frameworks,
-            key=lambda x: x[1]['summary']['avg_response_time_ms']
+            key=lambda x: x[1].get('summary', {}).get('avg_response_time_ms', float('inf'))
         )
 
         for i, (framework_key, result) in enumerate(sorted_by_performance, 1):
-            avg_response = result['summary']['avg_response_time_ms']
-            success_rate = result['summary']['overall_success_rate']
-            has_v2 = result['summary'].get('v2_available', False)
+            avg_response = result.get('summary', {}).get('avg_response_time_ms', 0)
+            success_rate = result.get('summary', {}).get('overall_success_rate', 0)
+            has_v2 = result.get('summary', {}).get('v2_available', False)
             api_version = "V2" if has_v2 else "V1"
 
             # Check for V2-specific features in results
@@ -711,7 +717,7 @@ class ComprehensiveBenchmark:
         print(f"\n🚀 V2 API ANALYSIS:")
         print("-" * 80)
 
-        v2_frameworks = [(k, v) for k, v in self.results.items() if v['summary'].get('v2_available', False)]
+        v2_frameworks = [(k, v) for k, v in self.results.items() if v.get('summary', {}).get('v2_available', False)]
 
         if v2_frameworks:
             print(f"{'Framework':<25} {'V2 Success':<12} {'Memory':<8} {'Roundtrip':<10} {'Compression'}")
@@ -764,10 +770,11 @@ class ComprehensiveBenchmark:
             scenario_p99_times = []
 
             for result in self.results.values():
-                if scenario_key in result['scenarios']:
-                    scenario_data = result['scenarios'][scenario_key]['summary']
-                    scenario_success_rates.append(scenario_data['success_rate'])
-                    if scenario_data['avg_response_time_ms'] > 0:
+                scenarios = result.get('scenarios', {})
+                if scenario_key in scenarios:
+                    scenario_data = scenarios[scenario_key].get('summary', {})
+                    scenario_success_rates.append(scenario_data.get('success_rate', 0))
+                    if scenario_data.get('avg_response_time_ms', 0) > 0:
                         scenario_response_times.append(scenario_data['avg_response_time_ms'])
 
                     # Collect percentile data if available
@@ -798,10 +805,10 @@ class ComprehensiveBenchmark:
         filename = f"final_comprehensive_benchmark_{timestamp}.json"
 
         # Calculate V2 statistics
-        v2_frameworks = sum(1 for r in self.results.values() if r['summary'].get('v2_available', False))
-        total_v2_tests = sum(sum(1 for s in r['scenarios'].values() if s.get('v2_unified_result'))
+        v2_frameworks = sum(1 for r in self.results.values() if r.get('summary', {}).get('v2_available', False))
+        total_v2_tests = sum(sum(1 for s in r.get('scenarios', {}).values() if s.get('v2_unified_result'))
                            for r in self.results.values())
-        successful_v2_tests = sum(sum(1 for s in r['scenarios'].values()
+        successful_v2_tests = sum(sum(1 for s in r.get('scenarios', {}).values()
                                     if s.get('v2_unified_result', {}).get('success', False))
                                 for r in self.results.values())
 
