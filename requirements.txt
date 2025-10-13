@@ -1,6 +1,17 @@
-pandas>=2.0.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
-plotly>=5.15.0
-streamlit>=1.28.0
+# Core dependencies (required)
+requests>=2.31.0
+
+# Statistical analysis (optional but recommended)
 numpy>=1.24.0
+
+# Visualization (optional - for chart generation)
+matplotlib>=3.7.0
+
+# Data analysis (optional - for CSV export)
+pandas>=2.0.0
+
+# PDF generation (optional - for PDF reports)
+reportlab>=4.0.0
+
+# Streamlit dashboard (optional - for interactive dashboard)
+streamlit>=1.28.0

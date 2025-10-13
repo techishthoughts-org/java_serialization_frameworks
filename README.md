@@ -39,13 +39,16 @@ This project provides a comprehensive evaluation platform for Java serialization
 
 ### V2 API Migration Status
 
-**V2 Unified Benchmark API** - New standardized benchmark architecture (In Progress)
+**✅ V2 Unified Benchmark API - Migration Complete (100%)**
 
-| Status | Frameworks | Features |
-|--------|-----------|----------|
-| ✅ **Complete (33%)** | Jackson, Protobuf, Kryo, Avro, MessagePack (5/15) | Unified `/v2/benchmark` endpoint, BenchmarkConfig, enhanced results |
-| 🔨 **In Progress** | Thrift, Cap'n Proto, FST, FlatBuffers, gRPC (5/15) | Service layer migration needed |
-| 📋 **Planned** | CBOR, BSON, Arrow, SBE, Parquet (5/15) | Complete implementation required |
+All 15 serialization frameworks now implement the standardized V2 benchmark architecture:
+
+| Framework Category | Frameworks | Status |
+|-------------------|-----------|--------|
+| **Phase 1** | Jackson, Protobuf, Kryo, Avro, MessagePack | ✅ Complete |
+| **Phase 2** | Thrift, Cap'n Proto, FST, FlatBuffers | ✅ Complete |
+| **Phase 3** | gRPC | ✅ Complete |
+| **Phase 4** | CBOR, BSON, Arrow, SBE, Parquet | ✅ Complete |
 
 **V2 API Benefits:**
 - Single unified endpoint (`/api/{framework}/v2/benchmark`) vs multiple V1 endpoints
@@ -56,9 +59,8 @@ This project provides a comprehensive evaluation platform for Java serialization
 - Backward compatibility with V1 endpoints maintained
 
 **Documentation:**
-- See `MIGRATION_STATUS_REPORT.md` for detailed migration roadmap
-- See `V2_BENCHMARK_UPDATE_SUMMARY.md` for V2 feature documentation
-- See `GIT_COMMIT_STRATEGY.md` for implementation strategy
+- See `V2_BENCHMARK_UPDATE_SUMMARY.md` for V2 feature documentation and API details
+- See `BENCHMARK_RECOMMENDATIONS.md` for benchmarking best practices
 
 ## 🛠️ Supported Frameworks
 
@@ -74,11 +76,11 @@ This project provides a comprehensive evaluation platform for Java serialization
 | **FST** | 8090 | ✅ Production | Java Fast Serialization | Very High |
 | **FlatBuffers** | 8091 | ✅ Production | Game Development, IoT | Ultra High |
 | **gRPC** | 8092 | ✅ Production | Microservices, HTTP/2 | Very High |
-| **CBOR** | 8093 | 🚧 In Development | IoT, Constrained Environments | High |
-| **BSON** | 8094 | 🚧 In Development | MongoDB, Document Databases | High |
-| **Apache Arrow** | 8095 | 🚧 In Development | Big Data, Analytics | Very High |
-| **SBE** | 8096 | 🚧 In Development | Ultra-low Latency, Financial | Ultra High |
-| **Apache Parquet** | 8097 | 🚧 In Development | Data Warehousing, Analytics | Very High |
+| **CBOR** | 8093 | ✅ Production | IoT, Constrained Environments | High |
+| **BSON** | 8094 | ✅ Production | MongoDB, Document Databases | High |
+| **Apache Arrow** | 8095 | ✅ Production | Big Data, Analytics | Very High |
+| **SBE** | 8096 | ✅ Production | Ultra-low Latency, Financial | Ultra High |
+| **Apache Parquet** | 8097 | ✅ Production | Data Warehousing, Analytics | Very High |
 
 ## 🚀 Quick Start
 
@@ -187,15 +189,48 @@ java_serialization_frameworks/
 
 ### 🧹 Clean Architecture
 
-This project has been **streamlined** to include only the **essential 12 frameworks**:
+This project has been **streamlined** to include **15 production-ready frameworks**:
 
-- ✅ **12 Active Frameworks** - All production-ready
+- ✅ **15 Active Frameworks** - All production-ready with V2 API
 - ✅ **1 Shared Dependency** - common-payload for shared models
 - ✅ **Clean Maven Structure** - No unused modules
 - ✅ **Optimized Build** - Faster compilation and deployment
-- ✅ **Background Benchmark** - Automated testing suite
+- ✅ **Unified V2 API** - Consistent benchmark interface across all frameworks
 
 ## 📊 Benchmarking
+
+### ⚠️ Known Limitations
+
+#### JMH Microbenchmarks (Available)
+
+**Current benchmark results include HTTP/network overhead (~2-3x the pure serialization time).**
+
+The integration tests (microservices + Python) measure **real-world distributed system performance** including:
+- HTTP request/response overhead
+- Network latency
+- Spring Boot container overhead
+
+For **pure algorithm performance**, use the JMH microbenchmarks in `benchmark-jmh/`:
+
+```bash
+cd benchmark-jmh
+mvn clean package
+java -jar target/benchmarks.jar                    # Run all frameworks
+java -jar target/benchmarks.jar JacksonBenchmark   # Run specific framework
+java -jar target/benchmarks.jar -rf json -rff jmh-results.json  # Export results
+```
+
+**Example Performance Comparison:**
+
+| Framework | JMH (Pure) | Integration (Real-World) | HTTP Overhead |
+|-----------|-----------|--------------------------|---------------|
+| Jackson   | ~3.2ms    | ~9.3ms                   | ~6.1ms (191%) |
+| Kryo      | ~1.8ms    | ~5.6ms                   | ~3.8ms (211%) |
+| Cap'n Proto | ~1.1ms  | ~6.1ms                   | ~5.0ms (455%) |
+
+**Key Insight**: HTTP overhead is approximately **2-3x** the pure serialization time.
+
+See `BENCHMARK_RECOMMENDATIONS.md` for detailed analysis and recommendations on using both JMH and integration tests together.
 
 ### Benchmark Scenarios
 
@@ -1251,4 +1286,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ for the Java community**
 
-*Last updated: July 2025 - Project cleaned and optimized*
+*Last updated: October 2025 - V2 API migration complete, project optimized and documentation updated*

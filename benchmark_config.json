@@ -1,0 +1,43 @@
+{
+  "data_retention": {
+    "description": "Data retention policies to prevent GB-scale bloat",
+    "max_benchmark_results": 10,
+    "max_jmh_results": 10,
+    "max_reports_per_format": 5,
+    "max_charts": 15,
+    "max_history_days": 30,
+    "max_total_size_mb": 500,
+    "auto_cleanup_enabled": true,
+    "cleanup_on_startup": true
+  },
+  "storage_paths": {
+    "reports_dir": "./reports",
+    "jmh_results_dir": "./reports",
+    "history_db": "./benchmark_history.db",
+    "charts_dir": "./reports",
+    "logs_dir": "./logs"
+  },
+  "monitoring": {
+    "enable_history_tracking": true,
+    "enable_regression_detection": true,
+    "enable_size_monitoring": true,
+    "regression_threshold_percent": 10,
+    "warning_size_mb": 400,
+    "critical_size_mb": 500
+  },
+  "benchmark_settings": {
+    "default_mode": "quick",
+    "jmh_warmup_iterations": 3,
+    "jmh_measurement_iterations": 5,
+    "jmh_forks": 1,
+    "integration_iterations_multiplier": 0.5
+  },
+  "reporting": {
+    "include_charts_in_reports": true,
+    "generate_html_by_default": true,
+    "generate_pdf_by_default": false,
+    "generate_json_by_default": true,
+    "generate_csv_by_default": true,
+    "compress_old_reports": true
+  }
+}

@@ -1,135 +1,154 @@
 #!/bin/bash
+##
+# Complete Benchmark Automation Script
+#
+# Runs the complete benchmark workflow with automatic report generation.
+# This script coordinates JMH benchmarks, integration tests, and report generation.
+#
+# Usage:
+#   ./run_complete_benchmark.sh [options]
+#
+# Options:
+#   --quick              Run quick benchmarks (fewer iterations)
+#   --skip-jmh           Skip JMH benchmarks (use cached results)
+#   --skip-integration   Skip integration tests (use cached results)
+#   --format FORMAT      Report format: pdf, html, json, csv, all (default: all)
+#   --output DIR         Output directory (default: ./reports)
+#   --help               Show this help message
+#
+# Examples:
+#   # Run complete workflow
+#   ./run_complete_benchmark.sh
+#
+#   # Quick benchmark with HTML reports
+#   ./run_complete_benchmark.sh --quick --format html
+#
+#   # Use cached JMH results, regenerate reports
+#   ./run_complete_benchmark.sh --skip-jmh --skip-integration --format all
+##
 
-# Complete Benchmark Runner for Java Serialization Frameworks (2025)
-# This script compiles all projects, starts all frameworks, and runs comprehensive benchmarks
+set -e  # Exit on error
 
-echo "🚀 Java Serialization Framework Complete Benchmark Runner"
-echo "========================================================="
-echo "⏰ Start time: $(date '+%Y-%m-%d %H:%M:%S')"
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Print colored output
+print_header() {
+    echo -e "\n${BLUE}========================================${NC}"
+    echo -e "${BLUE}$1${NC}"
+    echo -e "${BLUE}========================================${NC}\n"
+}
+
+print_success() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
+
+# Check prerequisites
+check_prerequisites() {
+    print_header "Checking Prerequisites"
+
+    # Check Python 3
+    if ! command -v python3 &> /dev/null; then
+        print_error "Python 3 is required but not installed"
+        exit 1
+    fi
+    print_success "Python 3 found: $(python3 --version)"
+
+    # Check Java
+    if ! command -v java &> /dev/null; then
+        print_error "Java is required but not installed"
+        exit 1
+    fi
+    print_success "Java found: $(java -version 2>&1 | head -n 1)"
+
+    # Check Maven
+    if ! command -v mvn &> /dev/null; then
+        print_error "Maven is required but not installed"
+        exit 1
+    fi
+    print_success "Maven found: $(mvn -version | head -n 1)"
+
+    # Check Python dependencies
+    print_header "Checking Python Dependencies"
+
+    if python3 -c "import requests" 2>/dev/null; then
+        print_success "requests module found"
+    else
+        print_warning "requests module not found - installing..."
+        pip3 install requests
+    fi
+
+    # Optional dependencies
+    if python3 -c "import matplotlib" 2>/dev/null; then
+        print_success "matplotlib found (charts enabled)"
+    else
+        print_warning "matplotlib not found (charts disabled)"
+        echo "  Install with: pip3 install matplotlib"
+    fi
+
+    if python3 -c "import pandas" 2>/dev/null; then
+        print_success "pandas found (CSV export enabled)"
+    else
+        print_warning "pandas not found (CSV export disabled)"
+        echo "  Install with: pip3 install pandas"
+    fi
+
+    if python3 -c "import reportlab" 2>/dev/null; then
+        print_success "reportlab found (PDF export enabled)"
+    else
+        print_warning "reportlab not found (PDF export disabled)"
+        echo "  Install with: pip3 install reportlab"
+    fi
+
+    echo ""
+}
+
+# Show help
+show_help() {
+    head -n 30 "$0" | grep "^#" | sed 's/^# \?//'
+    exit 0
+}
+
+# Parse arguments
+ARGS="$@"
+if [[ "$*" == *"--help"* ]]; then
+    show_help
+fi
+
+# Main execution
+print_header "🚀 Complete Benchmark Automation"
+echo "Starting comprehensive benchmark workflow..."
+echo "Output directory: ${OUTPUT_DIR:-./reports}"
 echo ""
 
 # Check prerequisites
-echo "🔍 Checking prerequisites..."
+check_prerequisites
 
-# Check Java
-if ! command -v java &> /dev/null; then
-    echo "❌ Java not found. Please install Java 21+"
-    exit 1
-fi
-
-JAVA_VERSION=$(java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1)
-if [ "$JAVA_VERSION" -lt 21 ]; then
-    echo "❌ Java 21+ required. Found Java $JAVA_VERSION"
-    exit 1
-fi
-echo "✅ Java $JAVA_VERSION found"
-
-# Check Maven
-if ! command -v mvn &> /dev/null; then
-    echo "❌ Maven not found. Please install Maven 3.8+"
-    exit 1
-fi
-echo "✅ Maven found"
-
-# Check Python
-if ! command -v python3 &> /dev/null; then
-    echo "❌ Python 3 not found. Please install Python 3.8+"
-    exit 1
-fi
-echo "✅ Python 3 found"
-
-# Check virtual environment
-if [ ! -d "venv" ]; then
-    echo "📦 Creating Python virtual environment..."
-    python3 -m venv venv
-fi
-
-# Activate virtual environment
-echo "🔧 Activating virtual environment..."
-source venv/bin/activate
-
-# Install Python dependencies
-echo "📦 Installing Python dependencies..."
-pip install requests -q
-
+# Run Python orchestration script
+print_header "Running Benchmark Workflow"
+echo "This may take 20-60 minutes depending on options"
+echo "Progress will be shown below..."
 echo ""
-echo "🏗️ STEP 1: Compiling all projects..."
-echo "====================================="
 
-# Clean and compile all projects
-mvn clean install -q -DskipTests
-
-if [ $? -ne 0 ]; then
-    echo "❌ Compilation failed!"
-    exit 1
-fi
-echo "✅ All projects compiled successfully"
-
-echo ""
-echo "🚀 STEP 2: Starting all frameworks..."
-echo "====================================="
-
-# Start all frameworks in background
-python start_all_frameworks_comprehensive.py &
-LAUNCHER_PID=$!
-
-echo "⏳ Waiting 60 seconds for all frameworks to start..."
-sleep 60
-
-# Check if launcher is still running
-if ! kill -0 $LAUNCHER_PID 2>/dev/null; then
-    echo "❌ Framework launcher failed to start"
-    exit 1
-fi
-
-echo "✅ Framework launcher is running (PID: $LAUNCHER_PID)"
-
-echo ""
-echo "🧪 STEP 3: Running comprehensive benchmark..."
-echo "============================================="
-
-# Run the comprehensive benchmark
-python final_comprehensive_benchmark.py
-
-BENCHMARK_EXIT_CODE=$?
-
-echo ""
-echo "🛑 STEP 4: Cleanup..."
-echo "===================="
-
-# Stop all frameworks
-echo "🛑 Stopping all frameworks..."
-kill $LAUNCHER_PID 2>/dev/null
-
-# Kill any remaining Spring Boot processes
-pkill -f "spring-boot:run" 2>/dev/null
-
-echo "✅ Cleanup completed"
-
-echo ""
-echo "📊 BENCHMARK COMPLETE!"
-echo "======================"
-
-if [ $BENCHMARK_EXIT_CODE -eq 0 ]; then
-    echo "✅ Benchmark completed successfully"
-    echo "📄 Check the generated JSON file for detailed results"
-    echo "📊 Review the console output above for performance rankings"
+if python3 run_complete_benchmark_with_reports.py $ARGS; then
+    print_success "Benchmark workflow completed successfully!"
+    echo ""
+    echo "📄 Check the ./reports directory for generated files"
+    echo "📊 Open benchmark_report_*.html in your browser for interactive results"
+    exit 0
 else
-    echo "❌ Benchmark completed with errors (exit code: $BENCHMARK_EXIT_CODE)"
+    print_error "Benchmark workflow failed"
+    exit 1
 fi
-
-echo ""
-echo "🎯 Next Steps:"
-echo "- Review the generated benchmark results JSON file"
-echo "- Check individual framework logs if needed"
-echo "- Run individual framework tests for deeper analysis"
-echo ""
-
-# Display latest results file
-LATEST_RESULTS=$(ls -t final_comprehensive_benchmark_*.json 2>/dev/null | head -n 1)
-if [ -n "$LATEST_RESULTS" ]; then
-    echo "📄 Latest results file: $LATEST_RESULTS"
-fi
-
-echo "⏰ Total runtime: $(($(date +%s) - $(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s))) seconds"
-echo "🏁 Complete benchmark finished at: $(date '+%Y-%m-%d %H:%M:%S')"

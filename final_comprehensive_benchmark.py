@@ -26,6 +26,13 @@ from datetime import datetime
 
 import requests
 
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
+    print("⚠️  NumPy not available - percentile analysis will use basic statistics")
+
 # All 15 frameworks with their complete endpoint mapping (V2 + V1 support)
 FRAMEWORKS = {
     'jackson': {
@@ -521,13 +528,38 @@ class ComprehensiveBenchmark:
                     scenario_response_times.append(result['response_time_ms'])
                     total_response_time += result['response_time_ms']
 
-            # Calculate scenario summary
+            # Calculate scenario summary with percentile analysis
             total_scenario_endpoints = (1 if has_v2 else 0) + len(framework_info['endpoints'])
+
+            # Calculate percentiles if we have response times
+            percentile_stats = {}
+            if scenario_response_times:
+                if HAS_NUMPY:
+                    percentile_stats = {
+                        'p50_ms': float(np.percentile(scenario_response_times, 50)),  # Median
+                        'p95_ms': float(np.percentile(scenario_response_times, 95)),
+                        'p99_ms': float(np.percentile(scenario_response_times, 99)),
+                        'min_ms': float(np.min(scenario_response_times)),
+                        'max_ms': float(np.max(scenario_response_times)),
+                        'std_dev_ms': float(np.std(scenario_response_times))
+                    }
+                else:
+                    sorted_times = sorted(scenario_response_times)
+                    percentile_stats = {
+                        'p50_ms': statistics.median(sorted_times),
+                        'p95_ms': sorted_times[int(len(sorted_times) * 0.95)] if len(sorted_times) > 1 else sorted_times[0],
+                        'p99_ms': sorted_times[int(len(sorted_times) * 0.99)] if len(sorted_times) > 1 else sorted_times[0],
+                        'min_ms': min(sorted_times),
+                        'max_ms': max(sorted_times),
+                        'std_dev_ms': statistics.stdev(sorted_times) if len(sorted_times) > 1 else 0
+                    }
+
             scenario_results['summary'] = {
                 'success_rate': (scenario_success_count / total_scenario_endpoints) * 100 if total_scenario_endpoints > 0 else 0,
                 'avg_response_time_ms': (
                     statistics.mean(scenario_response_times)
                     if scenario_response_times else 0),
+                'percentiles': percentile_stats,  # Add percentile statistics
                 'total_endpoints': total_scenario_endpoints,
                 'successful_endpoints': scenario_success_count,
                 'v2_available': has_v2,
@@ -715,10 +747,10 @@ class ComprehensiveBenchmark:
         else:
             print("No V2 endpoints available yet.")
 
-        # Scenario analysis
-        print(f"\n📋 SCENARIO ANALYSIS:")
+        # Scenario analysis with percentiles
+        print(f"\n📋 SCENARIO ANALYSIS (with Percentile Statistics):")
         print("-" * 80)
-        print(f"{'Scenario':<15} {'Overall':<15} {'V1 Success':<12} {'V2 Success':<12} {'Avg Time'}")
+        print(f"{'Scenario':<15} {'Overall':<10} {'Avg Time':<12} {'p50':<10} {'p95':<10} {'p99'}")
         print("-" * 80)
 
         for scenario in TEST_SCENARIOS:
@@ -727,39 +759,38 @@ class ComprehensiveBenchmark:
 
             scenario_success_rates = []
             scenario_response_times = []
-            v1_success_rates = []
-            v2_success_rates = []
+            scenario_p50_times = []
+            scenario_p95_times = []
+            scenario_p99_times = []
 
             for result in self.results.values():
                 if scenario_key in result['scenarios']:
                     scenario_data = result['scenarios'][scenario_key]['summary']
                     scenario_success_rates.append(scenario_data['success_rate'])
                     if scenario_data['avg_response_time_ms'] > 0:
-                        scenario_response_times.append(
-                            scenario_data['avg_response_time_ms'])
+                        scenario_response_times.append(scenario_data['avg_response_time_ms'])
 
-                    # Separate V1 and V2 success rates
-                    v1_endpoints = len(result['scenarios'][scenario_key].get('endpoints', {}))
-                    v1_successful = sum(1 for ep_result in result['scenarios'][scenario_key].get('endpoints', {}).values()
-                                      if ep_result.get('success', False))
-                    v1_rate = (v1_successful / v1_endpoints) * 100 if v1_endpoints > 0 else 0
-                    v1_success_rates.append(v1_rate)
-
-                    if scenario_data.get('v2_successful', False):
-                        v2_success_rates.append(100.0)
-                    elif scenario_data.get('v2_available', False):
-                        v2_success_rates.append(0.0)
+                    # Collect percentile data if available
+                    percentiles = scenario_data.get('percentiles', {})
+                    if percentiles.get('p50_ms', 0) > 0:
+                        scenario_p50_times.append(percentiles['p50_ms'])
+                    if percentiles.get('p95_ms', 0) > 0:
+                        scenario_p95_times.append(percentiles['p95_ms'])
+                    if percentiles.get('p99_ms', 0) > 0:
+                        scenario_p99_times.append(percentiles['p99_ms'])
 
             avg_success = (statistics.mean(scenario_success_rates)
                           if scenario_success_rates else 0)
             avg_response = (statistics.mean(scenario_response_times)
                            if scenario_response_times else 0)
-            avg_v1_success = (statistics.mean(v1_success_rates)
-                            if v1_success_rates else 0)
-            avg_v2_success = (statistics.mean(v2_success_rates)
-                            if v2_success_rates else 0)
+            avg_p50 = (statistics.mean(scenario_p50_times)
+                      if scenario_p50_times else 0)
+            avg_p95 = (statistics.mean(scenario_p95_times)
+                      if scenario_p95_times else 0)
+            avg_p99 = (statistics.mean(scenario_p99_times)
+                      if scenario_p99_times else 0)
 
-            print(f"{scenario_name:15} {avg_success:8.1f}%      {avg_v1_success:8.1f}%    {avg_v2_success:8.1f}%    {avg_response:8.1f}ms")
+            print(f"{scenario_name:15} {avg_success:6.1f}%    {avg_response:8.1f}ms    {avg_p50:6.1f}ms   {avg_p95:6.1f}ms   {avg_p99:6.1f}ms")
 
     def save_detailed_results(self):
         """Save detailed results to JSON file with V2 metadata"""
