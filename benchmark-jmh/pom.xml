@@ -7,7 +7,7 @@
 
     <parent>
         <groupId>org.techishthoughts</groupId>
-        <artifactId>serialization-frameworks</artifactId>
+        <artifactId>java-serialization-frameworks</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -25,19 +25,19 @@
         <dependency>
             <groupId>org.techishthoughts</groupId>
             <artifactId>common-payload</artifactId>
-            <version>\${project.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- JMH Core -->
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
-            <version>\${jmh.version}</version>
+            <version>${jmh.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
-            <version>\${jmh.version}</version>
+            <version>${jmh.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -91,7 +91,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>\${uberjar.name}</finalName>
+                            <finalName>${uberjar.name}</finalName>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.openjdk.jmh.Main</mainClass>
