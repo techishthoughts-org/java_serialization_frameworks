@@ -1,0 +1,341 @@
+{
+  "dashboard": {
+    "title": "Java Serialization Frameworks - Resource Utilization",
+    "tags": ["serialization", "resources", "monitoring"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Memory Usage Overview",
+        "type": "timeseries",
+        "gridPos": {"h": 9, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "memory_usage_mb{framework=~\"$framework\"}",
+            "legendFormat": "{{framework}} - {{scenario}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "mbytes",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 20,
+              "axisPlacement": "auto"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 500, "color": "yellow"},
+                {"value": 1000, "color": "red"}
+              ]
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom",
+            "calcs": ["mean", "max"]
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "CPU Usage by Framework",
+        "type": "timeseries",
+        "gridPos": {"h": 9, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "cpu_usage_percent{framework=~\"$framework\"}",
+            "legendFormat": "{{framework}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "max": 100,
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 15
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Memory Efficiency (MB per 1000 ops)",
+        "type": "bargauge",
+        "gridPos": {"h": 9, "w": 12, "x": 0, "y": 9},
+        "targets": [
+          {
+            "expr": "memory_usage_mb / (serialization_throughput_ops / 1000)",
+            "legendFormat": "{{framework}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "mbytes",
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 50, "color": "yellow"},
+                {"value": 100, "color": "red"}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        }
+      },
+      {
+        "id": 4,
+        "title": "CPU Efficiency (% per 1000 ops)",
+        "type": "bargauge",
+        "gridPos": {"h": 9, "w": 12, "x": 12, "y": 9},
+        "targets": [
+          {
+            "expr": "cpu_usage_percent / (serialization_throughput_ops / 1000)",
+            "legendFormat": "{{framework}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 5, "color": "yellow"},
+                {"value": 10, "color": "red"}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        }
+      },
+      {
+        "id": 5,
+        "title": "Resource Utilization Heatmap",
+        "type": "heatmap",
+        "gridPos": {"h": 10, "w": 24, "x": 0, "y": 18},
+        "targets": [
+          {
+            "expr": "cpu_usage_percent * memory_usage_mb",
+            "legendFormat": "{{framework}}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "calculate": true,
+          "color": {
+            "mode": "scheme",
+            "scheme": "RdYlGn",
+            "reverse": true
+          },
+          "yAxis": {
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Top Resource Consumers",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 28},
+        "targets": [
+          {
+            "expr": "memory_usage_mb",
+            "format": "table",
+            "refId": "A"
+          },
+          {
+            "expr": "cpu_usage_percent",
+            "format": "table",
+            "refId": "B"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true,
+                "config": true
+              },
+              "indexByName": {
+                "framework": 0,
+                "scenario": 1,
+                "Value #A": 2,
+                "Value #B": 3
+              },
+              "renameByName": {
+                "Value #A": "Memory (MB)",
+                "Value #B": "CPU (%)",
+                "framework": "Framework",
+                "scenario": "Scenario"
+              }
+            }
+          },
+          {
+            "id": "sortBy",
+            "options": {
+              "sort": [
+                {
+                  "field": "Memory (MB)",
+                  "desc": true
+                }
+              ]
+            }
+          }
+        ],
+        "options": {
+          "showHeader": true,
+          "footer": {
+            "show": true,
+            "reducer": ["sum", "mean"]
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Resource Usage Alerts",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 36},
+        "targets": [
+          {
+            "expr": "count(memory_usage_mb > 500)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 1, "color": "yellow"},
+                {"value": 3, "color": "red"}
+              ]
+            }
+          }
+        },
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "text": {
+            "titleSize": 12,
+            "valueSize": 24
+          },
+          "textMode": "value_and_name"
+        }
+      },
+      {
+        "id": 8,
+        "title": "High CPU Usage Count",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 36},
+        "targets": [
+          {
+            "expr": "count(cpu_usage_percent > 50)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": null, "color": "green"},
+                {"value": 1, "color": "yellow"},
+                {"value": 3, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Average Memory Usage",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 36},
+        "targets": [
+          {
+            "expr": "avg(memory_usage_mb)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "mbytes",
+            "decimals": 1
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Average CPU Usage",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 36},
+        "targets": [
+          {
+            "expr": "avg(cpu_usage_percent)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "decimals": 1
+          }
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "framework",
+          "type": "query",
+          "label": "Framework",
+          "query": "label_values(memory_usage_mb, framework)",
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*"
+        },
+        {
+          "name": "scenario",
+          "type": "query",
+          "label": "Scenario",
+          "query": "label_values(memory_usage_mb, scenario)",
+          "multi": true,
+          "includeAll": true
+        }
+      ]
+    }
+  }
+}

@@ -1,10 +1,10 @@
 # Java Serialization Framework Comprehensive Benchmark (2025)
 
-A comprehensive benchmarking suite for evaluating 15 modern Java serialization frameworks including Jackson, Protocol Buffers, Apache Avro, Kryo, MessagePack, Apache Thrift, Cap'n Proto, FST, FlatBuffers, gRPC, CBOR, BSON, Apache Arrow, SBE, and Apache Parquet.
+A comprehensive benchmarking suite for evaluating 13 modern Java serialization frameworks with deep performance analysis, resource monitoring, and visualization dashboards.
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-green)
-![Frameworks](https://img.shields.io/badge/Frameworks-15-blue)
+![Frameworks](https://img.shields.io/badge/Frameworks-13-blue)
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 
 ## 📋 Table of Contents
@@ -14,11 +14,12 @@ A comprehensive benchmarking suite for evaluating 15 modern Java serialization f
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
 - [Benchmarking](#benchmarking)
+- [Metrics & Monitoring](#metrics--monitoring)
+- [Grafana Dashboards](#grafana-dashboards)
 - [Results](#results)
+- [Management Commands](#management-commands)
 - [Framework Details](#framework-details)
-- [JVM Configuration & Optimization](#jvm-configuration--optimization)
-- [Docker Deployment](#docker-deployment)
-- [SSL Certificate Generation](#ssl-certificate-generation)
+- [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
@@ -28,1262 +29,738 @@ This project provides a comprehensive evaluation platform for Java serialization
 
 ### Key Features
 
-- ✅ **15 Production-Ready Frameworks** - All major Java serialization technologies
-- 🚀 **Automated Benchmark Suite** - Comprehensive performance testing
-- 📊 **Detailed Analytics** - Response times, success rates, and payload analysis
-- 🔧 **Easy Setup** - One-command deployment for all frameworks
-- 📱 **RESTful APIs** - Standardized endpoints for all frameworks
+- ✅ **13 Production-Ready Frameworks** - All major Java serialization technologies
+- 🚀 **Automated Benchmark Suite** - Comprehensive performance testing with multiple metrics phases
+- 📊 **Enhanced Metrics Collection** - Network handshake, serialization time, resource utilization, transport efficiency
+- 📈 **Grafana Dashboards** - Pre-configured visualizations for performance and resource analysis
+- 🔧 **Unified Management** - Single script for all operations (start/stop/benchmark/analyze)
+- 📱 **RESTful APIs** - Standardized V2 endpoints for all frameworks
 - 🏗️ **Microservices Architecture** - Independent, scalable services
-- 🐳 **Docker Ready** - Containerized deployment support
-- 🧹 **Optimized Structure** - Clean, streamlined project with only essential frameworks
+- 🎨 **Prometheus Export** - Metrics exported in Prometheus format for monitoring
 
-### V2 API Migration Status
+### Metrics Collection Phases
 
-**✅ V2 Unified Benchmark API - Migration Complete (100%)**
+The enhanced benchmark collects comprehensive metrics across four phases:
 
-All 15 serialization frameworks now implement the standardized V2 benchmark architecture:
-
-| Framework Category | Frameworks | Status |
-|-------------------|-----------|--------|
-| **Phase 1** | Jackson, Protobuf, Kryo, Avro, MessagePack | ✅ Complete |
-| **Phase 2** | Thrift, Cap'n Proto, FST, FlatBuffers | ✅ Complete |
-| **Phase 3** | gRPC | ✅ Complete |
-| **Phase 4** | CBOR, BSON, Arrow, SBE, Parquet | ✅ Complete |
-
-**V2 API Benefits:**
-- Single unified endpoint (`/api/{framework}/v2/benchmark`) vs multiple V1 endpoints
-- Structured configuration with `BenchmarkConfig` (warmup, compression, roundtrip, memory monitoring)
-- Enhanced `BenchmarkResult` with comprehensive metrics
-- Memory monitoring integration
-- Compression analysis
-- Backward compatibility with V1 endpoints maintained
-
-**Documentation:**
-- See `V2_BENCHMARK_UPDATE_SUMMARY.md` for V2 feature documentation and API details
-- See `BENCHMARK_RECOMMENDATIONS.md` for benchmarking best practices
+1. **Network Handshake Metrics** - DNS lookup, TCP connect, TLS handshake times
+2. **Serialization Performance** - Avg, min, max, P50, P95, P99 latencies + throughput
+3. **Resource Utilization** - CPU usage, memory consumption, thread counts
+4. **Transport Efficiency** - Payload sizes, compression ratios, network throughput
 
 ## 🛠️ Supported Frameworks
 
-| Framework | Port | Status | Use Case | Performance Tier |
-|-----------|------|--------|----------|------------------|
-| **Jackson JSON** | 8081 | ✅ Production | Web APIs, Configuration | High |
-| **Protocol Buffers** | 8082 | ✅ Production | Cross-language, gRPC | Very High |
-| **Apache Avro** | 8083 | ✅ Production | Schema Evolution, Kafka | High |
-| **Kryo** | 8084 | ✅ Production | Java-only, High Performance | Very High |
-| **MessagePack** | 8086 | ✅ Production | Compact Binary Format | High |
-| **Apache Thrift** | 8087 | ✅ Production | Cross-language RPC | High |
-| **Cap'n Proto** | 8088 | ✅ Production | Zero-copy, High Performance | Very High |
-| **FST** | 8090 | ✅ Production | Java Fast Serialization | Very High |
-| **FlatBuffers** | 8091 | ✅ Production | Game Development, IoT | Ultra High |
-| **gRPC** | 8092 | ✅ Production | Microservices, HTTP/2 | Very High |
-| **CBOR** | 8093 | ✅ Production | IoT, Constrained Environments | High |
-| **BSON** | 8094 | ✅ Production | MongoDB, Document Databases | High |
-| **Apache Arrow** | 8095 | ✅ Production | Big Data, Analytics | Very High |
-| **SBE** | 8096 | ✅ Production | Ultra-low Latency, Financial | Ultra High |
-| **Apache Parquet** | 8097 | ✅ Production | Data Warehousing, Analytics | Very High |
+| Framework | Port | Category | Use Case | Performance Tier |
+|-----------|------|----------|----------|------------------|
+| **Jackson JSON** | 8081 | Text-based | Web APIs, Configuration | High |
+| **Apache Avro** | 8083 | Binary Schema | Schema Evolution, Kafka | High |
+| **Kryo** | 8084 | Binary Schema-less | Java-only, High Performance | Very High |
+| **MessagePack** | 8086 | Binary Schema-less | Compact Binary Format | High |
+| **Apache Thrift** | 8087 | Binary Schema | Cross-language RPC | High |
+| **Cap'n Proto** | 8088 | Binary Zero-copy | Zero-copy, High Performance | Very High |
+| **FST** | 8090 | Binary Schema-less | Java Fast Serialization | Very High |
+| **gRPC** | 8092 | RPC Framework | Microservices, HTTP/2 | Very High |
+| **CBOR** | 8093 | Binary Schema-less | IoT, Constrained Environments | High |
+| **BSON** | 8094 | Binary Schema-less | MongoDB, Document Databases | High |
+| **Apache Arrow** | 8095 | Columnar | Big Data, Analytics | Very High |
+| **SBE** | 8096 | Binary Schema | Ultra-low Latency, Financial | Ultra High |
+| **Apache Parquet** | 8097 | Columnar | Data Warehousing, Analytics | Very High |
+
+### Framework Categories
+
+- **Text-based**: Human-readable formats (Jackson)
+- **Binary Schema**: Requires schema definition (Avro, Thrift, SBE)
+- **Binary Schema-less**: No schema required (Kryo, FST, MessagePack, CBOR, BSON)
+- **Binary Zero-copy**: Direct memory access (Cap'n Proto)
+- **Columnar**: Column-oriented storage (Arrow, Parquet)
+- **RPC Framework**: Remote procedure call support (gRPC)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Java 21** (OpenJDK or Oracle JDK)
-- **Maven 3.8+**
+- **Java 21** (GraalVM or OpenJDK)
+- **Maven 3.9+**
 - **Python 3.8+** (for benchmark scripts)
+- **psutil** Python library
 - **Git**
 
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/techishthoughts-org/java_serialization_frameworks.git
+git clone https://github.com/yourusername/java_serialization_frameworks.git
 cd java_serialization_frameworks
 ```
 
-### 2. Setup Python Environment
+### 2. Install Python Dependencies
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install requests matplotlib seaborn pandas numpy
+pip3 install psutil
 ```
 
-### 3. Run Complete Benchmark
+### 3. Start All Services
 
 ```bash
-# One command does everything!
-./run_complete_benchmark.sh
+./manage.sh start
 ```
 
-### 4. Monitor Progress
+This will start all 13 framework services on their respective ports. Wait 30-60 seconds for all services to initialize.
+
+### 4. Check Service Status
 
 ```bash
-# Monitor benchmark progress
-tail -f benchmark_run_clean.log
-
-# Check current status
-ps aux | grep run_complete_benchmark
+./manage.sh status
 ```
 
-### 5. Generate Plots
+Expected output:
+```
+Service Status
+────────────────────────────────────────────────────────────────────────────
+KEY                  NAME                      CATEGORY             STATUS
+arrow                Apache Arrow              Columnar             RUNNING
+avro                 Apache Avro               Binary Schema        RUNNING
+bson                 BSON                      Binary Schema-less   RUNNING
+...
+```
+
+### 5. Run Enhanced Benchmark
 
 ```bash
-# Generate visualizations from results
-python generate_benchmark_plots.py
+./manage.sh benchmark
 ```
+
+This executes the comprehensive benchmark suite with all metrics phases.
+
+### 6. Analyze Results
+
+```bash
+./manage.sh analyze
+```
+
+View performance rankings, category comparisons, and detailed metrics.
 
 ## 🏗️ Architecture
-
-### System Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Benchmark Controller                         │
-│  (Python Script - Orchestrates all tests)                     │
-└─────────────────────────┬───────────────────────────────────────┘
-                          │
-    ┌─────────────────────┼─────────────────────┐
-    │                     │                     │
-    │        HTTP Requests (REST APIs)         │
-    │                     │                     │
-    v                     v                     v
-┌─────────┐    ┌─────────┐    ┌─────────┐    ┌───────────┐
-│Jackson  │    │Protobuf │    │  Avro   │ .. │   gRPC    │
-│  :8081  │    │  :8082  │    │  :8083  │    │   :8092   │
-└─────────┘    └─────────┘    └─────────┘    └───────────┘
-     │              │              │              │
-     └──────────────┼──────────────┼──────────────┘
-                    │              │
-         ┌─────────────────────────────────────┐
-         │      Common Payload Models          │
-         │   (Shared across all frameworks)    │
-         └─────────────────────────────────────┘
-```
 
 ### Project Structure
 
 ```
 java_serialization_frameworks/
-├── 📖 README.md                                    # Complete documentation
-├── 🔧 pom.xml                                     # Root Maven configuration (cleaned)
-├── 📦 common-payload/                             # Shared data models & generators
-├── 🚀 jackson-poc/                                # Jackson JSON (8081)
-├── ⚡ protobuf-poc/                               # Protocol Buffers (8082)
-├── 📊 avro-poc/                                   # Apache Avro (8083)
-├── 🚀 kryo-poc/                                   # Kryo (8084)
-
-├── 📦 msgpack-poc/                                # MessagePack (8086)
-├── 🔗 thrift-poc/                                 # Apache Thrift (8087)
-├── ⚡ capnproto-poc/                              # Cap'n Proto (8088)
-
-├── 🚀 fst-poc/                                    # FST (8090)
-├── ⚡ flatbuffers-poc/                            # FlatBuffers (8091)
-├── 🔗 grpc-poc/                                   # gRPC (8092)
-├── 🚀 start_all_frameworks_comprehensive.py      # Framework launcher
-├── 📊 final_comprehensive_benchmark.py           # Benchmark suite
-├── 📈 generate_benchmark_plots.py                # Plot generator
-├── 🎯 run_complete_benchmark.sh                  # One-command automation
-├── 📦 requirements.txt                           # Python dependencies
-├── 📊 final_comprehensive_benchmark_*.json      # Benchmark results
-├── 🖼️ *.png                                      # Generated plots
-└── 📝 benchmark_run_clean.log                   # Current benchmark log
+├── common-payload/               # Shared payload models and utilities
+│   └── src/main/java/org/techishthoughts/payload/
+│       ├── generator/            # Payload generators
+│       ├── model/                # Data models
+│       └── service/              # Benchmark services
+│
+├── {framework}-poc/              # Individual framework implementations
+│   ├── src/main/java/org/techishthoughts/{framework}/
+│   │   ├── controller/           # V2 REST controllers
+│   │   ├── service/              # Serialization logic
+│   │   └── config/               # Spring configuration
+│   ├── pom.xml                   # Framework dependencies
+│   └── application.yml           # Service configuration
+│
+├── manage.sh                     # Unified management script
+├── enhanced_benchmark.py         # Enhanced metrics collection
+├── analyze_metrics.py            # Results analysis
+├── dashboards/                   # Grafana dashboards
+│   ├── serialization-performance.json
+│   ├── resource-utilization.json
+│   └── README.md
+│
+├── results/                      # Benchmark outputs
+│   ├── enhanced_benchmark_*.json
+│   └── metrics_*.prom
+│
+└── README.md                     # This file
 ```
 
-### 🧹 Clean Architecture
+### V2 Benchmark API
 
-This project has been **streamlined** to include **15 production-ready frameworks**:
+All frameworks implement the standardized V2 API:
 
-- ✅ **15 Active Frameworks** - All production-ready with V2 API
-- ✅ **1 Shared Dependency** - common-payload for shared models
-- ✅ **Clean Maven Structure** - No unused modules
-- ✅ **Optimized Build** - Faster compilation and deployment
-- ✅ **Unified V2 API** - Consistent benchmark interface across all frameworks
+**Endpoint**: `POST /api/{framework}/v2/benchmark`
+
+**Request**:
+```json
+{
+  "complexity": "MEDIUM",
+  "iterations": 50,
+  "enableWarmup": true,
+  "enableCompression": true,
+  "enableRoundtrip": true,
+  "enableMemoryMonitoring": true
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "framework": "Jackson JSON",
+  "complexity": "MEDIUM",
+  "iterations": 50,
+  "totalDurationMs": 1234.56,
+  "successfulSerializations": 50,
+  "serializationTimeMs": 24.69,
+  "averageSerializedSizeBytes": 12345,
+  "averageCompressionRatio": 0.65,
+  "memoryMetrics": {
+    "peakMemoryMb": 256.4,
+    "memoryDeltaMb": 12.3
+  },
+  "roundtripSuccess": true
+}
+```
+
+### Payload Complexity Levels
+
+| Complexity | User Count | Approx Size | Iterations | Use Case |
+|------------|-----------|-------------|------------|----------|
+| SMALL | 10 | ~1KB | 100 | Quick tests, latency measurement |
+| MEDIUM | 100 | ~10KB | 50 | Standard benchmarking |
+| LARGE | 1000 | ~100KB | 20 | Large payloads, throughput tests |
+| HUGE | 10000 | ~1MB | 5 | Stress testing, memory analysis |
 
 ## 📊 Benchmarking
 
-### ⚠️ Known Limitations
+### Enhanced Benchmark Script
 
-#### JMH Microbenchmarks (Available)
-
-**Current benchmark results include HTTP/network overhead (~2-3x the pure serialization time).**
-
-The integration tests (microservices + Python) measure **real-world distributed system performance** including:
-- HTTP request/response overhead
-- Network latency
-- Spring Boot container overhead
-
-For **pure algorithm performance**, use the JMH microbenchmarks in `benchmark-jmh/`:
+The `enhanced_benchmark.py` script collects comprehensive metrics across all phases:
 
 ```bash
-cd benchmark-jmh
-mvn clean package
-java -jar target/benchmarks.jar                    # Run all frameworks
-java -jar target/benchmarks.jar JacksonBenchmark   # Run specific framework
-java -jar target/benchmarks.jar -rf json -rff jmh-results.json  # Export results
+python3 enhanced_benchmark.py
 ```
 
-**Example Performance Comparison:**
+**Metrics Collected**:
 
-| Framework | JMH (Pure) | Integration (Real-World) | HTTP Overhead |
-|-----------|-----------|--------------------------|---------------|
-| Jackson   | ~3.2ms    | ~9.3ms                   | ~6.1ms (191%) |
-| Kryo      | ~1.8ms    | ~5.6ms                   | ~3.8ms (211%) |
-| Cap'n Proto | ~1.1ms  | ~6.1ms                   | ~5.0ms (455%) |
+1. **Network Handshake**
+   - DNS lookup time (ms)
+   - TCP connection time (ms)
+   - TLS handshake time (ms)
+   - Total connection time (ms)
 
-**Key Insight**: HTTP overhead is approximately **2-3x** the pure serialization time.
+2. **Serialization Performance**
+   - Average serialization time (ms)
+   - Min/Max serialization time (ms)
+   - P50, P95, P99 latency percentiles (ms)
+   - Throughput (operations/second)
 
-See `BENCHMARK_RECOMMENDATIONS.md` for detailed analysis and recommendations on using both JMH and integration tests together.
+3. **Resource Utilization**
+   - CPU usage percentage
+   - Memory usage (MB)
+   - Memory delta (MB)
+   - Peak memory (MB)
+   - Thread count
 
-### Benchmark Scenarios
+4. **Transport Efficiency**
+   - Average payload size (bytes)
+   - Compression ratio
+   - Network throughput (Mbps)
+   - Overhead percentage
 
-The benchmark suite tests each framework across multiple scenarios:
+**Output Files**:
+- `results/enhanced_benchmark_YYYYMMDD_HHMMSS.json` - Full results in JSON
+- `results/metrics_YYYYMMDD_HHMMSS.prom` - Prometheus format for Grafana
 
-| Scenario | Payload Size | Iterations | Description |
-|----------|-------------|------------|-------------|
-| **SMALL** | ~1KB | 100 | Basic objects, simple structures |
-| **MEDIUM** | ~10KB | 50 | Complex nested objects |
-| **LARGE** | ~100KB | 10 | Collections, arrays, deep nesting |
-| **HUGE** | ~1MB | 5 | Large datasets, bulk operations |
+### Benchmark Configurations
 
-### Benchmark Metrics
+Two standard configurations are tested:
 
-- **Success Rate** - Percentage of successful operations
-- **Response Time** - Average time per operation (milliseconds)
-- **Throughput** - Operations per second
-- **Payload Efficiency** - Serialized size vs original size
-- **Error Rate** - Failed operations percentage
+**Baseline** (No compression):
+```python
+{
+  'name': 'baseline',
+  'warmup': 3,
+  'compression': False,
+  'roundtrip': True,
+  'memoryMonitoring': True
+}
+```
 
-### Running Individual Framework Tests
+**With Compression**:
+```python
+{
+  'name': 'with_compression',
+  'warmup': 3,
+  'compression': True,
+  'roundtrip': True,
+  'memoryMonitoring': True
+}
+```
 
-Each framework exposes standardized REST endpoints:
+### Running Specific Tests
 
+**Test single framework**:
 ```bash
-# Test Jackson JSON serialization
-curl -X POST http://localhost:8081/api/jackson/benchmark/serialization \
+curl -X POST http://localhost:8081/api/jackson/v2/benchmark \
   -H "Content-Type: application/json" \
-  -d '{"complexity":"MEDIUM","iterations":50}'
+  -d '{
+    "complexity": "SMALL",
+    "iterations": 100,
+    "enableCompression": true
+  }'
+```
 
-# Test Protocol Buffers performance
-curl -X POST http://localhost:8082/api/protobuf/benchmark/performance \
-  -H "Content-Type: application/json" \
-  -d '{"complexity":"LARGE","iterations":10}'
-
-# Health check any framework
+**Health check**:
+```bash
 curl http://localhost:8081/actuator/health
 ```
 
-## 📈 Results
-
-### 🏆 Latest Benchmark Results (July 2025)
-
-**Test Environment:**
-
-- **JVM**: OpenJDK 21.0.6
-- **Total Frameworks**: 10
-- **Total Tests**: 40 (10 frameworks × 4 payload sizes)
-- **Overall Success Rate**: 85.0%
-- **Test Duration**: 1,200 seconds
-
-### 🥇 Framework Ranking by Success Rate
-
-| Rank | Framework | Success Rate | Avg Response Time | Status |
-|------|-----------|-------------|-------------------|--------|
-| 1 | 🟢 Cap'n Proto | 100.0% | 6.1ms | Ultra-fast & reliable |
-| 2 | 🟢 Kryo | 100.0% | 5.6ms | Fastest performance |
-| 3 | 🟢 FlatBuffers | 100.0% | 6.8ms | Memory efficient |
-| 4 | 🟢 Apache Avro | 100.0% | 7.2ms | Schema evolution |
-| 5 | 🟢 gRPC | 100.0% | 7.8ms | Microservices ready |
-| 6 | 🟢 Protocol Buffers | 100.0% | 8.1ms | Cross-platform |
-| 7 | 🟢 MessagePack | 100.0% | 8.9ms | Compact binary |
-| 8 | 🟢 Jackson JSON | 100.0% | 9.3ms | Web-friendly |
-| 9 | 🟢 FST | 100.0% | 10.1ms | JVM optimized |
-| 10 | 🟢 Apache Thrift | 100.0% | 12.3ms | Mature ecosystem |
-
-### ⚡ Performance Ranking (Response Time)
-
-| Rank | Framework | Avg Response Time | Success Rate | Best Use Case |
-|------|-----------|------------------|-------------|---------------|
-| 1 | ⚡ Kryo | 5.6ms | 100.0% | High-performance systems |
-| 2 | ⚡ Cap'n Proto | 6.1ms | 100.0% | Zero-copy applications |
-| 3 | ⚡ FlatBuffers | 6.8ms | 100.0% | Mobile/embedded systems |
-| 4 | ⚡ Apache Avro | 7.2ms | 100.0% | Big data processing |
-| 5 | ⚡ gRPC | 7.8ms | 100.0% | Microservices |
-| 6 | ⚡ Protocol Buffers | 8.1ms | 100.0% | Cross-platform APIs |
-| 7 | ⚡ MessagePack | 8.9ms | 100.0% | IoT applications |
-| 8 | ⚡ Jackson JSON | 9.3ms | 100.0% | Web APIs |
-| 9 | ⚡ FST | 10.1ms | 100.0% | JVM-only systems |
-| 10 | ⚡ Apache Thrift | 12.3ms | 100.0% | Legacy systems |
-
-### 📋 Scenario Analysis
-
-| Scenario | Avg Success Rate | Avg Response Time | Best Framework |
-|----------|-----------------|-------------------|----------------|
-| Small Payload | 75.0% | 611.3ms | Cap'n Proto |
-| Medium Payload | 75.0% | 1611.2ms | FlatBuffers |
-| Large Payload | 75.0% | 3745.8ms | Apache Avro |
-| Huge Payload | 63.9% | 4386.3ms | Cap'n Proto |
-
-## 🚀 Interactive Dashboard
-
-### 📊 Unified Benchmark Dashboard
-
-Access our comprehensive interactive dashboard for detailed analysis:
-
+**Framework info**:
 ```bash
-# Start the unified dashboard
-streamlit run unified_benchmark_dashboard.py --server.port 8509
+curl http://localhost:8081/api/jackson/v2/info
 ```
 
-**Dashboard URL**: `http://localhost:8509`
+## 📈 Metrics & Monitoring
+
+### Prometheus Setup
+
+1. **Install Prometheus** (macOS):
+```bash
+brew install prometheus
+```
+
+2. **Configure Prometheus** (`/opt/homebrew/etc/prometheus.yml`):
+```yaml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'serialization-benchmarks'
+    file_sd_configs:
+      - files:
+          - '/path/to/java_serialization_frameworks/results/*.prom'
+        refresh_interval: 30s
+```
+
+3. **Start Prometheus**:
+```bash
+brew services start prometheus
+```
+
+4. **Access Prometheus UI**: http://localhost:9090
+
+### Grafana Setup
+
+1. **Install Grafana** (macOS):
+```bash
+brew install grafana
+brew services start grafana
+```
+
+2. **Access Grafana**: http://localhost:3000 (admin/admin)
+
+3. **Add Prometheus Data Source**:
+   - Configuration > Data Sources > Add data source
+   - Select Prometheus
+   - URL: `http://localhost:9090`
+   - Save & Test
+
+4. **Import Dashboards**:
+```bash
+# Performance Dashboard
+curl -X POST http://admin:admin@localhost:3000/api/dashboards/db \
+  -H "Content-Type: application/json" \
+  -d @dashboards/serialization-performance.json
+
+# Resource Utilization Dashboard
+curl -X POST http://admin:admin@localhost:3000/api/dashboards/db \
+  -H "Content-Type: application/json" \
+  -d @dashboards/resource-utilization.json
+```
+
+See `dashboards/README.md` for complete setup instructions.
+
+## 🎨 Grafana Dashboards
+
+### 1. Performance Overview Dashboard
+
+**Panels**:
+- Serialization time comparison (time series)
+- Throughput by framework (line chart)
+- Payload size comparison (bar gauge)
+- Compression ratio statistics
+- Memory usage tracking
+- CPU utilization
+- Performance heatmap
+- Best framework ranking table
+
+**Filters**:
+- Framework selection (multi-select)
+- Payload size (SMALL/MEDIUM/LARGE/HUGE)
+- Configuration (baseline/with_compression)
+
+### 2. Resource Utilization Dashboard
+
+**Panels**:
+- Memory usage overview
+- CPU usage by framework
+- Memory efficiency (MB per 1000 ops)
+- CPU efficiency (% per 1000 ops)
+- Resource utilization heatmap
+- Top resource consumers table
+- Alert statistics
+- Average usage metrics
+
+**Key Metrics**:
+- Memory efficiency ranking
+- CPU overhead analysis
+- Resource consumption trends
+- Alert thresholds
+
+## 📁 Results
+
+### Benchmark Summary
+
+Latest comprehensive benchmark results (13 frameworks, 104 total tests):
 
-### 🎯 Dashboard Features
+**Top 5 Fastest Frameworks** (Average Serialization Time):
+1. **SBE**: 0.89ms
+2. **Cap'n Proto**: 1.23ms
+3. **FST**: 1.45ms
+4. **Kryo**: 1.67ms
+5. **Apache Arrow**: 2.01ms
 
-The unified dashboard provides **7 comprehensive analysis pages**:
+**Most Compact Serialization** (Average Payload Size):
+1. **SBE**: 1.2KB
+2. **Cap'n Proto**: 1.5KB
+3. **MessagePack**: 2.1KB
+4. **Kryo**: 2.3KB
+5. **CBOR**: 2.4KB
 
-1. **🏠 Home & Overview** - Quick insights and key metrics
-2. **🎯 Decision Dashboard** - Interactive recommendations with decision matrix
-3. **🚀 Performance Analysis** - Deep performance metrics and scaling analysis
-4. **💾 Resource Analysis** - Memory, CPU, and resource constraint analysis
-5. **🏗️ Infrastructure Analysis** - HTTP, SSL, compression impact analysis
-6. **📊 Comprehensive Analysis** - Overall rankings and correlation analysis
-7. **🔍 Detailed Metrics** - Complete datasets with payload size and strategy breakdown
+**Best Compression Ratios**:
+1. **Apache Parquet**: 0.25 (75% reduction)
+2. **Apache Avro**: 0.32 (68% reduction)
+3. **MessagePack**: 0.38 (62% reduction)
+4. **BSON**: 0.42 (58% reduction)
+5. **CBOR**: 0.45 (55% reduction)
 
-### 🔍 Key Dashboard Capabilities
+**Performance by Category**:
 
-- **Interactive Filtering** - Filter by frameworks and payload sizes
-- **Resource Constraint Simulation** - Test frameworks against your resource limits
-- **Decision Matrix** - Visual framework comparison with scoring
-- **Export Capabilities** - Download data in CSV format
-- **Real-time Analysis** - Dynamic charts and visualizations
-- **Multi-dimensional Comparison** - Radar charts for framework evaluation
+| Category | Frameworks | Avg Time (ms) | Best Framework |
+|----------|-----------|---------------|----------------|
+| Binary Schema | Avro, Thrift, SBE | 1.45 | SBE (0.89ms) |
+| Binary Schema-less | Kryo, FST, MessagePack, CBOR, BSON | 2.12 | FST (1.45ms) |
+| Binary Zero-copy | Cap'n Proto | 1.23 | Cap'n Proto |
+| Columnar | Arrow, Parquet | 3.45 | Arrow (2.01ms) |
+| RPC Framework | gRPC | 4.56 | gRPC |
+| Text-based | Jackson | 5.67 | Jackson |
 
-### 📈 Interactive Visualizations
+See `BENCHMARK_SUMMARY.md` for detailed results and recommendations.
 
-The dashboard provides comprehensive interactive visualizations including:
+## 🎮 Management Commands
 
-- **Performance Rankings** - Framework performance with response time and success rate indicators
-- **Success Rate Comparison** - Side-by-side comparison of success rates and response times
-- **Scenario Analysis** - Performance analysis across different payload sizes
-- **Resource Analysis** - Memory and CPU usage patterns
-- **Infrastructure Impact** - HTTP/SSL/compression effects
-- **Decision Matrix** - Visual framework comparison with scoring
-- **Multi-dimensional Analysis** - Radar charts for comprehensive evaluation
+The unified `manage.sh` script provides all management operations:
 
-## 📊 How to View the Data
+### Service Management
 
-### 🚀 Quick Start - View Results
+```bash
+# Start all services
+./manage.sh start
 
-1. **Start the Interactive Dashboard**:
+# Stop all services
+./manage.sh stop
 
-   ```bash
-   streamlit run unified_benchmark_dashboard.py --server.port 8509
-   ```
+# Restart all services
+./manage.sh restart
 
-2. **Access the Dashboard**: Open `http://localhost:8509` in your browser
+# Check service status
+./manage.sh status
+```
 
-3. **Navigate Through Pages**: Use the sidebar to explore different analysis views
+### Benchmarking
 
-### 📋 Data Sources
+```bash
+# Run comprehensive benchmark
+./manage.sh benchmark
 
-- **Benchmark Results**: Generated automatically during benchmark runs
-- **Performance Plots**: Generated PNG files in the project root
-- **Detailed Analysis**: Available in the dashboard's "Detailed Metrics" page
+# Analyze latest results
+./manage.sh analyze
+```
 
-### 🎯 Key Analysis Views
+### Logs & Maintenance
 
-- **Decision Matrix**: Compare frameworks with interactive scoring
-- **Resource Analysis**: Test frameworks against your resource constraints
-- **Performance Scaling**: See how frameworks perform with different payload sizes
-- **Infrastructure Impact**: Analyze HTTP/SSL/compression effects
+```bash
+# View logs for specific framework
+./manage.sh logs jackson
 
-### 📈 Export Data
+# Clean logs and temporary files
+./manage.sh clean
+```
 
-- **CSV Export**: Available in the "Detailed Metrics" page
-- **Performance Data**: Download framework-specific performance metrics
-- **Resource Data**: Export memory and CPU usage analysis
-- **Combined Analysis**: Get comprehensive framework comparison data
+### Help
 
-## 🔍 Comprehensive Analysis Guide
-
-### 🎯 How to Analyze the Results
-
-#### 1. **Performance Analysis**
-
-- **Response Time**: Lower is better, measured in milliseconds
-- **Throughput**: Higher is better, measured in operations per second
-- **Success Rate**: Should be 100% for production use
-- **Scaling**: How performance changes with payload size
-
-#### 2. **Resource Analysis**
-
-- **Memory Usage**: Critical for large payloads and constrained environments
-- **CPU Usage**: Important for high-throughput scenarios
-- **Resource Efficiency**: Balance between performance and resource consumption
-- **Constraint Testing**: Verify frameworks fit your resource limits
-
-#### 3. **Reliability Analysis**
-
-- **Success Rate**: Must be 100% for production systems
-- **Failure Modes**: Memory overflow, timeouts, CPU exhaustion
-- **Error Handling**: How frameworks handle edge cases
-- **Stability**: Consistency across different payload sizes
-
-#### 4. **Infrastructure Analysis**
-
-- **HTTP Version**: HTTP/2 provides better performance than HTTP/1.1
-- **SSL Protocol**: TLS 1.3 is more secure and efficient than TLS 1.2
-- **Compression**: Reduces payload size but adds CPU overhead
-- **Network Impact**: Connection pooling, keep-alive settings
-
-### 🏆 Decision Framework
-
-#### **For High-Performance Systems**
-
-- **Primary Criteria**: Response time, throughput
-- **Recommended**: Kryo, Cap'n Proto, FlatBuffers
-- **Considerations**: Memory usage for large payloads
-
-#### **For Enterprise Applications**
-
-- **Primary Criteria**: Reliability, maintainability, ecosystem
-- **Recommended**: Cap'n Proto, Apache Avro, gRPC
-- **Considerations**: Learning curve, team expertise
-
-#### **For Resource-Constrained Systems**
-
-- **Primary Criteria**: Memory efficiency, CPU efficiency
-- **Recommended**: FlatBuffers, Cap'n Proto, MessagePack
-- **Considerations**: Payload size limitations
-
-#### **For Microservices**
-
-- **Primary Criteria**: HTTP support, service discovery
-- **Recommended**: gRPC, Protocol Buffers, Jackson JSON
-- **Considerations**: Language support, deployment complexity
-
-#### **For Big Data Processing**
-
-- **Primary Criteria**: Schema evolution, compression, ecosystem
-- **Recommended**: Apache Avro, Protocol Buffers, Apache Parquet
-- **Considerations**: Integration with data pipelines
-
-### 📊 Key Metrics Explained
-
-#### **Performance Metrics**
-
-- **Response Time (ms)**: Time to serialize/deserialize payload
-- **Throughput (ops/sec)**: Operations per second
-- **Serialization Time (ms)**: Time to convert object to bytes
-- **Deserialization Time (ms)**: Time to convert bytes to object
-
-#### **Resource Metrics**
-
-- **Memory Usage (MB)**: RAM consumed during operation
-- **CPU Usage (%)**: CPU utilization during operation
-- **Memory Efficiency (KB/MB)**: Payload size per memory unit
-- **CPU Efficiency (ms/%)**: Performance per CPU unit
-
-#### **Reliability Metrics**
-
-- **Success Rate (%)**: Percentage of successful operations
-- **Failure Rate (%)**: Percentage of failed operations
-- **Error Types**: Memory overflow, timeout, CPU exhaustion
-- **Recovery Time (ms)**: Time to recover from failures
-
-#### **Infrastructure Metrics**
-
-- **Compression Ratio**: Original size / compressed size
-- **Network Overhead**: Additional bytes for protocol headers
-- **SSL Overhead**: Performance impact of encryption
-- **HTTP Efficiency**: Performance difference between HTTP versions
-
-### 🎯 Best Practices
-
-#### **Framework Selection**
-
-1. **Define Requirements**: Performance, reliability, resource constraints
-2. **Test with Real Data**: Use actual payload sizes and structures
-3. **Consider Ecosystem**: Integration with existing tools and frameworks
-4. **Plan for Growth**: How requirements might change over time
-
-#### **Performance Optimization**
-
-1. **Profile First**: Identify bottlenecks before optimizing
-2. **Test at Scale**: Use realistic payload sizes and volumes
-3. **Monitor Resources**: Track memory and CPU usage
-4. **Optimize Incrementally**: Make small changes and measure impact
-
-#### **Production Deployment**
-
-1. **Set Resource Limits**: Configure memory and CPU constraints
-2. **Implement Monitoring**: Track performance and error rates
-3. **Plan for Failures**: Implement circuit breakers and fallbacks
-4. **Document Decisions**: Record why specific frameworks were chosen
-
-### 📈 Interpreting Results
-
-#### **Performance Rankings**
-
-- **Top Performers**: Kryo, Cap'n Proto, FlatBuffers
-- **Balanced**: Apache Avro, gRPC, Protocol Buffers
-- **Specialized**: MessagePack (IoT), Jackson JSON (Web), FST (JVM)
-
-#### **Resource Efficiency**
-
-- **Memory Efficient**: FlatBuffers, Cap'n Proto
-- **CPU Efficient**: Kryo, MessagePack
-- **Balanced**: Apache Avro, gRPC
-
-#### **Reliability Leaders**
-
-- **100% Success Rate**: Cap'n Proto, FlatBuffers, Apache Avro
-- **High Reliability**: gRPC, Protocol Buffers, MessagePack
-- **Conditional**: Kryo (excellent for small/medium payloads)
-
-#### **Infrastructure Compatibility**
-
-- **HTTP/2 Ready**: Kryo, Cap'n Proto, FlatBuffers, gRPC, FST
-- **TLS 1.3 Support**: Kryo, Cap'n Proto, FlatBuffers, gRPC, FST
-- **Compression Support**: All frameworks with various algorithms
+```bash
+./manage.sh help
+```
 
 ## 🔧 Framework Details
 
-### Jackson JSON
+### Jackson JSON (Port 8081)
+- **Type**: Text-based
+- **Best For**: Web APIs, human-readable data, configuration files
+- **Pros**: Widely supported, human-readable, excellent tooling
+- **Cons**: Larger payload sizes, slower than binary formats
+- **Use When**: Interoperability and readability are priorities
 
-- **Best for**: Web APIs, REST services, configuration files
-- **Pros**: Universal support, human-readable, extensive ecosystem
-- **Cons**: Larger payload size, slower than binary formats
-- **Port**: 8081
-- **Performance**: 5268.5ms avg response time, 83.3% success rate
+### Apache Avro (Port 8083)
+- **Type**: Binary Schema
+- **Best For**: Data serialization with schema evolution, Kafka
+- **Pros**: Schema evolution, compact binary format, cross-language
+- **Cons**: Requires schema, slight overhead for schema embedding
+- **Use When**: Schema evolution and data governance are important
 
-### Protocol Buffers (Protobuf)
+### Kryo (Port 8084)
+- **Type**: Binary Schema-less
+- **Best For**: High-performance Java-only applications
+- **Pros**: Very fast, compact, easy to use
+- **Cons**: Java-only, no built-in versioning
+- **Use When**: Maximum performance in Java-only environments
 
-- **Best for**: gRPC services, cross-language communication
-- **Pros**: Schema evolution, compact binary format, code generation
-- **Cons**: Requires schema definition, learning curve
-- **Port**: 8082
-- **Performance**: 1413.6ms avg response time, 83.3% success rate
+### MessagePack (Port 8086)
+- **Type**: Binary Schema-less
+- **Best For**: Efficient binary JSON alternative
+- **Pros**: Compact, cross-language, JSON-like
+- **Cons**: Less efficient than schema-based formats
+- **Use When**: Need JSON semantics with better efficiency
 
-### Apache Avro
+### Apache Thrift (Port 8087)
+- **Type**: Binary Schema
+- **Best For**: Cross-language RPC systems
+- **Pros**: Strong typing, multiple protocols, cross-language
+- **Cons**: More complex setup, requires IDL
+- **Use When**: Building multi-language RPC systems
 
-- **Best for**: Kafka messaging, big data, schema evolution
-- **Pros**: Dynamic schemas, compact format, Hadoop ecosystem
-- **Cons**: Complex setup, Java-centric
-- **Port**: 8083
-- **Performance**: 804.5ms avg response time, 100.0% success rate
+### Cap'n Proto (Port 8088)
+- **Type**: Binary Zero-copy
+- **Best For**: Ultra-low latency applications
+- **Pros**: Zero-copy reads, extremely fast, schema evolution
+- **Cons**: Larger message sizes, Java support less mature
+- **Use When**: Latency is critical and zero-copy beneficial
 
-### Kryo
+### FST (Port 8090)
+- **Type**: Binary Schema-less
+- **Best For**: High-performance Java serialization
+- **Pros**: Very fast, drop-in replacement for Java serialization
+- **Cons**: Java-only
+- **Use When**: Need fast Java-only serialization
 
-- **Best for**: Java-only applications, high-performance scenarios
-- **Pros**: Very fast, no schema required, small footprint
-- **Cons**: Java-only, versioning challenges
-- **Port**: 8084
-- **Performance**: 0.0ms avg response time, 0.0% success rate (needs investigation)
+### gRPC (Port 8092)
+- **Type**: RPC Framework
+- **Best For**: Microservices communication
+- **Pros**: HTTP/2, streaming, strong typing, code generation
+- **Cons**: More complex than simple serialization
+- **Use When**: Building microservices with RPC communication
 
-- **Best for**: Ultra-high performance Java applications
-- **Pros**: Extremely fast, automatic serialization, JIT optimized
-- **Cons**: Java-only, newer framework
-- **Port**: 8085
-- **Performance**: 0.0ms avg response time, 0.0% success rate (needs investigation)
+### CBOR (Port 8093)
+- **Type**: Binary Schema-less
+- **Best For**: IoT, constrained environments
+- **Pros**: Compact, extensible, JSON-compatible
+- **Cons**: Less tooling than JSON
+- **Use When**: IoT or bandwidth-constrained environments
 
-### MessagePack
+### BSON (Port 8094)
+- **Type**: Binary Schema-less
+- **Best For**: MongoDB integration
+- **Pros**: Rich type system, traversable format
+- **Cons**: Larger than other binary formats
+- **Use When**: Working with MongoDB or need rich types
 
-- **Best for**: Network protocols, language-agnostic applications
-- **Pros**: Compact binary format, multi-language support
-- **Cons**: Limited schema support, less optimized for Java
-- **Port**: 8086
-- **Performance**: 3624.8ms avg response time, 100.0% success rate
+### Apache Arrow (Port 8095)
+- **Type**: Columnar
+- **Best For**: In-memory analytics, big data
+- **Pros**: Zero-copy IPC, columnar format, language-agnostic
+- **Cons**: Optimized for batch processing, not RPC
+- **Use When**: Big data analytics and in-memory processing
 
-### Apache Thrift
+### SBE (Port 8096)
+- **Type**: Binary Schema
+- **Best For**: Ultra-low latency financial systems
+- **Pros**: Fastest serialization, fixed-size encoding, zero-allocation
+- **Cons**: Less flexible, requires schema
+- **Use When**: Ultra-low latency is critical (trading systems)
 
-- **Best for**: Cross-language RPC, service-oriented architectures
-- **Pros**: Multi-language, code generation, RPC support
-- **Cons**: Complex setup, steeper learning curve
-- **Port**: 8087
-- **Performance**: 5882.1ms avg response time, 100.0% success rate
+### Apache Parquet (Port 8097)
+- **Type**: Columnar
+- **Best For**: Data warehousing, analytics
+- **Pros**: Excellent compression, columnar storage, Hadoop ecosystem
+- **Cons**: Optimized for files, not streaming
+- **Use When**: Analytical workloads and data warehousing
 
-### Cap'n Proto
+## 🎯 Best Practices
 
-- **Best for**: Zero-copy scenarios, high-performance computing
-- **Pros**: Infinite speed promise, zero-copy reads
-- **Cons**: Limited Java ecosystem, complex schemas
-- **Port**: 8088
-- **Performance**: 29.3ms avg response time, 100.0% success rate
+### Choosing a Framework
 
-- **Best for**: Web services, legacy system integration
-- **Pros**: Simple binary protocol, good Java support
-- **Cons**: Less performant, limited ecosystem
-- **Port**: 8089
-- **Performance**: 0.0ms avg response time, 0.0% success rate (needs investigation)
+**For Web APIs**:
+- Use **Jackson JSON** for standard REST APIs
+- Use **CBOR** for binary REST APIs
 
-### FST (Fast Serialization)
+**For Microservices**:
+- Use **gRPC** for RPC communication
+- Use **Avro** for event streaming (Kafka)
 
-- **Best for**: Java applications needing fast serialization
-- **Pros**: Drop-in replacement for Java serialization, fast
-- **Cons**: Java-only, compatibility concerns
-- **Port**: 8090
-- **Performance**: 5956.6ms avg response time, 100.0% success rate
+**For High Performance**:
+- Use **SBE** for ultra-low latency
+- Use **Kryo** or **FST** for fast Java-only
+- Use **Cap'n Proto** for zero-copy IPC
 
-### FlatBuffers
+**For Big Data**:
+- Use **Apache Arrow** for in-memory analytics
+- Use **Apache Parquet** for data warehousing
 
-- **Best for**: Game development, mobile apps, IoT
-- **Pros**: Zero-copy access, memory efficient, multi-platform
-- **Cons**: Schema required, complex for simple use cases
-- **Port**: 8091
-- **Performance**: 43.1ms avg response time, 100.0% success rate
+**For Cross-Language**:
+- Use **Protocol Buffers** or **Thrift** for RPC
+- Use **Avro** for data serialization
 
-### gRPC
+### Benchmark Best Practices
 
-- **Best for**: Microservices, modern distributed systems
-- **Pros**: HTTP/2, streaming, excellent tooling
-- **Cons**: HTTP/2 overhead, complex for simple cases
-- **Port**: 8092
-- **Performance**: 1315.8ms avg response time, 100.0% success rate
+1. **Warm-up**: Always enable warmup iterations (JVM optimization)
+2. **Multiple Runs**: Run benchmarks multiple times for consistency
+3. **Realistic Payloads**: Use payload sizes matching your use case
+4. **Monitor Resources**: Track CPU and memory during benchmarks
+5. **Compare Configurations**: Test both baseline and compression
+6. **Analyze Trends**: Use Grafana dashboards for trend analysis
 
-## 🛠️ Management Commands
+### Performance Tuning
 
-### 🚀 Quick Start (Recommended)
-
+**JVM Options**:
 ```bash
-# One command does everything!
-./run_complete_benchmark.sh
+-Xms512m -Xmx2048m          # Heap size
+-XX:+UseG1GC                # G1 garbage collector
+-XX:MaxGCPauseMillis=200    # GC pause target
+-XX:+UseStringDeduplication # String optimization
 ```
 
-### Start Individual Frameworks
-
-```bash
-# Start specific framework
-mvn spring-boot:run -pl jackson-poc
-
-# Start with custom port
-mvn spring-boot:run -pl jackson-poc -Dspring-boot.run.arguments=--server.port=8181
-
-# Start with profile
-mvn spring-boot:run -pl jackson-poc -Dspring-boot.run.arguments=--spring.profiles.active=prod
-```
-
-### 🎯 Start All Frameworks
-
-```bash
-# Start all 12 frameworks simultaneously
-python start_all_frameworks_comprehensive.py
-
-# Monitor framework status
-tail -f benchmark_run_clean.log
-```
-
-### Docker Deployment
-
-```bash
-# Build all Docker images
-for project in jackson-poc protobuf-poc avro-poc kryo-poc msgpack-poc thrift-poc capnproto-poc fst-poc flatbuffers-poc grpc-poc; do
-  cd $project
-  mvn spring-boot:build-image
-  cd ..
-done
-
-# Run with Docker Compose (all 10 frameworks)
-docker-compose up -d
-```
-
-### 🔐 SSL Certificate Generation
-
-This project supports SSL/TLS encryption for secure communication. Here's how to generate and configure SSL certificates:
-
-#### **1. Generate Self-Signed Certificate (Development)**
-
-```bash
-# Create certificates directory
-mkdir -p ssl-certificates
-cd ssl-certificates
-
-# Generate self-signed certificate for development
-keytool -genkeypair \
-  -alias serialization-benchmark \
-  -keyalg RSA \
-  -keysize 2048 \
-  -validity 365 \
-  -keystore keystore.p12 \
-  -storetype PKCS12 \
-  -storepass changeit \
-  -keypass changeit \
-  -dname "CN=localhost, OU=Development, O=TechishThoughts, L=City, ST=State, C=US"
-
-# Generate certificate for each framework
-for port in 8081 8082 8083 8084 8085 8086 8087 8088 8089; do
-  keytool -genkeypair \
-    -alias framework-${port} \
-    -keyalg RSA \
-    -keysize 2048 \
-    -validity 365 \
-    -keystore keystore-${port}.p12 \
-    -storetype PKCS12 \
-    -storepass changeit \
-    -keypass changeit \
-    -dname "CN=localhost, OU=Development, O=TechishThoughts, L=City, ST=State, C=US"
-done
-
-cd ..
-```
-
-#### **2. Generate Certificate Authority (Production)**
-
-```bash
-# Create CA directory
-mkdir -p ca-certificates
-cd ca-certificates
-
-# Generate CA private key
-openssl genrsa -out ca-private-key.pem 4096
-
-# Generate CA certificate
-openssl req -new -x509 -days 365 -key ca-private-key.pem \
-  -out ca-certificate.pem \
-  -subj "/C=US/ST=State/L=City/O=TechishThoughts/OU=IT/CN=Serialization-CA"
-
-# Generate server private key
-openssl genrsa -out server-private-key.pem 2048
-
-# Generate server certificate signing request
-openssl req -new -key server-private-key.pem \
-  -out server-certificate.csr \
-  -subj "/C=US/ST=State/L=City/O=TechishThoughts/OU=IT/CN=serialization-benchmark.local"
-
-# Sign server certificate with CA
-openssl x509 -req -days 365 -in server-certificate.csr \
-  -CA ca-certificate.pem -CAkey ca-private-key.pem \
-  -CAcreateserial -out server-certificate.pem
-
-# Convert to PKCS12 format for Java
-openssl pkcs12 -export \
-  -in server-certificate.pem \
-  -inkey server-private-key.pem \
-  -out keystore.p12 \
-  -name serialization-benchmark \
-  -passout pass:changeit
-
-cd ..
-```
-
-#### **3. Configure SSL in Application**
-
-Add SSL configuration to `application.yml`:
-
+**Spring Boot**:
 ```yaml
 server:
-  port: 8081
-  ssl:
-    enabled: true
-    key-store: classpath:ssl-certificates/keystore.p12
-    key-store-password: changeit
-    key-store-type: PKCS12
-    key-alias: serialization-benchmark
-
-spring:
-  application:
-    name: jackson-poc
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: always
-```
-
-#### **4. SSL Certificate Management**
-
-```bash
-# List certificates in keystore
-keytool -list -keystore ssl-certificates/keystore.p12 -storepass changeit
-
-# Export certificate
-keytool -export -alias serialization-benchmark \
-  -keystore ssl-certificates/keystore.p12 \
-  -storepass changeit \
-  -file ssl-certificates/certificate.crt
-
-# Import certificate to truststore
-keytool -import -alias serialization-benchmark \
-  -file ssl-certificates/certificate.crt \
-  -keystore ssl-certificates/truststore.p12 \
-  -storepass changeit -noprompt
-
-# Verify certificate
-openssl x509 -in ssl-certificates/certificate.crt -text -noout
-```
-
-#### **5. Docker SSL Configuration**
-
-```bash
-# Copy certificates to Docker containers
-docker cp ssl-certificates/keystore.p12 jackson-poc:/app/ssl-certificates/
-
-# Or mount certificates in docker-compose.yml
-volumes:
-  - ./ssl-certificates:/app/ssl-certificates:ro
-```
-
-#### **6. SSL Testing Commands**
-
-```bash
-# Test HTTPS endpoints (all 10 frameworks)
-curl -k https://localhost:8441/actuator/health  # Jackson
-curl -k https://localhost:8442/actuator/health  # Protobuf
-curl -k https://localhost:8443/actuator/health  # Avro
-curl -k https://localhost:8444/actuator/health  # Kryo
-curl -k https://localhost:8446/actuator/health  # MessagePack
-curl -k https://localhost:8447/actuator/health  # Cap'n Proto
-curl -k https://localhost:8448/actuator/health  # Thrift
-curl -k https://localhost:8450/actuator/health  # FST
-curl -k https://localhost:8451/actuator/health  # FlatBuffers
-curl -k https://localhost:8452/actuator/health  # gRPC
-
-# Test with certificate verification
-curl --cacert ssl-certificates/ca-certificate.pem \
-  https://localhost:8441/actuator/health
-
-# Test SSL connection
-openssl s_client -connect localhost:8441 -servername localhost
-```
-
-#### **7. SSL Security Best Practices**
-
-```bash
-# Generate strong password for production
-openssl rand -base64 32 > ssl-certificates/keystore-password.txt
-
-# Set proper permissions
-chmod 600 ssl-certificates/keystore-password.txt
-chmod 600 ssl-certificates/*.pem
-chmod 600 ssl-certificates/*.p12
-
-# Regular certificate renewal
-# Add to crontab for automatic renewal
-0 0 1 * * /path/to/renew-certificates.sh
-```
-
-### Health Monitoring
-
-```bash
-# Check all framework health
-for port in {8081..8092}; do
-  echo "Checking port $port..."
-  curl -s http://localhost:$port/actuator/health | jq '.status'
-done
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    max-connections: 8192
 ```
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+### Services Not Starting
 
-#### Port Already in Use
-
+**Check Java version**:
 ```bash
-# Find process using port
-lsof -i :8081
-
-# Kill process
-kill -9 <PID>
+java -version  # Should be Java 21
 ```
 
-#### Java Module Issues (Java 21)
-
-For FST framework on Java 21, add JVM arguments:
-
+**Check port conflicts**:
 ```bash
-export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED"
-mvn spring-boot:run -pl fst-poc
+lsof -i :8081  # Check specific port
+./manage.sh status
 ```
 
-**📖 For detailed JVM configuration, see [JVM Configuration & Optimization](#jvm-configuration--optimization) section.**
-
-#### Memory Issues
-
+**View service logs**:
 ```bash
-# Increase Maven heap size
-export MAVEN_OPTS="-Xmx4g -Xms2g"
-
-# Check Java memory
-java -XX:+PrintFlagsFinal -version | grep HeapSize
+./manage.sh logs jackson
+tail -f logs/jackson.log
 ```
 
-#### Compilation Issues
+### Benchmark Failures
 
+**Verify services are healthy**:
 ```bash
-# Clean and rebuild specific project
-mvn clean compile -pl jackson-poc
-
-# Skip tests if needed
-mvn clean install -DskipTests
-
-# Force update dependencies
-mvn clean install -U
+./manage.sh status
+curl http://localhost:8081/actuator/health
 ```
 
-### Framework-Specific Issues
-
-#### Protocol Buffers
-
-- Ensure `protoc` compiler is installed
-- Check generated files in `target/generated-sources/`
-- Verify `.proto` file syntax
-
-#### Apache Avro
-
-- Validate Avro schema files (`.avsc`)
-- Check Avro Maven plugin configuration
-- Ensure schema registry compatibility
-
-#### FlatBuffers
-
-- Install FlatBuffers compiler (`flatc`)
-- Verify `.fbs` schema files
-- Check generated Java files
-
-#### gRPC
-
-- Ensure gRPC plugins are correctly configured
-- Check `.proto` file for gRPC service definitions
-- Verify HTTP/2 support
-
-## 📝 API Documentation
-
-### Standard Endpoints
-
-All frameworks implement these standard endpoints:
-
-#### Health Check
-
-```
-GET /actuator/health
-```
-
-#### Serialization Benchmark
-
-```
-POST /api/{framework}/benchmark/serialization
-Content-Type: application/json
-
-{
-  "complexity": "SMALL|MEDIUM|LARGE|HUGE",
-  "iterations": 100
-}
-```
-
-#### Compression Benchmark
-
-```
-POST /api/{framework}/benchmark/compression
-Content-Type: application/json
-
-{
-  "complexity": "SMALL|MEDIUM|LARGE|HUGE",
-  "iterations": 50
-}
-```
-
-#### Performance Benchmark
-
-```
-POST /api/{framework}/benchmark/performance
-Content-Type: application/json
-
-{
-  "complexity": "SMALL|MEDIUM|LARGE|HUGE",
-  "iterations": 25
-}
-```
-
-### Response Format
-
-```json
-{
-  "framework": "Jackson JSON",
-  "status": "SUCCESS",
-  "complexity": "MEDIUM",
-  "iterations": 50,
-  "userCount": 100,
-  "averageSerializationMs": 12.5,
-  "averageDeserializationMs": 8.3,
-  "totalSizeBytes": 15720,
-  "compressionRatio": 0.75,
-  "successRate": 100.0,
-  "timestamp": "2025-01-24T15:30:45Z"
-}
-```
-
-## 🔧 Configuration
-
-### Application Properties
-
-Each framework can be configured via `application.yml`:
-
-```yaml
-server:
-  port: 8081
-
-spring:
-  application:
-    name: jackson-poc
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-
-logging:
-  level:
-    org.techishthoughts: DEBUG
-```
-
-### Environment Variables
-
+**Check Python dependencies**:
 ```bash
-# Set custom ports
-export JACKSON_PORT=8181
-export PROTOBUF_PORT=8182
-
-# JVM options
-export JAVA_OPTS="-Xmx2g -Xms1g"
-
-# Spring profiles
-export SPRING_PROFILES_ACTIVE=production
+pip3 install psutil
+python3 --version  # Should be 3.8+
 ```
 
-## 🔧 JVM Configuration & Optimization
+**Increase timeout**:
+Edit `enhanced_benchmark.py` and increase timeout from 180s to 300s.
 
-### **Current JVM Configuration (Java 21)**
+### Grafana No Data
 
-This project uses **OpenJDK 21** with specific JVM optimizations configured in `docker-compose.yml` for each framework.
-
-#### **Framework-Specific Configurations**
-
-**High-Performance Frameworks (4GB Heap):**
-
+**Check Prometheus**:
 ```bash
-# Kryo, Cap'n Proto, FlatBuffers, gRPC, Apache Avro, FST, MessagePack, Apache Thrift
-JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+# Verify Prometheus is running
+open http://localhost:9090
+
+# Check targets
+# http://localhost:9090/targets
+
+# Verify metrics file exists
+ls -l results/*.prom
 ```
 
-**Resource-Optimized Frameworks (2GB Heap):**
-
+**Restart Prometheus**:
 ```bash
-# CBOR, BSON, Apache Arrow, SBE, Apache Parquet
-JVM_OPTS=-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+brew services restart prometheus
 ```
 
-**FST Framework (Special Configuration):**
-
+**Re-import dashboards**:
 ```bash
-# FST requires module system access for reflection
-JVM_OPTS=--add-opens java.base/java.lang=ALL-UNNAMED \
-         --add-opens java.base/java.util=ALL-UNNAMED \
-         --add-opens java.base/java.io=ALL-UNNAMED \
-         --add-opens java.base/java.math=ALL-UNNAMED \
-         --add-opens java.base/java.time=ALL-UNNAMED \
-         --add-opens java.base/java.nio=ALL-UNNAMED \
-         -Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+curl -X POST http://admin:admin@localhost:3000/api/dashboards/db \
+  -H "Content-Type: application/json" \
+  -d @dashboards/serialization-performance.json
 ```
 
-#### **Configuration Breakdown**
+### Memory Issues
 
-**Memory Management:**
-
-- **High-Performance**: 4GB max heap, 2GB initial heap
-- **Resource-Optimized**: 2GB max heap, 1GB initial heap
-- **Rationale**: Different frameworks have different memory requirements
-
-**Garbage Collection:**
-
-- **Collector**: G1GC (Garbage-First Garbage Collector)
-- **Max Pause**: 200ms (predictable performance)
-- **Benefits**: Better throughput for memory-intensive serialization
-
-**Module System Access (FST Only):**
-
-- **Purpose**: Allow FST to use reflection for performance optimization
-- **Impact**: 10-100x faster than public APIs
-- **Required**: Java 21's strong encapsulation blocks access by default
-
-#### **Why These Configurations?**
-
-**High-Performance Frameworks (4GB):**
-
-- **Kryo**: Fast serialization requires more memory for object caching
-- **Cap'n Proto**: Zero-copy operations benefit from larger heap
-- **FlatBuffers**: Memory mapping and large object handling
-- **gRPC**: HTTP/2 and streaming operations
-- **Apache Avro**: Schema processing and compression
-- **FST**: Reflection-based optimization needs memory
-- **MessagePack**: Binary processing efficiency
-- **Apache Thrift**: Cross-language serialization overhead
-
-**Resource-Optimized Frameworks (2GB):**
-
-- **CBOR**: Compact binary format, lower memory footprint
-- **BSON**: Document-oriented, efficient memory usage
-- **Apache Arrow**: Columnar format, optimized memory layout
-- **SBE**: Simple Binary Encoding, minimal overhead
-- **Apache Parquet**: Columnar storage, efficient compression
-
-### **Docker Environment Variables**
-
-Each service in `docker-compose.yml` has specific JVM configurations:
-
-```yaml
-environment:
-  - SPRING_PROFILES_ACTIVE=docker
-  - KEYSTORE_PASSWORD=changeit
-  - JVM_OPTS=-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+**Increase JVM heap**:
+Edit `{framework}-poc/pom.xml`:
+```xml
+<configuration>
+  <jvmArguments>-Xms1024m -Xmx4096m</jvmArguments>
+</configuration>
 ```
 
-### **Local Development Configuration**
-
-For local development without Docker:
-
+**Monitor memory usage**:
 ```bash
-# High-performance frameworks
-export JAVA_OPTS="-Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
-
-# FST framework (with module access)
-export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
-                  --add-opens java.base/java.util=ALL-UNNAMED \
-                  --add-opens java.base/java.io=ALL-UNNAMED \
-                  --add-opens java.base/java.math=ALL-UNNAMED \
-                  --add-opens java.base/java.time=ALL-UNNAMED \
-                  --add-opens java.base/java.nio=ALL-UNNAMED \
-                  -Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
-
-# Resource-optimized frameworks
-export JAVA_OPTS="-Xmx2g -Xms1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
-```
-
-### **Performance Impact Analysis**
-
-#### **FST Framework Performance**
-
-| Configuration | Success Rate | Avg Response Time | Memory Usage |
-|---------------|-------------|------------------|--------------|
-| **With JVM Variables** | 100% | 5956.6ms | 2.1GB |
-| **Without JVM Variables** | 0% | N/A | N/A (crashes) |
-| **Partial Variables** | 25% | 12000ms | 1.8GB |
-
-#### **Memory Performance Comparison**
-
-| Heap Size | GC Pauses | Throughput | Stability |
-|-----------|-----------|------------|-----------|
-| **2GB** | 150ms | 85% | Good |
-| **4GB** | 100ms | 95% | Excellent |
-| **8GB** | 80ms | 98% | Outstanding |
-
-### **Security Considerations**
-
-#### **Module System Security**
-
-- **Risk**: Opening modules reduces encapsulation
-- **Mitigation**: Only opens to unnamed modules (our application)
-- **Benefit**: Enables high-performance serialization
-- **Trade-off**: Performance vs. security (acceptable for this use case)
-
-#### **Memory Security**
-
-- **Risk**: Large heap increases attack surface
-- **Mitigation**: Proper input validation and sanitization
-- **Benefit**: Supports large payload testing
-- **Trade-off**: Memory usage vs. functionality
-
-### **Troubleshooting JVM Issues**
-
-#### **Common JVM Errors**
-
-**1. InaccessibleObjectException**
-
-```bash
-java.lang.reflect.InaccessibleObjectException:
-Unable to make field private final byte[] java.lang.String.value accessible
-```
-
-**Solution**: Add `--add-opens java.base/java.lang=ALL-UNNAMED`
-
-**2. OutOfMemoryError**
-
-```bash
-java.lang.OutOfMemoryError: Java heap space
-```
-
-**Solution**: Increase heap size with `-Xmx4g` or higher
-
-**3. GC Pause Issues**
-
-```bash
-# Long garbage collection pauses
-```
-
-**Solution**: Use G1GC with `-XX:+UseG1GC -XX:MaxGCPauseMillis=200`
-
-#### **JVM Variable Validation**
-
-```bash
-# Check current JVM options
-java -XX:+PrintFlagsFinal -version | grep HeapSize
-
-# Verify module access
-java --add-opens java.base/java.lang=ALL-UNNAMED -version
-
-# Test memory allocation
-java -Xmx4g -Xms2g -version
+jps  # List Java processes
+jstat -gc <pid> 1000  # GC statistics
 ```
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our contributing guidelines:
+Contributions are welcome! Please follow these guidelines:
 
-### Development Setup
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Follow** the existing code style and patterns
+4. **Test** your changes thoroughly
+5. **Update** documentation as needed
+6. **Commit** with clear messages
+7. **Push** to your fork
+8. **Open** a Pull Request
 
-1. Fork the repository
-2. Create a feature branch
-3. Follow code style guidelines
-4. Add tests for new features
-5. Update documentation
-6. Submit a pull request
+### Adding a New Framework
 
-### Code Style
+1. Create `{framework}-poc` module based on existing structure
+2. Implement V2 API endpoints
+3. Add framework to `FRAMEWORKS` in `manage.sh`
+4. Update `enhanced_benchmark.py` with framework configuration
+5. Test thoroughly with all payload sizes
+6. Update this README with framework details
 
-- Follow Google Java Style Guide
-- Use meaningful variable names
-- Add JavaDoc for public methods
-- Include unit tests
-- Update README for new frameworks
-
-### Adding New Frameworks
-
-1. Create new Maven module: `{framework}-poc`
-2. Implement standardized REST endpoints
-3. Add framework to benchmark suite
-4. Update documentation
-5. Add Docker configuration
-
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- Spring Boot team for excellent framework
-- All serialization framework maintainers
-- Contributors and beta testers
-- Open source community
+- All framework maintainers for excellent serialization libraries
+- Spring Boot team for the fantastic framework
+- Prometheus and Grafana teams for monitoring tools
 
-## 📞 Support
+## 📧 Contact
 
-- **Issues**: [GitHub Issues](https://github.com/techishthoughts-org/java_serialization_frameworks/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/techishthoughts-org/java_serialization_frameworks/discussions)
-- **Documentation**: [Wiki](https://github.com/techishthoughts-org/java_serialization_frameworks/wiki)
+For questions, issues, or suggestions:
+- Open an issue on GitHub
+- Contact: [your-email@example.com]
 
 ---
 
 **Built with ❤️ for the Java community**
 
-*Last updated: October 2025 - V2 API migration complete, project optimized and documentation updated*
+Last Updated: 2025-10-22
+Version: 2.0.0

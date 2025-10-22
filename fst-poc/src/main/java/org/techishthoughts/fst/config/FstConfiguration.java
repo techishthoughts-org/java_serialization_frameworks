@@ -8,6 +8,7 @@ import org.techishthoughts.payload.generator.PayloadGenerator;
  * FST Application Configuration
  *
  * Provides beans and configuration for the FST serialization framework.
+ * UnifiedPayloadGenerator is now auto-configured via component scanning.
  */
 @Configuration
 public class FstConfiguration {

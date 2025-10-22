@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 2025 UPDATE: Apache Thrift provides cross-language RPC with
  * high-performance serialization and battle-tested reliability.
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"org.techishthoughts.thrift", "org.techishthoughts.payload"})
 public class ThriftPocApplication {
 
     public static void main(String[] args) {

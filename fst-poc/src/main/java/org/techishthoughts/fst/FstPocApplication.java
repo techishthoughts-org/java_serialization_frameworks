@@ -19,7 +19,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * - Caching-friendly serialization
  * - Integration with modern compression algorithms
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"org.techishthoughts.fst", "org.techishthoughts.payload"})
 public class FstPocApplication {
 
     public static void main(String[] args) {
