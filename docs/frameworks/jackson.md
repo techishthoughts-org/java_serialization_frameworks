@@ -1,8 +1,8 @@
 # Jackson JSON - Deep Dive
 
-![Speed](https://img.shields.io/badge/Speed-⭐⭐⭐-yellow)
-![Compression](https://img.shields.io/badge/Compression-⭐⭐-orange)
-![Ease of Use](https://img.shields.io/badge/Ease%20of%20Use-⭐⭐⭐⭐⭐-brightgreen)
+![Speed](https://img.shields.io/badge/Speed-3_stars-yellow)
+![Compression](https://img.shields.io/badge/Compression-2_stars-orange)
+![Ease of Use](https://img.shields.io/badge/Ease%20of%20Use-5_stars-brightgreen)
 
 ## Overview
 
@@ -15,17 +15,17 @@ Jackson is the de facto standard for JSON serialization in Java. It provides hig
 ## Key Characteristics
 
 ### Strengths
-✅ **Human-Readable**: JSON format is easy to read and debug
-✅ **Universal Compatibility**: Works with any HTTP client or tool
-✅ **Rich Ecosystem**: Extensive libraries and integrations
-✅ **Flexible**: Annotations, mixins, custom serializers
-✅ **Well-Documented**: Abundant resources and community support
+- **Human-Readable**: JSON format is easy to read and debug
+- **Universal Compatibility**: Works with any HTTP client or tool
+- **Rich Ecosystem**: Extensive libraries and integrations
+- **Flexible**: Annotations, mixins, custom serializers
+- **Well-Documented**: Abundant resources and community support
 
 ### Weaknesses
-❌ **Larger Payload**: Text format less compact than binary
-❌ **Slower**: Parsing text slower than binary formats
-❌ **No Schema**: Runtime errors if structure mismatch
-❌ **No Built-in Compression**: Requires external tools
+- **Larger Payload**: Text format less compact than binary
+- **Slower**: Parsing text slower than binary formats
+- **No Schema**: Runtime errors if structure mismatch
+- **No Built-in Compression**: Requires external tools
 
 ## Performance Benchmarks
 
@@ -122,7 +122,7 @@ public class JacksonConfiguration {
 
 ## Use Cases
 
-### ✅ Ideal For
+### Ideal For
 
 **Web APIs & REST Services**
 - Most HTTP clients support JSON natively
@@ -144,7 +144,7 @@ public class JacksonConfiguration {
 - Self-documenting
 - Easy for third-party integration
 
-### ❌ Not Ideal For
+### Not Ideal For
 
 **High-Performance Systems**
 - Text parsing overhead
@@ -163,12 +163,12 @@ public class JacksonConfiguration {
 
 ### 1. Reuse ObjectMapper
 ```java
-// ❌ Bad: Creates new instance every time
+// Bad: Creates new instance every time
 public byte[] serialize(Object obj) {
     return new ObjectMapper().writeValueAsBytes(obj);
 }
 
-// ✅ Good: Reuse singleton instance
+// Good: Reuse singleton instance
 private static final ObjectMapper MAPPER = new ObjectMapper();
 
 public byte[] serialize(Object obj) {

@@ -2,7 +2,7 @@
 
 This guide shows what screenshots to capture for the project documentation.
 
-## 📸 Required Screenshots
+## Required Screenshots
 
 ### 1. **Project Structure** (`screenshots/01-project-structure.png`)
 
@@ -236,7 +236,7 @@ curl -X POST http://localhost:8081/api/jackson/v2/benchmark \
 
 ---
 
-## 🎨 Screenshot Best Practices
+## Screenshot Best Practices
 
 ### Terminal Screenshots
 
@@ -273,7 +273,7 @@ curl -X POST http://localhost:8081/api/jackson/v2/benchmark \
 
 ---
 
-## 📝 Screenshot Annotations
+## Screenshot Annotations
 
 For each screenshot, add a caption in the documentation:
 
@@ -290,13 +290,13 @@ Example:
 
 ---
 
-## 🔄 Updating Screenshots
+## Updating Screenshots
 
 When to update screenshots:
-- ✅ After major feature additions
-- ✅ After UI/output format changes
-- ✅ When dashboard layouts are modified
-- ✅ When adding new frameworks
+- After major feature additions
+- After UI/output format changes
+- When dashboard layouts are modified
+- When adding new frameworks
 
 **Quick update script:**
 ```bash
@@ -311,7 +311,7 @@ When to update screenshots:
 
 ---
 
-## 📊 Screenshot Organization
+## Screenshot Organization
 
 ```
 screenshots/
@@ -334,7 +334,7 @@ screenshots/
 
 ---
 
-## 🚀 Quick Screenshot Capture Session
+## Quick Screenshot Capture Session
 
 Run these commands in sequence for terminal screenshots:
 
@@ -402,7 +402,7 @@ For Grafana/Prometheus screenshots (9, 10, 13, 14):
 
 ---
 
-## ✅ Verification Checklist
+## Verification Checklist
 
 Before finalizing screenshots:
 

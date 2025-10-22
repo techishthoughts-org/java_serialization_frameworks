@@ -2,33 +2,33 @@
 
 This document provides visual examples and ASCII representations of the Java Serialization Frameworks project.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 java_serialization_frameworks/
 │
-├── 📄 README.md                          # Main documentation
-├── 📄 BENCHMARK_SUMMARY.md               # Benchmark results
-├── 📄 SCREENSHOT_GUIDE.md                # Screenshot instructions
-├── 📄 VISUAL_DOCUMENTATION.md            # This file
+├── README.md                          # Main documentation
+├── BENCHMARK_SUMMARY.md               # Benchmark results
+├── SCREENSHOT_GUIDE.md                # Screenshot instructions
+├── VISUAL_DOCUMENTATION.md            # This file
 │
-├── 🔧 manage.sh                          # Unified management script ⭐
-├── 🐍 enhanced_benchmark.py              # Enhanced metrics collection ⭐
-├── 🐍 analyze_metrics.py                 # Results analysis
+├── manage.sh                          # Unified management script
+├── enhanced_benchmark.py              # Enhanced metrics collection
+├── analyze_metrics.py                 # Results analysis
 │
-├── 📊 dashboards/                        # Grafana dashboards
+├── dashboards/                        # Grafana dashboards
 │   ├── serialization-performance.json
 │   ├── resource-utilization.json
 │   └── README.md
 │
-├── 📂 results/                           # Benchmark outputs
+├── results/                           # Benchmark outputs
 │   ├── enhanced_benchmark_*.json
 │   └── metrics_*.prom
 │
-├── 📂 screenshots/                       # Visual documentation
+├── screenshots/                       # Visual documentation
 │   └── *.png
 │
-├── 📦 common-payload/                    # Shared models
+├── common-payload/                    # Shared models
 │   ├── pom.xml
 │   ├── build.gradle
 │   └── src/main/java/org/techishthoughts/payload/
@@ -36,24 +36,24 @@ java_serialization_frameworks/
 │       ├── model/                        # Data models
 │       └── service/                      # Benchmark framework
 │
-├── 📦 jackson-poc/                       # Framework POCs (13 total)
-├── 📦 avro-poc/
-├── 📦 kryo-poc/
-├── 📦 msgpack-poc/
-├── 📦 thrift-poc/
-├── 📦 capnproto-poc/
-├── 📦 fst-poc/
-├── 📦 grpc-poc/
-├── 📦 cbor-poc/
-├── 📦 bson-poc/
-├── 📦 arrow-poc/
-├── 📦 sbe-poc/
-└── 📦 parquet-poc/
+├── jackson-poc/                       # Framework POCs (13 total)
+├── avro-poc/
+├── kryo-poc/
+├── msgpack-poc/
+├── thrift-poc/
+├── capnproto-poc/
+├── fst-poc/
+├── grpc-poc/
+├── cbor-poc/
+├── bson-poc/
+├── arrow-poc/
+├── sbe-poc/
+└── parquet-poc/
 ```
 
 ---
 
-## 🎨 Command Line Interface Examples
+## Command Line Interface Examples
 
 ### 1. Management Script Help
 
@@ -101,90 +101,90 @@ FRAMEWORKS (13):
 
 KEY                  NAME                      CATEGORY             STATUS
 ────────────────────────────────────────────────────────────────────────────
-arrow                Apache Arrow              Columnar             RUNNING ✅
-avro                 Apache Avro               Binary Schema        RUNNING ✅
-bson                 BSON                      Binary Schema-less   RUNNING ✅
-capnproto            Cap'n Proto               Binary Zero-copy     RUNNING ✅
-cbor                 CBOR                      Binary Schema-less   RUNNING ✅
-fst                  FST                       Binary Schema-less   RUNNING ✅
-grpc                 gRPC                      RPC Framework        RUNNING ✅
-jackson              Jackson JSON              Text-based           RUNNING ✅
-kryo                 Kryo                      Binary Schema-less   RUNNING ✅
-msgpack              MessagePack               Binary Schema-less   RUNNING ✅
-parquet              Apache Parquet            Columnar             RUNNING ✅
-sbe                  SBE                       Binary Schema        RUNNING ✅
-thrift               Apache Thrift             Binary Schema        RUNNING ✅
+arrow                Apache Arrow              Columnar             RUNNING
+avro                 Apache Avro               Binary Schema        RUNNING
+bson                 BSON                      Binary Schema-less   RUNNING
+capnproto            Cap'n Proto               Binary Zero-copy     RUNNING
+cbor                 CBOR                      Binary Schema-less   RUNNING
+fst                  FST                       Binary Schema-less   RUNNING
+grpc                 gRPC                      RPC Framework        RUNNING
+jackson              Jackson JSON              Text-based           RUNNING
+kryo                 Kryo                      Binary Schema-less   RUNNING
+msgpack              MessagePack               Binary Schema-less   RUNNING
+parquet              Apache Parquet            Columnar             RUNNING
+sbe                  SBE                       Binary Schema        RUNNING
+thrift               Apache Thrift             Binary Schema        RUNNING
 
-ℹ  Running: 13/13 services
+Running: 13/13 services
 ```
 
 ### 3. Enhanced Benchmark Execution
 
 ```
 ================================================================================
-🚀 ENHANCED SERIALIZATION FRAMEWORK BENCHMARK
+ENHANCED SERIALIZATION FRAMEWORK BENCHMARK
 ================================================================================
-⏰ Start time: 2025-10-22 14:30:15
-📊 Frameworks: 13
-🎯 Scenarios: 4 payload sizes
-🔧 Configurations: 2 test configs
+Start time: 2025-10-22 14:30:15
+Frameworks: 13
+Scenarios: 4 payload sizes
+Configurations: 2 test configs
 
-📈 Metrics Collection Phases:
-   1️⃣  Network Handshake (DNS, TCP, TLS)
-   2️⃣  Serialization Performance (avg, p50, p95, p99)
-   3️⃣  Resource Utilization (CPU, Memory, Threads)
-   4️⃣  Transport Efficiency (size, compression, throughput)
+Metrics Collection Phases:
+   1. Network Handshake (DNS, TCP, TLS)
+   2. Serialization Performance (avg, p50, p95, p99)
+   3. Resource Utilization (CPU, Memory, Threads)
+   4. Transport Efficiency (size, compression, throughput)
 ================================================================================
 
 Phase 1: Health Check
 ────────────────────────────────────────────────────────────────────────────
-✅ Jackson JSON                (port 8081): HEALTHY
-✅ Apache Avro                 (port 8083): HEALTHY
-✅ Kryo                        (port 8084): HEALTHY
-✅ MessagePack                 (port 8086): HEALTHY
-✅ Apache Thrift               (port 8087): HEALTHY
-✅ Cap'n Proto                 (port 8088): HEALTHY
-✅ FST                         (port 8090): HEALTHY
-✅ gRPC                        (port 8092): HEALTHY
-✅ CBOR                        (port 8093): HEALTHY
-✅ BSON                        (port 8094): HEALTHY
-✅ Apache Arrow                (port 8095): HEALTHY
-✅ SBE                         (port 8096): HEALTHY
-✅ Apache Parquet              (port 8097): HEALTHY
+Jackson JSON                (port 8081): HEALTHY
+Apache Avro                 (port 8083): HEALTHY
+Kryo                        (port 8084): HEALTHY
+MessagePack                 (port 8086): HEALTHY
+Apache Thrift               (port 8087): HEALTHY
+Cap'n Proto                 (port 8088): HEALTHY
+FST                         (port 8090): HEALTHY
+gRPC                        (port 8092): HEALTHY
+CBOR                        (port 8093): HEALTHY
+BSON                        (port 8094): HEALTHY
+Apache Arrow                (port 8095): HEALTHY
+SBE                         (port 8096): HEALTHY
+Apache Parquet              (port 8097): HEALTHY
 
-📊 Health Summary: 13/13 services available
+Health Summary: 13/13 services available
 
 ================================================================================
 Phase 2: Enhanced Metrics Collection
 ================================================================================
 
-🧪 Testing: Jackson JSON (Text-based)
+Testing: Jackson JSON (Text-based)
 ────────────────────────────────────────────────────────────────────────────
-  [1/104] SMALL  | baseline              ... ✅ 23.45ms | 1.2KB | 3.5% CPU
-  [2/104] SMALL  | with_compression      ... ✅ 28.12ms | 0.8KB | 4.1% CPU
-  [3/104] MEDIUM | baseline              ... ✅ 45.67ms | 12.3KB | 5.2% CPU
-  [4/104] MEDIUM | with_compression      ... ✅ 52.34ms | 8.1KB | 6.0% CPU
-  [5/104] LARGE  | baseline              ... ✅ 234.56ms | 123.4KB | 12.3% CPU
-  [6/104] LARGE  | with_compression      ... ✅ 267.89ms | 81.2KB | 14.1% CPU
-  [7/104] HUGE   | baseline              ... ✅ 1234.56ms | 1.2MB | 25.6% CPU
-  [8/104] HUGE   | with_compression      ... ✅ 1456.78ms | 0.8MB | 28.4% CPU
+  [1/104] SMALL  | baseline              ... 23.45ms | 1.2KB | 3.5% CPU
+  [2/104] SMALL  | with_compression      ... 28.12ms | 0.8KB | 4.1% CPU
+  [3/104] MEDIUM | baseline              ... 45.67ms | 12.3KB | 5.2% CPU
+  [4/104] MEDIUM | with_compression      ... 52.34ms | 8.1KB | 6.0% CPU
+  [5/104] LARGE  | baseline              ... 234.56ms | 123.4KB | 12.3% CPU
+  [6/104] LARGE  | with_compression      ... 267.89ms | 81.2KB | 14.1% CPU
+  [7/104] HUGE   | baseline              ... 1234.56ms | 1.2MB | 25.6% CPU
+  [8/104] HUGE   | with_compression      ... 1456.78ms | 0.8MB | 28.4% CPU
 
-🧪 Testing: Apache Avro (Binary Schema)
+Testing: Apache Avro (Binary Schema)
 ────────────────────────────────────────────────────────────────────────────
-  [9/104] SMALL  | baseline              ... ✅ 12.34ms | 0.9KB | 2.8% CPU
-  [10/104] SMALL  | with_compression     ... ✅ 15.67ms | 0.6KB | 3.2% CPU
+  [9/104] SMALL  | baseline              ... 12.34ms | 0.9KB | 2.8% CPU
+  [10/104] SMALL  | with_compression     ... 15.67ms | 0.6KB | 3.2% CPU
   ...
 
 ================================================================================
-✅ ENHANCED BENCHMARK COMPLETE!
+ENHANCED BENCHMARK COMPLETE!
 ================================================================================
-📁 JSON Results: results/enhanced_benchmark_20251022_143500.json
-📊 Prometheus Metrics: results/metrics_20251022_143500.prom
-🧪 Total tests run: 104
-✅ Successful tests: 104
-❌ Failed tests: 0
+JSON Results: results/enhanced_benchmark_20251022_143500.json
+Prometheus Metrics: results/metrics_20251022_143500.prom
+Total tests run: 104
+Successful tests: 104
+Failed tests: 0
 
-📊 Performance Summary by Framework:
+Performance Summary by Framework:
 ────────────────────────────────────────────────────────────────────────────
   Apache Arrow             :    67.23ms avg |     45.6KB avg | 8 tests
   Apache Avro              :    23.45ms avg |     12.3KB avg | 8 tests
@@ -203,7 +203,7 @@ Phase 2: Enhanced Metrics Collection
 
 ---
 
-## 📊 Sample JSON Results Structure
+## Sample JSON Results Structure
 
 ```json
 {
@@ -256,7 +256,7 @@ Phase 2: Enhanced Metrics Collection
 
 ---
 
-## 📈 Sample Prometheus Metrics
+## Sample Prometheus Metrics
 
 ```prometheus
 # HELP serialization_time_ms Average serialization time in milliseconds
@@ -289,13 +289,13 @@ cpu_usage_percent{framework="Kryo",scenario="SMALL",config="baseline"} 2.9
 
 ---
 
-## 🎨 Grafana Dashboard Layouts
+## Grafana Dashboard Layouts
 
 ### Performance Overview Dashboard
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ 📊 Java Serialization Frameworks - Performance Overview         │
+│ Java Serialization Frameworks - Performance Overview            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │ Filters: [Framework ▼] [Scenario ▼] [Config ▼]                 │
@@ -322,10 +322,10 @@ cpu_usage_percent{framework="Kryo",scenario="SMALL",config="baseline"} 2.9
 │ Performance Heatmap                                              │
 │ ┌──────────────────────────────────────────────────────────────┐│
 │ │            SMALL  MEDIUM  LARGE   HUGE                       ││
-│ │ Jackson    🟢     🟡     🟠     🔴                          ││
-│ │ Avro       🟢     🟢     🟡     🟠                          ││
-│ │ Kryo       🟢     🟢     🟡     🟠                          ││
-│ │ SBE        🟢     🟢     🟢     🟡                          ││
+│ │ Jackson    GOOD   OK      SLOW    SLOW                      ││
+│ │ Avro       GOOD   GOOD    OK      SLOW                      ││
+│ │ Kryo       GOOD   GOOD    OK      SLOW                      ││
+│ │ SBE        GOOD   GOOD    GOOD    OK                        ││
 │ │ ...                                                          ││
 │ └──────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
@@ -335,7 +335,7 @@ cpu_usage_percent{framework="Kryo",scenario="SMALL",config="baseline"} 2.9
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ 💻 Java Serialization Frameworks - Resource Utilization         │
+│ Java Serialization Frameworks - Resource Utilization            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │ Filters: [Framework ▼] [Scenario ▼]                            │
@@ -363,9 +363,9 @@ cpu_usage_percent{framework="Kryo",scenario="SMALL",config="baseline"} 2.9
 │ ┌──────────────────────────────────────────────────────────────┐│
 │ │ Framework     Memory (MB)  CPU (%)  Threads  Efficiency     ││
 │ │ ───────────────────────────────────────────────────────────  ││
-│ │ Jackson       256.4        3.5      45       ⭐⭐⭐         ││
-│ │ Avro          234.2        2.8      42       ⭐⭐⭐⭐       ││
-│ │ Kryo          245.8        2.9      43       ⭐⭐⭐⭐       ││
+│ │ Jackson       256.4        3.5      45       GOOD           ││
+│ │ Avro          234.2        2.8      42       VERY GOOD      ││
+│ │ Kryo          245.8        2.9      43       VERY GOOD      ││
 │ │ ...                                                          ││
 │ └──────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
@@ -373,7 +373,7 @@ cpu_usage_percent{framework="Kryo",scenario="SMALL",config="baseline"} 2.9
 
 ---
 
-## 🔄 API Request/Response Flow
+## API Request/Response Flow
 
 ### Request Example
 
@@ -419,69 +419,69 @@ curl -X POST http://localhost:8081/api/jackson/v2/benchmark \
 
 ---
 
-## 📊 Performance Comparison Table
+## Performance Comparison Table
 
 | Framework | Avg Time (ms) | Payload Size (KB) | Compression | Category |
 |-----------|---------------|-------------------|-------------|----------|
-| **SBE** ⚡ | 0.89 | 1.2 | ⭐⭐⭐⭐ | Binary Schema |
-| **Cap'n Proto** | 1.23 | 1.5 | ⭐⭐⭐ | Zero-copy |
-| **FST** | 1.45 | 2.3 | ⭐⭐⭐ | Schema-less |
-| **Kryo** | 1.67 | 2.3 | ⭐⭐⭐ | Schema-less |
-| **Apache Arrow** | 2.01 | 3.4 | ⭐⭐⭐⭐ | Columnar |
-| **Avro** | 2.34 | 1.8 | ⭐⭐⭐⭐⭐ | Binary Schema |
-| **MessagePack** | 2.89 | 2.1 | ⭐⭐⭐⭐ | Schema-less |
-| **Thrift** | 3.12 | 2.4 | ⭐⭐⭐ | Binary Schema |
-| **CBOR** | 3.45 | 2.4 | ⭐⭐⭐⭐ | Schema-less |
-| **Parquet** | 3.78 | 2.8 | ⭐⭐⭐⭐⭐ | Columnar |
-| **BSON** | 4.23 | 3.2 | ⭐⭐⭐ | Schema-less |
-| **gRPC** | 4.56 | 2.9 | ⭐⭐⭐ | RPC Framework |
-| **Jackson** | 5.67 | 5.6 | ⭐⭐ | Text-based |
+| **SBE** (Fastest) | 0.89 | 1.2 | Excellent | Binary Schema |
+| **Cap'n Proto** | 1.23 | 1.5 | Good | Zero-copy |
+| **FST** | 1.45 | 2.3 | Good | Schema-less |
+| **Kryo** | 1.67 | 2.3 | Good | Schema-less |
+| **Apache Arrow** | 2.01 | 3.4 | Excellent | Columnar |
+| **Avro** | 2.34 | 1.8 | Excellent | Binary Schema |
+| **MessagePack** | 2.89 | 2.1 | Excellent | Schema-less |
+| **Thrift** | 3.12 | 2.4 | Good | Binary Schema |
+| **CBOR** | 3.45 | 2.4 | Excellent | Schema-less |
+| **Parquet** | 3.78 | 2.8 | Excellent | Columnar |
+| **BSON** | 4.23 | 3.2 | Good | Schema-less |
+| **gRPC** | 4.56 | 2.9 | Good | RPC Framework |
+| **Jackson** | 5.67 | 5.6 | Fair | Text-based |
 
 **Legend:**
-- ⚡ = Fastest
-- ⭐ = Compression Rating (more stars = better compression)
+- Fastest = Best performance
+- Compression Rating: Excellent > Good > Fair
 
 ---
 
-## 🎯 Framework Selection Flowchart
+## Framework Selection Flowchart
 
 ```
 START
   │
-  ├─► Need Human Readable? ──YES──► 📄 Jackson JSON
+  ├─► Need Human Readable? ──YES──► Jackson JSON
   │           │
   │          NO
   │           │
-  ├─► Ultra-Low Latency? ──YES──► ⚡ SBE
+  ├─► Ultra-Low Latency? ──YES──► SBE
   │           │
   │          NO
   │           │
-  ├─► Zero-Copy Required? ──YES──► 🔧 Cap'n Proto
+  ├─► Zero-Copy Required? ──YES──► Cap'n Proto
   │           │
   │          NO
   │           │
-  ├─► Schema Evolution? ──YES──► 📋 Apache Avro
+  ├─► Schema Evolution? ──YES──► Apache Avro
   │           │
   │          NO
   │           │
-  ├─► RPC/Microservices? ──YES──► 🌐 gRPC
+  ├─► RPC/Microservices? ──YES──► gRPC
   │           │
   │          NO
   │           │
-  ├─► Big Data/Analytics? ──YES──► 📊 Arrow/Parquet
+  ├─► Big Data/Analytics? ──YES──► Arrow/Parquet
   │           │
   │          NO
   │           │
-  ├─► Java-Only? ──YES──► ⚡ Kryo or FST
+  ├─► Java-Only? ──YES──► Kryo or FST
   │           │
   │          NO
   │           │
-  └─► Cross-Language? ──YES──► 🌍 Thrift or MessagePack
+  └─► Cross-Language? ──YES──► Thrift or MessagePack
 ```
 
 ---
 
-## ✅ Quick Reference Card
+## Quick Reference Card
 
 ### Essential Commands
 
