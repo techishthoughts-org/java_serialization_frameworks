@@ -16,6 +16,7 @@ A comprehensive benchmarking suite for evaluating 13 modern Java serialization f
 - [Benchmarking](#benchmarking)
 - [Metrics & Monitoring](#metrics--monitoring)
 - [Grafana Dashboards](#grafana-dashboards)
+- [Visual Documentation](#visual-documentation)
 - [Results](#results)
 - [Management Commands](#management-commands)
 - [Framework Details](#framework-details)
@@ -130,6 +131,9 @@ bson                 BSON                      Binary Schema-less   RUNNING
 
 This executes the comprehensive benchmark suite with all metrics phases.
 
+![Benchmark Execution](screenshots/05-benchmark-running.png)
+*Enhanced benchmark collecting comprehensive metrics across all 4 phases*
+
 ### 6. Analyze Results
 
 ```bash
@@ -137,6 +141,9 @@ This executes the comprehensive benchmark suite with all metrics phases.
 ```
 
 View performance rankings, category comparisons, and detailed metrics.
+
+![Analysis Results](screenshots/15-analysis-output.png)
+*Performance analysis showing rankings and recommendations*
 
 ## 🏗️ Architecture
 
@@ -370,7 +377,16 @@ curl -X POST http://admin:admin@localhost:3000/api/dashboards/db \
 
 See `dashboards/README.md` for complete setup instructions.
 
+## 📺 Visual Documentation
+
+For detailed visual examples, ASCII diagrams, and command outputs, see:
+- **[VISUAL_DOCUMENTATION.md](VISUAL_DOCUMENTATION.md)** - Comprehensive visual guide with examples
+- **[SCREENSHOT_GUIDE.md](SCREENSHOT_GUIDE.md)** - Instructions for capturing screenshots
+
 ## 🎨 Grafana Dashboards
+
+![Grafana Performance Dashboard](screenshots/09-grafana-performance.png)
+*Performance Overview Dashboard showing serialization times, throughput, and compression ratios*
 
 ### 1. Performance Overview Dashboard
 
@@ -390,6 +406,9 @@ See `dashboards/README.md` for complete setup instructions.
 - Configuration (baseline/with_compression)
 
 ### 2. Resource Utilization Dashboard
+
+![Grafana Resource Dashboard](screenshots/10-grafana-resources.png)
+*Resource Utilization Dashboard showing memory, CPU, and efficiency metrics*
 
 **Panels**:
 - Memory usage overview
