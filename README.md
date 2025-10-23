@@ -947,8 +947,19 @@ Location: [docs/README.md](docs/README.md)
 Location: [docs/frameworks/](docs/frameworks/)
 
 **Available**:
-- [Jackson JSON](docs/frameworks/jackson.md) - Complete (600+ lines)
-- Additional frameworks: In development
+- [Jackson JSON](docs/frameworks/jackson.md) - Complete (442 lines)
+- [Apache Arrow](docs/frameworks/arrow.md) - Complete (600+ lines)
+- [Apache Avro](docs/frameworks/avro.md) - Complete (600+ lines)
+- [BSON](docs/frameworks/bson.md) - Complete (740+ lines)
+- [Cap'n Proto](docs/frameworks/capnproto.md) - Complete (700+ lines)
+- [CBOR](docs/frameworks/cbor.md) - Complete (700+ lines)
+- [FST](docs/frameworks/fst.md) - Complete (740+ lines)
+- [gRPC](docs/frameworks/grpc.md) - Complete (1,260+ lines)
+- [Kryo](docs/frameworks/kryo.md) - Complete (750+ lines)
+- [MessagePack](docs/frameworks/msgpack.md) - Complete (860+ lines)
+- [Apache Parquet](docs/frameworks/parquet.md) - Complete (800+ lines)
+- [SBE](docs/frameworks/sbe.md) - Complete (700+ lines)
+- [Apache Thrift](docs/frameworks/thrift.md) - Complete (900+ lines)
 
 #### 14.1.3 Guides
 Location: [docs/guides/](docs/guides/)
